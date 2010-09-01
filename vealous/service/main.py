@@ -39,7 +39,7 @@ class article(webapp.RequestHandler):
             return self.response.out.write(html)
         mode = self.request.get('mode','mark')
         if 'plaintext' == mode:
-            self.response.headers['Content-Type'] = 'text'
+            self.response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
             html = data.text
             return self.response.out.write(html)
         rdic['navs'] = dbs.Melody.get_all('nav')
