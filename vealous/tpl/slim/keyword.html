@@ -4,6 +4,10 @@
 {{keyword}}|{{vigo.sitename|default:"Vealous"}}
 {%endblock%}
 
+{%block extra%}
+<meta name="keywords" content="Vealous, {{conf.sitename|default:"Vealous"}},{{keyword}}" />
+{%endblock%}
+
 {%block soga%}
 {%for data in articles%}
 <div class="post">
