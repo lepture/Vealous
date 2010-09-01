@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 import os
+import logging
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 
@@ -12,6 +13,7 @@ import config
 def get_path(ua, name):
     ua = ua.lower()
     if ua.find('mobile') != -1 or ua.find('j2me') != -1:
+        logging.info('mobile device visited this site --' + ua)
         path = os.path.join(config.ROOT, 'tpl','mobile' , name)
         return path
     path = os.path.join(config.ROOT, 'tpl', config.THEME, name)
@@ -33,6 +35,7 @@ class article(webapp.RequestHandler):
         rdic = {}
         data = dbs.Article.get(slug)
         if not data:
+            logging.info('404 , visite article ' + str(slug))
             path = get_path(ua, '404.html')
             self.response.set_status(404)
             html = render(path, rdic)
@@ -54,6 +57,7 @@ class keyword_article(webapp.RequestHandler):
         rdic = {}
         articles = dbs.Article.keyword_article(keyword)
         if not articles:
+            logging.info('404 , visite keyword ' + str(keyword))
             path = get_path(ua, '404.html')
             html = render(path, rdic)
             self.response.set_status(404)
@@ -71,6 +75,7 @@ class melody_s5(webapp.RequestHandler):
         data = dbs.Melody.get_s5(slug)
         if not data:
             rdic = {}
+            logging.info('404 , visite s5 ' + str(slug))
             ua = self.request.headers.get('User-Agent', 'bot')
             path = get_path(ua, '404.html')
             self.response.set_status(404)
@@ -137,10 +142,12 @@ class sitemap (webapp.RequestHandler):
 
 class redirect(webapp.RequestHandler):
     def get(self, path):
+        logging.info('redirect from path ' + str(path))
         self.redirect('/' + path)
 
 class error404(webapp.RequestHandler):
     def get(self):
+        logging.info('404')
         rdic = {}
         ua = self.request.headers.get('User-Agent', 'bot')
         path = get_path(ua, '404.html')
