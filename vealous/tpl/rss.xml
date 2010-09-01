@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <atom:link href="{{conf.site}}/feed.rss" rel="self" type="application/rss+xml" />
+        <title>{{vigo.sitename}}</title>
+        <description>{{vigo.sitetag}}</description>
+        <link>{{conf.site}}</link>
+        <lastBuildDate>{%now "D, d M Y H:i:s"%} GMT</lastBuildDate>
+        <language>en</language>
+        <copyright>Copyright (c) {%now "Y"%} with Creative Commons by {{vigo.sitename}}</copyright>
+        <pubDate>Sat, 28 Aug 2010 22:59:58 GMT</pubDate>
+        {% for data in datas%}
+        <item>
+            <title>{{data.title}}</title>
+            <link>{{conf.site}}{{data.the_url}}</link>
+            <author>{{confi.email}} ({{vigo.twitter}})</author>
+            <description>
+                <![CDATA[
+                    {{data.text|mark}}
+                    <small>Permalink: <a href="{{conf.site}}{{data.the_url}}">{{data.title}}</a></small>
+                ]]>
+            </description>
+            <pubDate>{{data.created|feedtime}}</pubDate>
+            <guid>{{conf.site}}{{data.the_url}}</guid>
+        </item>
+        {% endfor %}
+    </channel>
+</rss>

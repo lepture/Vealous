@@ -1,0 +1,31 @@
+<ul class="clearfix">
+    {% if mvdata.has_previous %}
+    <li><a href="?p={{ mvdata.previous_num }}" class="page-numbers" title="previous">«</a></li>
+    {% endif %}
+
+    {% if mvdata.show_first %}
+    <li><a href="?p=1" class="page-numbers" title="first page">1</a></li>
+    {% endif %}
+    {% if mvdata.show_first_dash %}
+    <li><span class="page-numbers">...</span></li>
+    {% endif %}
+
+    {% for p in mvdata.page_range %}
+    {% ifequal p mvdata.page %}
+    <li><span class="page-numbers current">{{ p }}</span></li>
+    {% else %}
+    <li><a href="?p={{ p }}" class="page-numbers">{{ p }}</a></li>
+    {% endifequal %}
+    {% endfor %}
+
+    {% if mvdata.show_last_dash %}
+    <li><span class="page-numbers">...</span></li>
+    {% endif %}
+    {% if mvdata.show_last %}
+    <li><a href="?p={{ mvdata.page_num }}" class="page-numbers" title="last page">{{mvdata.page_num}}</a></li>
+    {% endif %}
+
+    {% if mvdata.has_next %}
+    <li><a href="?p={{ mvdata.next_num }}" class="page-numbers" title="next">»</a></li>
+    {% endif %}
+</ul>

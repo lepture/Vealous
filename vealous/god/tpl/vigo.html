@@ -1,0 +1,87 @@
+{%extends "layout.html"%}
+
+{%block nav%}
+<ul class="alignright nav">
+    <li><a href="{%url dashboard%}">Dashboard</a></li>
+    <li><a href="{%url view_article%}">Articles</a></li>
+    <li><a href="{%url view_melody%}">Melody</a></li>
+    <li class="current"><a href="{%url vigo_setting%}">Setting</a></li>
+</ul>
+{%endblock%}
+
+{%block main%}
+<div class="soga alignleft">
+    <p class="message">{{message}}</p>
+    <form class="box" action="" method="post">
+        <div class="form-row cell">
+            <input id="id_sitename" class="text" type="text" name="sitename" maxlength="200" value="{{vigo.sitename}}" />
+            <label for="id_sitename" class="required">Site Name</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_sitetag" class="text" type="text" name="sitetag" maxlength="500" value="{{vigo.sitetag}}" />
+            <label for="id_sitetag" class="required">Description</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_twitter" class="text" type="text" name="twitter" maxlength="100" value="{{vigo.twitter}}" />
+            <label for="id_twitter" class="required">Twitter</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_ga" class="text" type="text" name="ga" maxlength="15" value="{{vigo.ga}}" />
+            <label for="id_ga" class="required">Google Analytics</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_gcse" class="text" type="text" name="gcse" maxlength="33" value="{{vigo.gcse}}" />
+            <label for="id_gcse" class="required">Google CSE</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_disqus" class="text" type="text" name="disqus" maxlength="30" value="{{vigo.disqus}}" />
+            <label for="id_disqus" class="required">Disqus</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_disqus_key" class="text" type="text" name="disqus_key" maxlength="100" value="{{disqus_key}}" />
+            <label for="id_disqus_key" class="required">Disqus Key</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_forum_key" class="text" type="text" name="forum_key" maxlength="100" value="{{forum_key}}" />
+            <label for="id_forum_key" class="required">Forum Key</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_disqus_forumid" class="text" type="text" name="disqus_forumid" maxlength="15" value="{{disqus_forumid}}" />
+            <label for="id_disqus_forumid" class="required">Disqus Forumid</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_alterfeed" class="text" type="text" name="alterfeed" maxlength="100" value="{{vigo.alterfeed|default:""}}" />
+            <label for="id_alterfeed">Aternate Feed</label>
+        </div>
+        <div class="form-row inner">
+            <input type="submit" class="button" value="Save Setting" />
+        </div>
+    </form>
+</div>
+<div class="sidebar alignright">
+    <div class="help">
+        <h4>Google Analytics</h4>
+        <p>Get it from <a href="https://www.google.com/analytics">Google Analytics</a></p>
+        <p>eg: UA-10244214-2</p>
+    </div>
+    <div class="help">
+        <h4>Google CSE</h4>
+        <p>Get it from <a href="http://www.google.com/cse/">Google Custom Search</a></p>
+        <p>eg: 017842580319746762888:cpwtpvhrc34</p>
+    </div>
+    <div class="help">
+        <h4>Disqus</h4>
+        <p>Get it from <a href="http://disqus.com">Disqus</a></p>
+        <p>Get the shortname from Disqus</p>
+    </div>
+    <div class="help">
+        <h4>Disqus Key</h4>
+        <p>Get your disqus key and forum key from <a href="http://disqus.com/api/keys/">Get Keys</a></p>
+    </div>
+    <div class="help">
+        <h4>Disqus Forumid</h4>
+        <p>Get your forum id at <a href="http://disqus.com/api/get_forum_list?user_api_key=API_KEY_HERE&api_version=1.1">HERE</a></p>
+        <p>Use your Disqus Key replace `API_KEY_HERE`</p>
+    </div>
+</div>
+{%endblock%}

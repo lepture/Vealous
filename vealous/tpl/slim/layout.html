@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <title>{%block title%}Home|{{vigo.sitename|default:"Vealous"}}{%endblock%}</title>
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        {%if vigo.alterfeed%}
+        <link rel="alternate" type="application/rss+xml" href="{{vigo.alterfeed}}" />
+        {%endif%}
+        <link rel="alternate" type="application/atom+xml" href="{{conf.site}}/feed.atom" />
+        <link rel="stylesheet" href="{{conf.static}}/css/reset.css" />
+        <link rel="stylesheet" href="{{conf.static}}/css/style.css" />
+        <script type="text/javascript" src="{{conf.jshost}}/lib/js/jquery.js"></script>
+        <script type="text/javascript" src="{{conf.jshost}}/js/slim.js"></script>
+        {%block extra%}{%endblock%}
+    </head>
+    <body>
+        <div id="container">
+            <div id="header">
+                <div class="wrapper clearfix">
+                    <div class="brand alignleft">
+                        <h2><a href="/">{{vigo.sitename|default:"Vealous"}}</a></h2>
+                        <p class="pretty">{{vigo.sitetag|default:"Love its people, but never trust its government"}}</p>
+                    </div>
+                    {%block nav%}
+                    <ul class="alignright nav">
+                        <li class="nav-0"><a href="/">Home</a></li>
+                        {%for nav in navs%}
+                        <li class="nav-{{forloop.counter}}"><a href="{{nav.url}}">{{nav.title}}</a></li>
+                        {%endfor%}
+                    </ul>
+                    {%endblock%}
+                </div>
+            </div>
+            <div id="mainbody">
+                <div class="wrapper clearfix">
+                    <div class="soga alignleft">
+                    {%block soga%}{%endblock%}
+                    </div>
+                    <div class="sidebar alignright">
+                        {%block searchform%}
+                        <div class="searchbox widget">
+                            {%include "gcse.html"%}
+                        </div>
+                        {%endblock%}
+                        {%block sidebar%}{%endblock%}
+                    </div>
+                </div>
+            </div>
+            <div id="footer">
+                <div class="wrapper clearfix">
+                    <div class="alignleft">
+                        <p class="pretty">Copyleft by <a href="{{conf.site}}">@{{vigo.twitter|default:"lepture"}}</a> &copy; 2010-{%now "Y"%} Powered by <a href="http://i.shiao.org/a/vealous"><strong>Vealous</strong></a></p>
+                    </div>
+                    <div class="alignright">
+                        <a rel="external" href="http://code.google.com/appengine"><img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Powered by Google App Engine" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {%include "footer.html"%}
+    </body>
+</html>

@@ -1,0 +1,10 @@
+# use glob syntax
+syntax: glob
+
+*.py[co]
+*.swp
+*~
+*.mo
+*.orig
+config.py
+app.yaml

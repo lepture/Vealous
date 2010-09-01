@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+#-*- coding: utf-8 -*-
+import os
+VERSION = '1.0.0'
+
+DEBUG=False
+
+ROOT = os.path.dirname(__file__)
+
+THEME = 'slim'
+EMAIL = 'you@email.com'
+
+LOGIN_URL = '/god/login'
+STATIC_URL = '/static'
+JS_HOST = '/static'
+SITE_URL = 'http://www.example.com' #no slash
+
+# douban oauth 
+douban_key = ''
+douban_secret = ''
+
+SECRET = 'xhoayerqdjfat' #once decided, you should never change it
+PASSWORD = 'SECRECT' #you first password
+# for session
+SESSION_NAME = 'sessionid'
+SESSION_EXPIRE = 7200
+
+# don't change gvars
+gvars = {
+    'version': VERSION,
+    'site': SITE_URL,
+    'static': STATIC_URL,
+    'jshost': JS_HOST,
+    'email': EMAIL,
+    'debug': DEBUG,
+}

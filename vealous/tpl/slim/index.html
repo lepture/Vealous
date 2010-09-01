@@ -1,0 +1,37 @@
+{% extends "layout.html"%}
+
+{%block soga%}
+{%for data in articles%}
+<div class="post">
+    <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>
+    <div class="post-info">
+        <label>Created at</label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="external">{{vigo.twitter}}</a>
+    </div>
+    <div class="post-content">
+        {{data.text|more}}
+        <p><a class="more" href="{{data.the_url}}">Get More »</a></p>
+    </div>
+    <div class="post-meta clearfix">
+        <div class="alignleft">
+            {%if data.keyword%}Keyword: <a href="/k/{{data.keyword}}">{{data.keyword}}</a>{%endif%}
+        </div>
+        <div class="alignright">
+            <a href="{{conf.site}}{{data.the_url}}#disqus_thread">Comments</a>
+        </div>
+    </div>
+</div>
+{%endfor%}
+{%endblock%}
+
+{%block sidebar%}
+<div class="widget widget-links">
+    <h3 class="widget-title">Links</h3>
+    <ul>
+        {%for link in links%}
+        <li><a href="{{link.url}}" rel="{{link.ext}}">{{link.title}}</a>
+        {%if link.text%}<p>{{link.text}}</p>{%endif%}
+        </li>
+        {%endfor%}
+    </ul>
+</div>
+{%endblock%}

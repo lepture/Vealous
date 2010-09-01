@@ -1,0 +1,53 @@
+{%extends "layout.html"%}
+
+{%block nav%}
+<ul class="alignright nav">
+    <li><a href="{%url dashboard%}">Dashboard</a></li>
+    <li class="current"><a href="{%url view_article%}">Articles</a></li>
+    <li><a href="{%url view_melody%}">Melody</a></li>
+    <li><a href="{%url vigo_setting%}">Setting</a></li>
+</ul>
+{%endblock%}
+
+{%block main%}
+<div class="soga alignleft">
+    <div class="boxnav clearfix">
+        <a href="{%url add_article%}" class="button">Add Article</a>
+        <div class="page-nav alignright">
+            {%include "p.html"%}
+        </div>
+    </div>
+    <p class="message">{{message}}</p>
+    <div class="box articles">
+        {%for data in mvdata.object_list%}
+        <div class="cell article clearfix">
+            <div class="content alignleft">
+                <h3 class="title"><a href="{%url edit_article%}?key={{data.key}}">{{data.title}}</a></h3>
+                <p><label>Created at</label> <span class="time">{{data.created|prettytime}}</span> {%if data.draft%}<a href="?action=post&key={{data.key}}">Post It</a>{%else%}<a href="?action=draft&key={{data.key}}">Draft It</a>{%endif%}</p>
+                <p><label>Update at</label> <span class="time">{{data.modified|prettytime}}</span>{%if data.draft%}<span class="status">Draft</span>{%endif%}</p>
+            </div>
+            <div class="action alignright">
+                <a href="{%url edit_article%}?key={{data.key}}" class="edit">Edit</a>
+                <a href="{%url edit_article%}?key={{data.key}}&action=delete" class="delete">Delete</a>
+            </div>
+        </div>
+        {%endfor%}
+        <div class="inner article">
+            <p>There are {{mvdata.item_num}} articles</p>
+        </div>
+    </div>
+</div>
+<div class="sidebar alignright">
+    <div class="help">
+        <form action="">
+            <input type="text" name="key" class="text" />
+            <input type="submit" value="Find" name="action" />
+        </form>
+    </div>
+    <div class="help">
+        <h4>Filter</h4>
+        <p class="seprate"><a class="button" href="?action=filter&draft=1">Show Drafts</a></p>
+        <p class="seprate"><a class="button" href="?action=filter&draft=0">Show Posts</a></p>
+    </div>
+</div>
+{%endblock%}

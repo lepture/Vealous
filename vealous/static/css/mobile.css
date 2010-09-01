@@ -1,0 +1,221 @@
+/* ---------- clearfix hack ---------- */
+/* http://perishablepress.com/press/2008/02/05/lessons-learned-concerning-the-clearfix-css-hack */
+.clearfix:after { content: " "; display: block; clear: both; height: 0; visibility: hidden; font-size: 0; }
+.clearfix { display: inline-block; }
+/* exlude MacIE5 \*/
+* html .clearfix { height: 1% }
+.clearfix {display:block;}
+/* end clearfix */
+
+/* http://sonspring.com/journal/clearing-floats */
+.clear {
+    clear: both;
+    display: block;
+    overflow: hidden;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+/* defined class */
+.hide {
+    display: none;
+}
+.alignleft { float: left;}
+.alignright{ float: right;}
+.textleft { text-align: left;}
+.textright { text-align: right;}
+.textcenter { text-align: center; }
+.pretty {
+    font-family: Georgia, "DejaVu Serif", "Times New Roman", serif;
+    font-size: 12px;
+    font-style: italic;
+}
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0.6;
+    filter: alpha(opacity=60) !important;
+    z-index: 5;
+}
+.button, input[type="submit"] {
+    background-image: url("../img/bg_blended.png");
+    background-color: #f5f5f5;
+    box-shadow: 0 1px 3px rgba(66, 66, 77, 0.4);
+    -moz-box-shadow: 0 1px 3px rgba(66, 66, 77, 0.4);
+    -webkit-box-shadow: 0 1px 3px rgba(66, 66, 77, 0.4);
+    color: #333;
+    text-decoration: none;
+    text-shadow: 0 1px 1px #fff;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(0,0,0,0.25) rgba(0,0,0,0.25) rgba(0,0,0,0.35);
+    cursor: pointer;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    padding: 4px 15px;
+    font: 12px/12px "Helvetica Neue", "Luxi Sans", "DejaVu Sans", "Lucida Grande", Tahoma, sans-serif;
+    font-weight: bold;
+}
+a.button:visited {
+    color: #333;
+}
+html body a.button {
+    text-decoration: none;
+    color: #333;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(0,0,0,0.25) rgba(0,0,0,0.25) rgba(0,0,0,0.35);
+}
+.button:hover, input[type="submit"] {
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba(66, 66, 77, 0.2);
+    -webkit-box-shadow: 0 1px 2px rgba(66, 66, 77, 0.2);
+    -moz-box-shadow: 0 1px 2px rgba(66, 66, 77, 0.2);
+    text-shadow: 0 1px 1px #fff;
+}
+.button:active, input[type="submit"] {
+    background-color: #e2e2e2;
+}
+.required { font-weight: bold;}
+.status {
+    margin-left: 12px;
+    background-color: #666;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    padding: 2px 6px;
+    color: #fff;
+    font-size: 10px;
+    font-weight: bold;
+    text-decoration: none;
+}
+a.status:hover {
+    background-color: #999;
+    text-decoration: none;
+    color: #fff;
+}
+input[type="text"], input[type="password"], textarea, select, .sl {
+    background: #fff;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    padding: 3px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, sans-serif;
+}
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .sl:focus, select:focus {
+    border: 1px solid rgba(128, 128, 160, 0.6);
+    -moz-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
+    -webkit-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
+    outline: none;
+}
+.wrapper { padding: 10px 20px; }
+/* reset */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,p,blockquote,table,th,td { margin: 0; padding: 0; }
+fieldset,img,abbr { border: 0; }
+address,caption,cite,code,dfn,h4,h5,h6,th,var { font-style: normal; font-weight: normal; }
+caption,th { text-align: left; }
+q:before, q:after { content: ''; }
+a { text-decoration: none; outline: 0 none; }
+
+code, pre { font-family: Consolas, Monaco, "Courier New", Courier, monospace; }
+
+pre {
+    background: #f5f5f5;
+    border: 1px solid #dadada;
+    padding: 11px;
+    font-size: 12px;
+    line-height: 1.3em;
+    overflow: auto;
+}
+a { color: #21759b; text-decoration: none; font-weight: normal; border: 0 none; }
+/*a:visited {color:#4ca6cf;}*/
+a:hover { color: #d54e21; }
+a:active { outline: none; }
+p a { border-bottom: 1px solid #dfdfdf; }
+p a:hover { border-bottom: 1px solid #d54e21; }
+em, cite {font-style: italic;}
+blockquote { background: #f5f5f5; border: 1px solid #dadada; padding: 15px 20px; margin-bottom: 22px; border-radius: 5px, -moz-border-radius: 5px; }
+ul { list-style-type: none;}
+h3 { font-weight: bold; }
+h3 a { font-size: 16px;}
+/* end reset */
+/* common */
+body {
+    background: #fff;
+    color: #555;
+    font-family: "Lucida Grande", Verdana, Arial, sans-serif;
+    line-height: 150%;
+    font-size: 13px;
+}
+#header {
+    background: #efefef;
+    border-bottom: 1px solid #dfdfdf;
+}
+.brand {
+    padding-top: 20px;
+    padding-left: 12px;
+}
+.brand h2 {
+    color: #555;
+    font-size: 36px;
+    line-height: 1em;
+    text-shadow: 0 1px 0 #fff;
+    font-family: Georgia, "Times New Roman", serif;
+}
+.brand a {
+    color: #555;
+}
+#mainbody {
+    margin: 20px 0;
+    min-height: 450px;
+    font-size: 13px;
+}
+.message {
+    display: none;
+    background-color: #fff5ba;
+    border: 1px solid #ffcc00;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    color: #666;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 12px 10px;
+    margin-bottom: 12px;
+}
+.searchbox {
+    margin-bottom: 20px;
+}
+.searchbox input.text {
+    width: 60%;
+}
+#nav {
+    border-top: 1px solid #dadada;
+}
+#footer {
+    background: #eee;
+    border-top: 1px solid #dadada;
+}
+#cse-search-results iframe {
+    width: 100%;
+    max-height: 1000px !important;
+}
+/* blog */
+.post p { margin: 5px 0 15px 0;}
+.post ul { list-style-type: disc; margin: 0 0 22px 16px;}
+.post ol { list-style-type: decimal; margin: 0 0 22px 20px; }
+.post h3 { font-size: 16px; font-weight: bold; line-height: 16px; margin: 15px 0;}
+.post { border-bottom: 1px solid #dadada; margin-bottom: 30px; padding-bottom: 1px;}
+.post .post-title a { font-size: 18px; font-weight: bold; margin-bottom: 8px; font-family: "WenQuanYi Micro Hei", "Microsoft YaHei", SimHei, sans-serif;}
+.post-info { color: #777; font-size: 11px; margin-bottom: 10px;}
+.post-info a, .post-meta a { border-bottom: 1px solid #dfdfdf; color: #777; }
+.post-info a:hover, .post-meta a:hover { border-bottom: 1px solid #d54e21; color: #d54e21; }
+.post-content { font-size: 13px; }
+.post-meta { font-size: 11px; margin-top: 10px; }
+.post img {
+    border: 4px solid #dadada;
+}

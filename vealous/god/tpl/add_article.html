@@ -1,0 +1,73 @@
+{%extends "layout.html"%}
+
+{%block nav%}
+<ul class="alignright nav">
+    <li><a href="{%url dashboard%}">Dashboard</a></li>
+    <li class="current"><a href="{%url view_article%}">Articles</a></li>
+    <li><a href="{%url view_melody%}">Melody</a></li>
+    <li><a href="{%url vigo_setting%}">Setting</a></li>
+</ul>
+{%endblock%}
+
+{%block main%}
+<div class="soga alignleft">
+    <p class="message">{{message}}</p>
+    <form class="box" action="" method="post">
+        <div class="form-row cell">
+            <input id="id_title" class="text" type="text" name="title" maxlength="100" />
+            <label for="id_title" class="required">Title</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_slug" class="text" type="text" name="slug" maxlength="100" />
+            <label for="id_slug" class="required">Slug</label>
+        </div>
+        <div class="form-row cell">
+            <textarea id="id_text" name="text"></textarea>
+        </div>
+        <div class="form-row cell">
+            <input id="id_keyword" class="text" type="text" name="keyword" maxlength="300" />
+            <label for="id_keyword">Keyword</label>
+        </div>
+        <div class="form-row inner">
+            <input type="submit" class="button" value="Save as Draft" name="draft" />
+            <input type="submit" class="button" value="Post Now" name="publish" />
+        </div>
+    </form>
+</div>
+<div class="sidebar alignright">
+    <div class="help">
+        <h4>Header</h4>
+        <p># This is h1</p>
+        <p>## This is h2</p>
+        <p>###### This is h6</p>
+    </div>
+    <div class="help">
+        <h4>Blockquote</h4>
+        <p>&gt; blockquote begin with this</p>
+    </div>
+    <div class="help">
+        <h4>List</h4>
+        <p>* &nbsp; unorder list</p>
+        <p>+ &nbsp; unorder list</p>
+        <p>- &nbsp; unorder list</p>
+        <p>1. &nbsp; order list</p> 
+    </div>
+    <div class="help">
+        <h4>Links</h4>
+        <p>Auto create link: &lt;http://example.com&gt;</p>
+        <p>[Link Name](http://i.shiao.org "title")</p>
+        <p>![alt](/path/to/img.jpg "title")</p>
+        <p>[id]: http://example.com "title"</p>
+    </div>
+    <div class="help">
+        <h4>Emphasis</h4>
+        <p>*em* _em_</p>
+        <p>**strong** __strong__</p>
+    </div>
+    <div class="help">
+        <h4>Code</h4>
+        <p>``this will be inline code``</p>
+    </div>
+    <p>For More Visit <a href="http://daringfireball.net/projects/markdown/syntax" rel="external">Markdown Syntax</a></p>
+</div>
+{%endblock%}

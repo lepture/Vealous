@@ -1,0 +1,148 @@
+#-*- coding: utf-8 -*-
+
+import os
+from google.appengine.ext import webapp
+from google.appengine.api import memcache
+
+from utils.render import render
+import dbs
+
+import config
+
+def get_path(ua, name):
+    ua = ua.lower()
+    if ua.find('mobile') != -1 or ua.find('j2me') != -1:
+        path = os.path.join(config.ROOT, 'tpl','mobile' , name)
+        return path
+    path = os.path.join(config.ROOT, 'tpl', config.THEME, name)
+    return path
+
+class index(webapp.RequestHandler):
+    def get(self):
+        rdic = {}
+        rdic['articles'] = dbs.Article.getten()[:5]
+        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['links'] = dbs.Melody.get_all('link')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'index.html')
+        self.response.out.write(render(path,rdic))
+
+class article(webapp.RequestHandler):
+    def get(self, slug):
+        ua = self.request.headers.get('User-Agent', 'bot')
+        rdic = {}
+        data = dbs.Article.get(slug)
+        if not data:
+            path = get_path(ua, '404.html')
+            self.response.set_status(404)
+            html = render(path, rdic)
+            return self.response.out.write(html)
+        mode = self.request.get('mode','mark')
+        if 'plaintext' == mode:
+            self.response.headers['Content-Type'] = 'text'
+            html = data.text
+            return self.response.out.write(html)
+        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['data'] = data
+        path = get_path(ua, 'article.html')
+        html = render(path, rdic)
+        self.response.out.write(html)
+
+class keyword_article(webapp.RequestHandler):
+    def get(self, keyword):
+        ua = self.request.headers.get('User-Agent', 'bot')
+        rdic = {}
+        articles = dbs.Article.keyword_article(keyword)
+        if not articles:
+            path = get_path(ua, '404.html')
+            html = render(path, rdic)
+            self.response.set_status(404)
+        else:
+            rdic['articles'] = articles
+            rdic['navs'] = dbs.Melody.get_all('nav')
+            rdic['links'] = dbs.Melody.get_all('link')
+            rdic['keyword'] = keyword
+            path = get_path(ua, 'keyword.html')
+            html = render(path, rdic)
+        self.response.out.write(html)
+
+class melody_s5(webapp.RequestHandler):
+    def get(self, slug):
+        data = dbs.Melody.get_s5(slug)
+        if not data:
+            rdic = {}
+            ua = self.request.headers.get('User-Agent', 'bot')
+            path = get_path(ua, '404.html')
+            self.response.set_status(404)
+            html = render(path, rdic)
+        else:
+            html = data.text
+        self.response.out.write(html)
+
+class search(webapp.RequestHandler):
+    def get(self):
+        rdic = {}
+        rdic['navs'] = dbs.Melody.get_all('nav')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'search.html')
+        self.response.out.write(render(path,rdic))
+
+class atom(webapp.RequestHandler):
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
+        html = memcache.get('xml$atom')
+        if html is None:
+            rdic = {}
+            rdic['datas'] = dbs.Article.getten()
+            path = os.path.join(config.ROOT, 'tpl', 'atom.xml')
+            html = render(path, rdic)
+            memcache.set('xml$atom', html, 43200) # 12hour
+        self.response.out.write(html)
+
+class rss(webapp.RequestHandler):
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
+        html = memcache.get('xml$rss')
+        if html is None:
+            rdic = {}
+            rdic['datas'] = dbs.Article.getten()
+            path = os.path.join(config.ROOT, 'tpl', 'rss.xml')
+            html = render(path, rdic)
+            memcache.set('xml$rss', html, 43200) # 12hour
+        self.response.out.write(html)
+
+class sitemap (webapp.RequestHandler):
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
+        html = memcache.get('xml$sitemap')
+        if html is None:
+            rdic = {}
+            urlset = []
+            def addurl(loc, lastmod=None, changefreq=None, priority=None):
+                url = {
+                    'location': loc,
+                    'lastmod': lastmod,
+                    'changefreq': changefreq,
+                    'priority': priority,
+                }
+                urlset.append(url)
+            articles = dbs.Article.getten()
+            for art in articles:
+                addurl(art.the_url, art.modified,'weekly',0.5)
+            rdic['urlset'] = urlset
+            path = os.path.join(config.ROOT, 'tpl', 'sitemap.xml')
+            html = render(path, rdic)
+            memcache.set('xml$sitemap', html, 21600) # 6hour
+        self.response.out.write(html)
+
+class redirect(webapp.RequestHandler):
+    def get(self, path):
+        self.redirect('/' + path)
+
+class error404(webapp.RequestHandler):
+    def get(self):
+        rdic = {}
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, '404.html')
+        self.response.set_status(404)
+        self.response.out.write(render(path,rdic))

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>{{vigo.sitename}}</title>
+    <subtitle>{{vigo.sitetag}}</subtitle>
+    <updated>{%now "Y-m-d\TH:i:s\Z"%}</updated>
+    <id>{{conf.site}}/</id>
+    <link href="{{conf.site}}" />
+    <link href="{{conf.site}}/feed.atom" rel="self" />
+    {% for data in datas%}
+    <entry>
+        <title>{{ data.title|escape }}</title>
+        <link rel="alternate" type="text/html" href="{{conf.site}}{{data.the_url}}"/>
+        <id>{{conf.site}}{{data.the_url}}</id>
+        <published>{{data.created|date:"Y-m-d\TH:i:s\Z"}}</published>
+        <updated>{{data.modified|date:"Y-m-d\TH:i:s\Z"}}</updated>
+        <author>
+            <name>{{vigo.twitter}}</name>
+            <uri>{{conf.site}}</uri>
+        </author>
+        <content type="html" xml:base="{{conf.site}}/" xml:lang="en">
+            <![CDATA[
+            {{ data.text|mark}}
+            <small>Permalink: <a href="{{conf.site}}{{data.the_url}}">{{data.title}}</a></small>
+            ]]>
+        </content>
+    </entry>
+    {% endfor %}
+</feed>

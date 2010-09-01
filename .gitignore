@@ -1,0 +1,10 @@
+*.py[co]
+*.mo
+*.db
+*.swp
+*.pid
+*.orig
+*~
+tmp/
+config.py
+app.yaml

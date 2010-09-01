@@ -1,0 +1,71 @@
+{%extends "layout.html"%}
+
+{%block main%}
+<div class="soga alignleft">
+    <div class="boxnav clearfix">
+        <a href="{%url console_memcache%}?action=flush" class="button">Flush All</a>
+    </div>
+    <p class="message">{{message}}</p>
+    <div class="box">
+        <div class="cell">
+            <ul>
+                <li>{{memstat.hits}} hits, {{memstat.misses}} misses</li>
+                <li>Size of cache: {{memstat.items}} items, {{memstat.bytes|filesizeformat}} , {{memstat.byte_hits|filesizeformat}} hits</li>
+                <li>Cache contains items up to {{memstat.oldest_item_age}} seconds</li>
+            </ul>
+        </div>
+        {%if result%}
+        <div class="cell">
+            <pre>{{result|escape}}</pre>
+        </div>
+        {%endif%}
+        <form action="">
+            <div class="cell">
+                <input type="text" name="key" />
+            </div>
+            <div class="inner">
+                <input type="submit" class="button" name="action" value="display" />
+                <input type="submit" class="button" name="action" value="delete" />
+            </div>
+        </form>
+    </div>
+</div>
+<div class="sidebar alignright">
+    <div class="help">
+        <h4>xml</h4>
+        <ul>
+            <li>xml$atom 12h</li>
+            <li>xml$rss 12h</li>
+            <li>xml$sitemap 6h</li>
+        </ul>
+    </div>
+    <div class="help">
+        <h4>Article</h4>
+        <ul>
+            <li>a/{slug} 1week</li>
+            <li>a$keyword/{keyword} 1week</li>
+            <li>a$ten 1day</li>
+        </ul>
+    </div>
+    <div class="help">
+        <h4>Vigo</h4>
+        <ul>
+            <li>vigo 1week</li>
+            <li>vigo/{name} 1month</li>
+        </ul>
+    </div>
+    <div class="help">
+        <h4>Melody</h4>
+        <ul>
+            <li>melody/{label} 1week</li>
+            <li>melody$s5/{slug} 1week</li>
+        </ul>
+    </div>
+    <div class="help">
+        <h4>Other</h4>
+        <ul>
+            <li>god/comments  1day</li>
+        </ul>
+    </div>
+</div>
+{%endblock%}
