@@ -1,19 +1,28 @@
 {%extends "layout.html"%}
 
 {%block main%}
-<div class="soga alignleft">
-    <div class="boxnav">
-        <a href="{%url add_article%}" class="button">Add Article</a>
-        <a href="{%url console_memcache%}" class="button">Memcache</a>
-    </div>
-    <p class="message">{{message}}</p>
-    <div class="box comment">
-        {% for data in comments %}
-        <div class="cell clearfix disqus">
-            <img src="{{data.avatar}}" alt="avatar" class="avatar alignleft" />
-            <div class="bitch alignleft">
-                <p>{{data.content}}</p>
-                <p><label>{{data.username}} Comment on <a href="{{data.thread.url}}">{{data.thread.title}}</a></p>
+<div class="boxnav">
+    <a href="{%url add_article%}" class="button">Add Article</a>
+    <a href="{%url add_melody%}" class="button">Add Melody</a>
+</div>
+<p class="message">{{message}}</p>
+<div class="box">
+    <form action="" method="">
+        <div class="form-row cell">
+            <textarea id="note" name="text" style="width:95%; height:90px;" ></textarea>
+        </div>
+        <div class="form-row inner">
+            <input type="submit" class="button" value="Save Note" />
+        </div>
+    </form>
+</div>
+<div class="box comment" style="margin-top:10px;">
+    {% for data in comments %}
+    <div class="cell clearfix disqus">
+        <img src="{{data.avatar}}" alt="avatar" class="avatar alignleft" />
+        <div class="bitch alignleft">
+            <p>{{data.content}}</p>
+            <p><label>{{data.username}} Comment on <a href="{{data.thread.url}}">{{data.thread.title}}</a></p>
                 <p><label>Posted at:</label> <span class="time">{{data.created}}</span> <span class="status">{{data.status}}</span></p>
             </div>
             <div class="action alignright">
@@ -29,19 +38,6 @@
         <div class="inner">
             <p>For more comments Visit <a class="button" href="http://disqus.com/comments/moderate/{{vigo.disqus}}/">Disqus</a></p>
         </div>
-    </div>
-</div>
-<div class="sidebar alignright">
-    <p class="message"></p>
-    <div class="box">
-        <form action="" method="">
-            <div class="form-row cell">
-                <textarea id="note" name="text" rows="4" cols="20" ></textarea>
-            </div>
-            <div class="form-row inner">
-                <input type="submit" class="button" value="Save Note" />
-            </div>
-        </form>
     </div>
 </div>
 {%endblock%}

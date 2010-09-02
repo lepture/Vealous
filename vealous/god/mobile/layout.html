@@ -3,45 +3,44 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <title>{%block title%}Dashboard{%endblock%}</title>
-        <link rel="stylesheet" href="{{conf.static}}/css/reset.css" />
-        <link rel="stylesheet" href="{{conf.static}}/css/style.css" />
+        <link rel="stylesheet" href="{{conf.static}}/css/mobile.css" />
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
         <script type="text/javascript" src="{{conf.jshost}}/js/funcs.js"></script>
         {%block extra%}{%endblock%}
     </head>
     <body>
-        <div id="container">
-            <div id="header">
-                <div class="wrapper clearfix">
-                    <div class="brand alignleft">
-                        <h2><a href="/">{{vigo.sitename|default:"Vealous"}}</a></h2>
-                        <p class="pretty">{{vigo.sitetag|default:"Love its people, but never trust its government"}}</p>
-                    </div>
-                    {%block nav%}
-                    <ul class="alignright nav">
-                        <li class="current"><a href="{%url dashboard%}">Dashboard</a></li>
-                        <li><a href="{%url view_article%}">Articles</a></li>
-                        <li><a href="{%url view_melody%}">Melody</a></li>
-                        <li><a href="{%url vigo_setting%}">Setting</a></li>
-                    </ul>
-                    {%endblock%}
+        <div id="header">
+            <div class="wrapper clearfix">
+                <div class="brand alignleft">
+                    <h2><a href="/">{{vigo.sitename|default:"Vealous"}}</a></h2>
+                    <p class="pretty">{{vigo.sitetag|default:"Love its people, but never trust its government"}}</p>
                 </div>
             </div>
-            <div id="mainbody">
-                <div class="wrapper clearfix">
-                    {%block main%}{%endblock%}
-                </div>
+        </div>
+        <div id="mainbody">
+            <div class="wrapper clearfix">
+                {%block main%}{%endblock%}
             </div>
-            <div id="footer">
-                <div class="wrapper clearfix">
-                    <div class="alignleft">
-                        {%block account%}<p class="pretty"><a href="{%url logout%}"><strong>Logout</strong></a> | <a href="{%url chpasswd%}"><strong>Change Password</strong></a> of <a href="http://i.shiao.org">Vealous God Lands</a></p>{%endblock%}
-                        <p class="pretty">Copyleft by <a href="http://i.shiao.org">@lepture</a> &copy; 2010-{%now "Y"%} Version {{conf.version}}</p>
-                    </div>
-                    <div class="alignright">
-                        <a rel="external" href="http://code.google.com/appengine"><img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Powered by Google App Engine" /></a>
-                    </div>
-                </div>
+        </div>
+        <div id="nav">
+            <div class="wrapper">
+                {%block nav%}
+                <ul>
+                    <li class="current"><a href="{%url dashboard%}">Dashboard</a></li>
+                    <li><a href="{%url view_article%}">Articles</a></li>
+                    <li><a href="{%url view_melody%}">Melody</a></li>
+                    <li><a href="{%url vigo_setting%}">Setting</a></li>
+                </ul>
+                {%endblock%}
+            </div>
+        </div>
+        <div id="footer">
+            <div class="wrapper">
+                {%block account%}<p class="pretty"><a href="{%url logout%}"><strong>Logout</strong></a> | <a href="{%url chpasswd%}"><strong>Change Password</strong></a> of <a href="http://i.shiao.org">Vealous God Lands</a></p>{%endblock%}
+                <p class="pretty">Copyleft by <a href="http://i.shiao.org">@lepture</a> &copy; 2010-{%now "Y"%} Version {{conf.version}}</p>
+            </div>
+            <div class="wrapper">
+                <a rel="external" href="http://code.google.com/appengine"><img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Powered by Google App Engine" /></a>
             </div>
         </div>
     </body>
