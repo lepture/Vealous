@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 import os
+import logging
 import urllib
 try:
     import hashlib
@@ -28,6 +29,15 @@ def get_path(name):
     path = os.path.join(config.ROOT, 'god', 'tpl', name)
     return path
 
+def get_path(ua, name):
+    ua = ua.lower()
+    if ua.find('mobile') != -1 or ua.find('j2me') != -1:
+        logging.info('mobile device visited this site --' + ua)
+        path = os.path.join(config.ROOT, 'god','mobile' , name)
+        return path
+    path = os.path.join(config.ROOT, 'god', 'tpl', name)
+    return path
+
 class login(webapp.RequestHandler):
     def get(self):
         session = Session(self)
@@ -39,7 +49,8 @@ class login(webapp.RequestHandler):
         if 1 == auth:
             self.redirect('/god')
         rdic = {}
-        path = get_path('login.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'login.html')
         return self.response.out.write(render(path,rdic))
     def post(self):
         password = dbs.Vigo.get('password')
@@ -56,7 +67,8 @@ class login(webapp.RequestHandler):
         rdic = {}
         message = 'Are you really a God?'
         rdic['message'] = message
-        path = get_path('login.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'login.html')
         return self.response.out.write(render(path,rdic))
 
 class logout(webapp.RequestHandler):
@@ -77,7 +89,8 @@ class dashboard(webapp.RequestHandler):
             session.delete('message')
         rdic['message'] = message
         comments = memcache.get('god/comments')
-        path = get_path('dashboard.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'dashboard.html')
         if comments is not None:
             rdic['comments'] = comments
             return self.response.out.write(render(path,rdic))
@@ -125,7 +138,8 @@ class view_article(webapp.RequestHandler):
         rdic['message'] = message
         p = self.request.get('p',1)
         rdic['mvdata'] = Paginator(data, count, p)
-        path = get_path('article.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'article.html')
         return self.response.out.write(render(path,rdic))
 
     def get_filter(self, status):
@@ -158,7 +172,8 @@ class edit_article(webapp.RequestHandler):
             return self.redirect('/god/article?from=delete')
         rdic = {}
         rdic['data'] = data
-        path = get_path('edit_article.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'edit_article.html')
         return self.response.out.write(render(path,rdic))
     
     @be_god
@@ -187,14 +202,16 @@ class edit_article(webapp.RequestHandler):
         rdic['data'] = data
         message = 'Please fill the required fields'
         rdic['message'] = message
-        path = get_path('edit_article.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'edit_article.html')
         return self.response.out.write(render(path,rdic))
 
 class add_article(webapp.RequestHandler):
     @be_god
     def get(self):
         rdic = {}
-        path = get_path('add_article.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'add_article.html')
         return self.response.out.write(render(path,rdic))
     
     @be_god
@@ -216,7 +233,8 @@ class add_article(webapp.RequestHandler):
             return self.redirect('/god/article?from=add')
         message = 'Please fill the required fields'
         rdic['message'] = message
-        path = get_path('add_article.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'add_article.html')
         return self.response.out.write(render(path,rdic))
 
 class view_melody(webapp.RequestHandler):
@@ -234,7 +252,8 @@ class view_melody(webapp.RequestHandler):
         data = self.get_filter(status)
         p = self.request.get('p',1)
         rdic['mvdata'] = Paginator(data, count, p)
-        path = get_path('melody.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'melody.html')
         return self.response.out.write(render(path,rdic))
 
     def get_filter(self, status):
@@ -248,7 +267,8 @@ class add_melody(webapp.RequestHandler):
     @be_god
     def get(self):
         rdic = {}
-        path = get_path('add_melody.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'add_melody.html')
         return self.response.out.write(render(path,rdic))
 
     @be_god
@@ -269,7 +289,8 @@ class add_melody(webapp.RequestHandler):
             return self.redirect('/god/melody?from=add')
         message = 'Please fill the required fields'
         rdic['message'] = message
-        path = get_path('add_melody.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'add_melody.html')
         return self.response.out.write(render(path,rdic))
 
 class edit_melody(webapp.RequestHandler):
@@ -289,7 +310,8 @@ class edit_melody(webapp.RequestHandler):
             return self.redirect('/god/melody?from=delete')
         rdic = {}
         rdic['data'] = data
-        path = get_path('edit_melody.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'edit_melody.html')
         return self.response.out.write(render(path,rdic))
     
     @be_god
@@ -317,7 +339,8 @@ class edit_melody(webapp.RequestHandler):
         rdic['data'] = data
         message = 'Please fill the required fields'
         rdic['message'] = message
-        path = get_path('edit_melody.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'edit_melody.html')
         return self.response.out.write(render(path,rdic))
 
 class vigo_setting(webapp.RequestHandler):
@@ -327,7 +350,8 @@ class vigo_setting(webapp.RequestHandler):
         rdic['disqus_key'] = dbs.Vigo.get('disqus_key')
         rdic['forum_key'] = dbs.Vigo.get('forum_key')
         rdic['disqus_forumid'] = dbs.Vigo.get('disqus_forumid')
-        path = get_path('vigo.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'vigo.html')
         return self.response.out.write(render(path,rdic))
 
     @be_god
@@ -356,21 +380,24 @@ class vigo_setting(webapp.RequestHandler):
         rdic['alterfeed'] = dbs.Vigo.set('alterfeed', alterfeed)
         memcache.delete('vigo')
         rdic['message'] = 'Your setting has been saved'
-        path = get_path('vigo.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'vigo.html')
         return self.response.out.write(render(path,rdic))
 
 class chpasswd(webapp.RequestHandler):
     @be_god
     def get(self):
         rdic = {}
-        path = get_path('chpasswd.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'chpasswd.html')
         return self.response.out.write(render(path,rdic))
     @be_god
     def post(self):
         rdic = {}
         origpasswd = dbs.Vigo.get('password')
         old = self.request.get('oldpasswd','')
-        path = get_path('chpasswd.html')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'chpasswd.html')
         if origpasswd != sha1(old + config.SECRET).hexdigest():
             rdic['message'] = 'Heavens! God forgot his password ..'
             return self.response.out.write(render(path,rdic))

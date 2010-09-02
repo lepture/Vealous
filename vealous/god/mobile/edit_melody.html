@@ -1,0 +1,69 @@
+{%extends "layout.html"%}
+
+{%block nav%}
+<ul class="alignright nav">
+    <li><a href="{%url dashboard%}">Dashboard</a></li>
+    <li><a href="{%url view_article%}">Articles</a></li>
+    <li class="current"><a href="{%url view_melody%}">Melody</a></li>
+    <li><a href="{%url vigo_setting%}">Setting</a></li>
+</ul>
+{%endblock%}
+
+{%block main%}
+<div class="soga alignleft">
+    <p class="message">{{message}}</p>
+    <form class="box" action="" method="post">
+        <div class="form-row cell">
+            <select id="id_label" name="label">
+                <option {%ifequal data.label "s5"%}selected="selected"{%endifequal%} value="s5">S5</option>
+                <option {%ifequal data.label "link"%}selected="selected"{%endifequal%} value="link">Link</option>
+                <option {%ifequal data.label "nav"%}selected="selected"{%endifequal%} value="nav">Nav</option>
+            </select>
+            <label for="id_label" class="required">Label</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_title" class="text" type="text" name="title" maxlength="100" value="{{data.title}}" />
+            <label for="id_title" class="required">Title</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_url" class="text" type="text" name="url" maxlength="200" value="{{data.url}}" />
+            <label for="id_url" class="required">URL</label>
+        </div>
+        <div class="melodyspace">
+        </div>
+        <div class="form-row cell">
+            <input id="id_prior" class="text" type="text" name="prior" maxlength="3" value="{{data.prior|default:"0"}}" />
+            <label for="id_prior" class="required">Priorty</label>
+        </div>
+        <div class="form-row inner">
+            <input type="submit" class="button" value="Save Now" />
+        </div>
+    </form>
+    <div class="choices hide">
+        <div class="link">
+            <div class="form-row cell">
+                <textarea id="id_text" name="text" style="height:100px;">{{data.text|default:""}}</textarea>
+            </div>
+            <div class="form-row cell">
+                <input id="id_ext" class="text" type="text" name="ext" maxlength="40" value="{{data.ext|default:""}}"/>
+                <label for="id_ext">Relation</label>
+            </div>
+        </div>
+        <div class="s5">
+            <div class="form-row cell">
+                <textarea id="id_text" name="text" style="height:400px;">{{data.text|default:""}}</textarea>
+            </div>
+            <div class="form-row cell">
+                <input id="id_ext" class="text" type="text" name="ext" maxlength="40" value="{{data.ext|default:""}}" />
+                <label for="id_ext" class="required">Slug</label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sidebar alignright">
+    <div class="help">
+        <h4>S5</h4>
+        <p>A Simple Standards-Based Slide Show System. <a href="http://meyerweb.com/eric/tools/s5/">Get Intro</a> | <a href="http://www.netzgesta.de/S5/demos.php">Get DEMO</a></p> 
+    </div>
+</div>
+{%endblock%}
