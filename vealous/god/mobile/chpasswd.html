@@ -1,26 +1,22 @@
 {%extends "layout.html"%}
 
 {%block main%}
-<div class="soga alignleft">
-    <p class="message">{{message}}</p>
-    <form class="box" action="" method="post">
-        <div class="form-row cell">
-            <input id="id_oldpasswd" class="text" type="password" name="oldpasswd" maxlength="200" />
-            <label for="id_oldpasswd" class="required">Old Password</label>
-        </div>
-        <div class="form-row cell">
-            <input id="id_passwd1" class="text" type="password" name="passwd1" maxlength="200" />
-            <label for="id_passwd1" class="required">New Password</label>
-        </div>
-        <div class="form-row cell">
-            <input id="id_passwd2" class="text" type="password" name="passwd2" maxlength="200" />
-            <label for="id_passwd2" class="required">Confirm Password</label>
-        </div>
-        <div class="form-row inner">
-            <input type="submit" class="button" value="Save Password" />
-        </div>
-    </form>
-</div>
-<div class="sidebar alignright">
-</div>
+<p class="message">{{message}}</p>
+<form class="box" action="" method="post">
+    <div class="form-row cell">
+        <input id="id_oldpasswd" class="text" type="password" name="oldpasswd" maxlength="200" />
+        <label for="id_oldpasswd" class="required">Old Password</label>
+    </div>
+    <div class="form-row cell">
+        <input id="id_passwd1" class="text" type="password" name="passwd1" maxlength="200" />
+        <label for="id_passwd1" class="required">New Password</label>
+    </div>
+    <div class="form-row cell">
+        <input id="id_passwd2" class="text" type="password" name="passwd2" maxlength="200" />
+        <label for="id_passwd2" class="required">Confirm Password</label>
+    </div>
+    <div class="form-row inner">
+        <input type="submit" class="button" value="Save Password" />
+    </div>
+</form>
 {%endblock%}

@@ -198,7 +198,6 @@ body {
 }
 #mainbody {
     margin: 20px 0;
-    min-height: 450px;
     font-size: 13px;
 }
 .message {
@@ -252,3 +251,40 @@ body {
     margin: 0 0 20px;
     padding: 5px 0;
 }
+.god form textarea {
+    width: 95%;
+    height: 90px;
+}
+.god input.text {
+    margin-right: 4px;
+}
+.god .action a {
+    margin: 6px;
+}
+.god .articles .content p {
+    line-height: 18px;
+}
+.god form label {
+    margin-left: 1em;
+    font-size: 13px;
+    font-family: Georgia, "DejaVu Serif", "Times New Roman", serif;
+    color: #333;
+}
+.god p label {
+    color: #ccc;
+    font-size: 10px;
+    font-weight: bold;
+}
+.god .title {
+    margin: 2px 0 10px;
+}
+.god .time, .god .bold {
+    color: gray;
+    font-size: 10px;
+    font-weight: bold;
+    margin-left: .5em;
+}
+.god .button {
+    margin: 0 10px;
+}
+
