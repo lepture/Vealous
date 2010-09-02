@@ -122,9 +122,13 @@ class view_article(webapp.RequestHandler):
             if art and 'draft' == action:
                 art.draft = True
                 art.put()
+                memcache.delete('a/' + art.slug)
+                memcache.delete('a$ten')
             elif art and 'post' == action:
                 art.draft = False
                 art.put()
+                memcache.delete('a/' + art.slug)
+                memcache.delete('a$ten')
             else:
                 session = Session(self)
                 session['message'] = "Can't find the article"
