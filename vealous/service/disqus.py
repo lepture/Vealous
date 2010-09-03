@@ -64,7 +64,7 @@ class Disqus(object):
                 else:
                     avatar += message['author']['email_hash']
                     avatar += '?size=48'
-                username = message['author']['display_name']
+                username = message['author']['display_name'] or message['author']['username']
                 email = message['author']['email']
             rdic = {}
             rdic['avatar'] = avatar
