@@ -19,25 +19,27 @@
 <div class="box comment" style="margin-top:10px;">
     {% for data in comments %}
     <div class="cell clearfix disqus">
-        <img src="{{data.avatar}}" alt="avatar" class="avatar alignleft" />
-        <div class="bitch alignleft">
-            <p>{{data.content}}</p>
-            <p><label>{{data.username}} Comment on <a href="{{data.thread.url}}">{{data.thread.title}}</a></p>
-                <p><label>Posted at:</label> <span class="time">{{data.created}}</span> <span class="status">{{data.status}}</span></p>
-            </div>
-            <div class="action alignright">
-                {%ifequal data.status "approved"%}
-                <a class='{{data.comment_id}}' href="{%url disqus_moderate%}?action=spam&post_id={{data.comment_id}}">Spam</a>
-                {%else%}
-                <a class='{{data.comment_id}}' href="{%url disqus_moderate%}?action=approve&post_id={{data.comment_id}}">Approve</a>
-                {%endifequal%}
-                <a class='{{data.comment_id}}' href="{%url disqus_moderate%}?action=kill&post_id={{data.comment_id}}">Delete</a>
+        <div class="cl-1 clearfix">
+            <img src="{{data.avatar}}" alt="avatar" class="avatar alignleft" />
+            <div class="bitch">
+                <p>{{data.content}}</p>
+                <p><label>{{data.username}}</label> Comment on <a href="{{data.thread.url}}">{{data.thread.title}}</a></p>
+                <p><label>Posted at:</label> <span class="time">{{data.created}}</span> 
             </div>
         </div>
-        {% endfor %}
-        <div class="inner">
-            <p>For more comments Visit <a class="button" href="http://disqus.com/comments/moderate/{{vigo.disqus}}/">Disqus</a></p>
-        </div>
+        <p class="action">
+            {%ifequal data.status "approved"%}
+            <a class='{{data.comment_id}}' href="{%url disqus_moderate%}?action=spam&post_id={{data.comment_id}}">Spam</a>
+            {%else%}
+            <a class='{{data.comment_id}}' href="{%url disqus_moderate%}?action=approve&post_id={{data.comment_id}}">Approve</a>
+            {%endifequal%}
+            <a class='{{data.comment_id}}' href="{%url disqus_moderate%}?action=kill&post_id={{data.comment_id}}">Delete</a>
+            <span class="status">{{data.status}}</span></p>
+        </p>
+    </div>
+    {% endfor %}
+    <div class="inner">
+        <p>For more comments Visit <a class="button" href="http://disqus.com/comments/moderate/{{vigo.disqus}}/">Disqus</a></p>
     </div>
 </div>
 {%endblock%}

@@ -4,44 +4,54 @@
 <p class="message">{{message}}</p>
 <form class="box" action="" method="post">
     <div class="form-row cell">
-        <input id="id_sitename" class="text" type="text" name="sitename" maxlength="200" value="{{vigo.sitename}}" />
         <label for="id_sitename" class="required">Site Name</label>
+        <br />
+        <input id="id_sitename" class="text" type="text" name="sitename" maxlength="200" value="{{vigo.sitename}}" />
     </div>
     <div class="form-row cell">
-        <input id="id_sitetag" class="text" type="text" name="sitetag" maxlength="500" value="{{vigo.sitetag}}" />
         <label for="id_sitetag" class="required">Description</label>
+        <br />
+        <input id="id_sitetag" class="text" type="text" name="sitetag" maxlength="500" value="{{vigo.sitetag}}" />
     </div>
     <div class="form-row cell">
-        <input id="id_twitter" class="text" type="text" name="twitter" maxlength="100" value="{{vigo.twitter}}" />
         <label for="id_twitter" class="required">Twitter</label>
+        <br />
+        <input id="id_twitter" class="text" type="text" name="twitter" maxlength="100" value="{{vigo.twitter}}" />
     </div>
     <div class="form-row cell">
-        <input id="id_ga" class="text" type="text" name="ga" maxlength="15" value="{{vigo.ga}}" />
         <label for="id_ga" class="required">Google Analytics</label>
+        <br />
+        <input id="id_ga" class="text" type="text" name="ga" maxlength="15" value="{{vigo.ga}}" />
     </div>
     <div class="form-row cell">
-        <input id="id_gcse" class="text" type="text" name="gcse" maxlength="33" value="{{vigo.gcse}}" />
         <label for="id_gcse" class="required">Google CSE</label>
+        <br />
+        <input id="id_gcse" class="text" type="text" name="gcse" maxlength="33" value="{{vigo.gcse}}" />
     </div>
     <div class="form-row cell">
-        <input id="id_disqus" class="text" type="text" name="disqus" maxlength="30" value="{{vigo.disqus}}" />
         <label for="id_disqus" class="required">Disqus</label>
+        <br />
+        <input id="id_disqus" class="text" type="text" name="disqus" maxlength="30" value="{{vigo.disqus}}" />
     </div>
     <div class="form-row cell">
-        <input id="id_disqus_key" class="text" type="text" name="disqus_key" maxlength="100" value="{{disqus_key}}" />
         <label for="id_disqus_key" class="required">Disqus Key</label>
+        <br />
+        <input id="id_disqus_key" class="text" type="text" name="disqus_key" maxlength="100" value="{{disqus_key}}" />
     </div>
     <div class="form-row cell">
-        <input id="id_forum_key" class="text" type="text" name="forum_key" maxlength="100" value="{{forum_key}}" />
         <label for="id_forum_key" class="required">Forum Key</label>
+        <br />
+        <input id="id_forum_key" class="text" type="text" name="forum_key" maxlength="100" value="{{forum_key}}" />
     </div>
     <div class="form-row cell">
-        <input id="id_disqus_forumid" class="text" type="text" name="disqus_forumid" maxlength="15" value="{{disqus_forumid}}" />
         <label for="id_disqus_forumid" class="required">Disqus Forumid</label>
+        <br />
+        <input id="id_disqus_forumid" class="text" type="text" name="disqus_forumid" maxlength="15" value="{{disqus_forumid}}" />
     </div>
     <div class="form-row cell">
-        <input id="id_alterfeed" class="text" type="text" name="alterfeed" maxlength="100" value="{{vigo.alterfeed|default:""}}" />
         <label for="id_alterfeed">Aternate Feed</label>
+        <br />
+        <input id="id_alterfeed" class="text" type="text" name="alterfeed" maxlength="100" value="{{vigo.alterfeed|default:""}}" />
     </div>
     <div class="form-row inner">
         <input type="submit" class="button" value="Save Setting" />
