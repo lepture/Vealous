@@ -3,10 +3,35 @@
 from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
+import time
 
 month = 2592000
 week = 604800
 day = 86400
+
+class Note(db.Model):
+    slug = db.StringProperty(required=False)
+    text = db.TextProperty(indexed=False)
+    created = db.DateTimeProperty(auto_now_add=True)
+
+    @classmethod
+    def add(cls, text):
+        slug = str(int(time.time()))
+        key = 't/' + slug
+        data = memcache.get(key)
+        if data is not None:
+            return data
+        data = Note(slug=slug, text=text)
+        data.put()
+        memcache.set(key, data, month)
+        return data
+
+    @classmethod
+    def delete(cls, data):
+        key = 't/' + data.slug
+        memcache.delete(key)
+        db.delete(data)
+        return data
 
 class Article(db.Model):
     title = db.StringProperty(required=True)
@@ -32,7 +57,7 @@ class Article(db.Model):
             draft=draft, keyword=keyword,
         )
         data.put()
-        memcache.add(key, data, week)
+        memcache.set(key, data, week)
         memcache.delete('a$ten')
         key = 'a$keyword/' + data.keyword
         memcache.delete(key)
