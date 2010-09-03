@@ -152,8 +152,9 @@ body {
     border-bottom: 1px solid #dadada;
     margin-bottom: 10px;
 }
-.sidebar ul { list-style-type: square; margin: 0 0 22px 16px;}
-.sidebar ol { list-style-type: decimal; margin: 0 0 22px 20px; }
+.sidebar ul { list-style-type: square; margin: 0 0 5px 16px; line-height: 22px;}
+.sidebar ol { list-style-type: decimal; margin: 0 0 12px 20px; }
+.sidebar .widget h3 { border-bottom: 1px solid #dadada;}
 .sidebar .help {
     margin-bottom: 10px;
 }
@@ -175,8 +176,6 @@ body {
     width: 98%;
     height: 90px;
 }
-.sidebar ul, .sidebar ol { margin: 0 0 22px 16px; }
-.sidebar ul { list-style-type: square; }
 #footer {
     background: #eee;
     padding: 20px 0;
