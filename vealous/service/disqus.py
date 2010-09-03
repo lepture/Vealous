@@ -3,6 +3,7 @@
 from google.appengine.api import urlfetch
 from django.utils.simplejson import loads as parse_json
 import urllib
+import logging
 
 class Disqus(object):
     rpc = None
@@ -26,10 +27,12 @@ class Disqus(object):
         try:
             result = self.rpc.get_result()
             if 200 != result.status_code:
+                logging.error('get forum posts result failed, status code: ' + str(result.status_code))
                 return None
             data = result.content
             return data
         except urlfetch.DownloadError:
+            logging.error('get forum posts result failed, urlfetch download error')
             return None
         return None
     
@@ -43,6 +46,7 @@ class Disqus(object):
         except:
             return None
         if 'ok' != code:
+            logging.info('parse data failed')
             return None
         datalist = []
         for message in messages:
@@ -87,5 +91,6 @@ class Disqus(object):
         result = urlfetch.fetch(url, payload=payload, method='POST').content
         json = parse_json(result)
         if 'ok' != json['code']:
+            logging.info('moderate post failed')
             return {'succeeded': False}
         return json
