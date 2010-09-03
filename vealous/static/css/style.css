@@ -120,6 +120,8 @@ body {
 }
 .soga .bitch {
     width: 450px;
+    overflow: hidden;
+    word-wrap: break-word;
 }
 .soga .bitch p {
     margin-bottom: 2px;
