@@ -14,6 +14,7 @@ $(function(){
         swLabel(arg);
     });
     disqus_moderate();
+    douban_miniblog();
 });
 function swLabel(arg) {
     $('.melodyspace').html('');
@@ -44,5 +45,29 @@ function disqus_moderate() {
             return false
         }
         return false
+    });
+}
+function douban_miniblog() {
+    $('#notebook').submit(function(){
+        $.ajax({
+            type: "POST",
+            data: $("#notebook").serialize(),
+            url: '/god/third/douban/miniblog_saying',
+            cache: false,
+            dataType: 'json',
+            success: function(data, textStatus){
+                if(data.succeeded){
+                    $('.soga .message').text('Post to Douban Success');
+                }else{
+                    $('.soga .message').text('Post to Douban Failed');
+                }
+                $('.soga .message').fadeIn();
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+                $('.soga .message').text('Server Error');
+                $('.soga .message').fadeIn();
+            }
+        });
+        return false;
     });
 }

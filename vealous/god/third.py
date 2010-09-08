@@ -88,7 +88,7 @@ apps = webapp.WSGIApplication(
         ('/god/third/disqus_moderate', disqus_moderate),
         ('/god/third/douban/request', douban_request_auth),
         ('/god/third/douban/auth', douban_access_token),
-        ('/god/third/douban/miniblog', douban_miniblog_saying),
+        ('/god/third/douban/miniblog_saying', douban_miniblog_saying),
     ],
     debug = DEBUG,
 )
