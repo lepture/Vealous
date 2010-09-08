@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.api import memcache
 from django.utils.simplejson import dumps
 #import urllib2
@@ -10,7 +11,7 @@ from service.disqus import Disqus
 from utils.sessions import Session
 from decorators import be_god
 import dbs
-from config import SITE_URL
+from config import SITE_URL, DEBUG
 from config import douban_key, douban_secret
 
 
@@ -64,7 +65,7 @@ class douban_access_token(webapp.RequestHandler):
         session['message'] = 'Douban Auth Success'
         return self.redirect('/god?from=douban')
 
-class douban_miniblog(webapp.RequestHandler):
+class douban_miniblog_saying(webapp.RequestHandler):
     @be_god
     def post(self):
         content = self.request.get('text', None)
@@ -80,3 +81,17 @@ class douban_miniblog(webapp.RequestHandler):
         except:
             data = {'succeeded': False}
         return self.response.out.write(dumps(data))
+
+
+apps = webapp.WSGIApplication(
+    [
+        ('/god/third/disqus_moderate', disqus_moderate),
+        ('/god/third/douban/request', douban_request_auth),
+        ('/god/third/douban/auth', douban_access_token),
+        ('/god/third/douban/miniblog', douban_miniblog_saying),
+    ],
+    debug = DEBUG,
+)
+
+if '__main__' == __name__:
+    run(apps)

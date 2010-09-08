@@ -5,7 +5,6 @@ from google.appengine.ext.webapp.util import run_wsgi_app as run
 
 from service.main import *
 from god.main import *
-from god.third import *
 from god.console import *
 
 apps = webapp.WSGIApplication(
@@ -31,11 +30,6 @@ apps = webapp.WSGIApplication(
         ('/god/melody', view_melody),
         ('/god/melody/add', add_melody),
         ('/god/melody/edit', edit_melody),
-
-        ('/god/third/disqus_moderate', disqus_moderate),
-        ('/god/third/douban/request', douban_request_auth),
-        ('/god/third/douban/auth', douban_access_token),
-        ('/god/third/douban/miniblog', douban_miniblog),
 
         ('/god/console/memcache', console_memcache),
 
