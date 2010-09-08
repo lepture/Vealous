@@ -3,10 +3,10 @@
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from django.utils.simplejson import dumps
-import urllib
+#import urllib2
 
+from service import doubanapi
 from service.disqus import Disqus
-from service.oauth import OauthClient
 from utils.sessions import Session
 from decorators import be_god
 import dbs
@@ -31,19 +31,18 @@ class disqus_moderate(webapp.RequestHandler):
         data = {'succeeded': False}
         return self.response.out.write(dumps(data))
 
-
 class douban_request_auth(webapp.RequestHandler):
     @be_god
     def get(self):
-        rq_url = 'http://www.douban.com/service/auth/request_token'
-        auth_url = 'http://www.douban.com/service/auth/authorize'
-        callback = SITE_URL + '/god/third/douban/auth'
-        client = OauthClient(douban_key, douban_secret, callback=callback)
-        dic = client.request_token(rq_url)
-        to = client.request_auth(auth_url)
+        consumer = doubanapi.set_consumer(douban_key, douban_secret)
+        qs = doubanapi.request_token(consumer)
+        token = doubanapi.set_qs_token(qs)
+
         session = Session(self)
-        session['douban'] = dic
-        dbs.Vigo.set('xxxx', str(dic))
+        session['douban_qs'] = qs
+
+        callback = SITE_URL + '/god/third/douban/auth'
+        to = doubanapi.authorize(consumer, token, callback)
         return self.redirect(to)
 
 class douban_access_token(webapp.RequestHandler):
@@ -53,16 +52,15 @@ class douban_access_token(webapp.RequestHandler):
         if oauth_douban:
             return self.response.out.write('authed')
         session = Session(self)
-        douban = session.get('douban','')
-        if not douban:
+        qs = session.get('douban_qs','')
+        if not qs:
             session['message'] = 'Request Douban access token failed'
             return self.redirect('/god?from=douban')
-        token = douban['oauth_token']
-        token_secret = douban['oauth_token_secret']
-        client = OauthClient(douban_key, douban_secret, token, token_secret)
-        acs_url = 'http://www.douban.com/service/auth/access_token'
-        dic = client.access_token(acs_url)
-        # dic: 'oauth_token', 'oauth_token_secret', 'douban_user_id'
-        dbs.Vigo.set('oauth_douban',urllib.urlencode(dic)) 
+        consumer = doubanapi.set_consumer(douban_key, douban_secret)
+        token = doubanapi.set_qs_token(qs)
+        oauth_douban = doubanapi.access_token(consumer, token)
+
+        dbs.Vigo.set('oauth_douban', oauth_douban)
         session['message'] = 'Douban Auth Success'
         return self.redirect('/god?from=douban')
+
