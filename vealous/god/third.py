@@ -64,3 +64,19 @@ class douban_access_token(webapp.RequestHandler):
         session['message'] = 'Douban Auth Success'
         return self.redirect('/god?from=douban')
 
+class douban_miniblog(webapp.RequestHandler):
+    @be_god
+    def post(self):
+        content = self.request.get('text', None)
+        if not content:
+            data = {'succeeded': False}
+            return self.response.out.write(dumps(data))
+        consumer = doubanapi.set_consumer(douban_key, douban_secret)
+        qs = dbs.Vigo.get('oauth_douban')
+        token = doubanapi.set_qs_token(qs)
+        try:
+            doubanapi.miniblog_saying(consumer, token, content)
+            data = {'succeeded': True}
+        except:
+            data = {'succeeded': False}
+        return self.response.out.write(dumps(data))

@@ -35,6 +35,7 @@ apps = webapp.WSGIApplication(
         ('/god/third/disqus_moderate', disqus_moderate),
         ('/god/third/douban/request', douban_request_auth),
         ('/god/third/douban/auth', douban_access_token),
+        ('/god/third/douban/miniblog', douban_miniblog),
 
         ('/god/console/memcache', console_memcache),
 
