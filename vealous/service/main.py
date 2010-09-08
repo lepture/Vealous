@@ -22,6 +22,7 @@ def get_path(ua, name):
 class index(webapp.RequestHandler):
     def get(self):
         rdic = {}
+        rdic['notes'] = dbs.Note.getten()
         rdic['articles'] = dbs.Article.getten()[:5]
         rdic['navs'] = dbs.Melody.get_all('nav')
         rdic['links'] = dbs.Melody.get_all('link')

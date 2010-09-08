@@ -20,6 +20,24 @@ def prettytime(value):
     return value
 
 @register.filter
+def humantime(value):
+    if isinstance(value, datetime.datetime):
+        now = datetime.datetime.now()
+        time = now - value
+        days = time.days
+        if days:
+            return '%s days ago' % days
+        seconds = time.seconds
+        if seconds < 10:
+            return 'Just now'
+        if seconds / 3600:
+            return '%i hours ago' % int(seconds/3600)
+        if seconds / 60:
+            return '%i minutes ago' % int(seconds/60)
+        return '%i seconds ago' % seconds
+    return value
+
+@register.filter
 def feedtime(value):
     if isinstance(value, datetime.datetime):
         return value.strftime("%a, %d %b %Y %H:%M:%S GMT")

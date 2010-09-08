@@ -5,7 +5,7 @@
 <div class="post">
     <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>
     <div class="post-info">
-        <label>Created at</label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="external">{{vigo.twitter}}</a>
+        <label>Created at </label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="external">{{vigo.twitter}}</a>
     </div>
     <div class="post-content">
         {{data.text|more}}
@@ -24,6 +24,14 @@
 {%endblock%}
 
 {%block sidebar%}
+<div class="widget widget-notebook">
+{%for note in notes%}
+<li class="note"><p>
+{{note.text|escape}}
+{{note.created|humantime}}
+</p></li>
+{%endfor%}
+</div>
 <div class="widget widget-links">
     <h3 class="widget-title">Links</h3>
     <ul>

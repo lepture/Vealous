@@ -13,6 +13,16 @@ class Note(db.Model):
     slug = db.StringProperty(required=False)
     text = db.TextProperty(indexed=False)
     created = db.DateTimeProperty(auto_now_add=True)
+    
+    @classmethod
+    def getten(cls):
+        data = memcache.get('t$ten')
+        if data is not None:
+            return data
+        q = Note.gql("ORDER BY created DESC")
+        data = q.fetch(10)
+        memcache.set('t$ten', data, day)
+        return data
 
     @classmethod
     def add(cls, text):
@@ -24,6 +34,7 @@ class Note(db.Model):
         data = Note(slug=slug, text=text)
         data.put()
         memcache.set(key, data, month)
+        memcache.delete('t$ten')
         return data
 
     @classmethod
@@ -31,6 +42,7 @@ class Note(db.Model):
         key = 't/' + data.slug
         memcache.delete(key)
         db.delete(data)
+        memcache.delete('t$ten')
         return data
 
 class Article(db.Model):
