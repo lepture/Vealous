@@ -1,5 +1,6 @@
 import oauth2 as oauth
 import httplib
+import logging
 
 try:
     from urlparse import parse_qs, parse_qsl, urlparse
@@ -55,6 +56,7 @@ class DoubanClient(object):
         conn.request(method, uri)
         res = conn.getresponse()
         if 200 != res.status:
+            logging.error('OAuth Request Token Error: ' + str(res.status))
             raise Exception('OAuth Request Token Error: ' + str(res.status))
         content = res.read()
         res.close()
@@ -69,6 +71,7 @@ class DoubanClient(object):
         conn.request(method, uri, body=body, headers = headers)
         res = conn.getresponse()
         if 201 != res.status:
+            logging.error('OAuth Request Token Error: ' + str(res.status))
             raise Exception('OAuth Request Token Error: ' + str(res.status))
         return True
 
