@@ -343,6 +343,16 @@ class edit_melody(webapp.RequestHandler):
         path = get_path(ua, 'edit_melody.html')
         return self.response.out.write(render(path,rdic))
 
+class add_note(webapp.RequestHandler):
+    @be_god
+    def post(self):
+        content = self.request.get('text', None)
+        session = Session(self)
+        if not content:
+            return self.response.out.write('You Said Nothing')
+        dbs.Note.add(content)
+        return self.response.out.write('Note Saved')
+
 class vigo_setting(webapp.RequestHandler):
     @be_god
     def get(self):

@@ -14,6 +14,7 @@ $(function(){
         swLabel(arg);
     });
     disqus_moderate();
+    post_note();
     douban_miniblog();
 });
 function swLabel(arg) {
@@ -47,11 +48,37 @@ function disqus_moderate() {
         return false
     });
 }
-function douban_miniblog() {
-    $('#notebook').submit(function(){
+function post_note() {
+    $('#noteform').submit(function(){
+        var notelen = $('#note').val().length;
+        if (notelen < 1) {
+            $('.soga .message').text('You said nothing');
+            $('.soga .message').fadeIn();
+            return false
+        }
         $.ajax({
             type: "POST",
-            data: $("#notebook").serialize(),
+            data: $("#noteform").serialize(),
+            url: '/god/note/add',
+            cache: false,
+            dataType: 'text',
+            success: function(data, textStatus){
+                $('.soga .message').text('Saved to note');
+                $('.soga .message').fadeIn();
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown){
+                $('.soga .message').text('Server Error');
+                $('.soga .message').fadeIn();
+            }
+        });
+        return false;
+    });
+}
+function douban_miniblog() {
+    $('#noteform').submit(function(){
+        $.ajax({
+            type: "POST",
+            data: $("#noteform").serialize(),
             url: '/god/third/douban/miniblog_saying',
             cache: false,
             dataType: 'json',

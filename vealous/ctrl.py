@@ -30,6 +30,7 @@ apps = webapp.WSGIApplication(
         ('/god/melody', view_melody),
         ('/god/melody/add', add_melody),
         ('/god/melody/edit', edit_melody),
+        ('/god/note/add', add_note),
 
         ('/god/console/memcache', console_memcache),
 
