@@ -50,8 +50,12 @@ class DoubanClient(object):
         uri = req.to_url()
         return uri
 
-    def request(self, uri, method="GET"):
-        res = urlfetch.fetch(uri, method=method)
+    def request(self, uri):
+        try:
+            res = urlfetch.fetch(uri)
+        except urlfetch.DownloadError, e:
+            logging.error('OAuth Request Token Error: ' + str(e))
+            raise urlfetch.DownloadError
         if 200 != res.status_code:
             logging.error('OAuth Request Token Error: ' + str(res.status_code))
             raise Exception('OAuth Request Token Error: ' + str(res.status_code))
@@ -62,7 +66,11 @@ class DoubanClient(object):
         method = 'POST'
         headers = self.set_header(method, uri, param)
 
-        res = urlfetch.fetch(uri, method=method, payload=body, headers=headers)
+        try:
+            res = urlfetch.fetch(uri, method=method, payload=body, headers=headers)
+        except urlfetch.DownloadError, e:
+            logging.error('OAuth Post Data Error: ' + str(e))
+            raise urlfetch.DownloadError
         if 201 != res.status_code:
             logging.error('OAuth Request Token Error: ' + str(res.status_code))
             raise Exception('OAuth Request Token Error: ' + str(res.status_code))
