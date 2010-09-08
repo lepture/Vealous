@@ -1,11 +1,11 @@
+from google.appengine.api import urlfetch
 import oauth2 as oauth
-import httplib
 import logging
 
 try:
-    from urlparse import parse_qs, parse_qsl, urlparse
+    from urlparse import parse_qs, parse_qsl
 except ImportError:
-    from cgi import parse_qs, parse_qsl, urlparse
+    from cgi import parse_qs, parse_qsl
 
 AUTH_URL = 'http://www.douban.com/service/auth/'
 API_URL = 'http://api.douban.com/'
@@ -51,28 +51,21 @@ class DoubanClient(object):
         return uri
 
     def request(self, uri, method="GET"):
-        http_url = urlparse(uri)
-        conn = httplib.HTTPConnection("%s" % http_url.hostname)
-        conn.request(method, uri)
-        res = conn.getresponse()
-        if 200 != res.status:
-            logging.error('OAuth Request Token Error: ' + str(res.status))
-            raise Exception('OAuth Request Token Error: ' + str(res.status))
-        content = res.read()
-        res.close()
+        res = urlfetch.fetch(uri, method=method)
+        if 200 != res.status_code:
+            logging.error('OAuth Request Token Error: ' + str(res.status_code))
+            raise Exception('OAuth Request Token Error: ' + str(res.status_code))
+        content = res.content
         return content
 
     def post_data(self, uri, body=None, param=None):
         method = 'POST'
         headers = self.set_header(method, uri, param)
 
-        hostname = urlparse(uri).hostname
-        conn = httplib.HTTPConnection("%s" % hostname)
-        conn.request(method, uri, body=body, headers = headers)
-        res = conn.getresponse()
-        if 201 != res.status:
-            logging.error('OAuth Request Token Error: ' + str(res.status))
-            raise Exception('OAuth Request Token Error: ' + str(res.status))
+        res = urlfetch.fetch(uri, method=method, payload=body, headers=headers)
+        if 201 != res.status_code:
+            logging.error('OAuth Request Token Error: ' + str(res.status_code))
+            raise Exception('OAuth Request Token Error: ' + str(res.status_code))
         return True
 
 def to_atom(content):
