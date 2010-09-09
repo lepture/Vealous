@@ -1,5 +1,5 @@
 from google.appengine.api import urlfetch
-import oauth2 as oauth
+import libs.oauth2 as oauth
 import logging
 
 try:
