@@ -17,7 +17,7 @@
             <description>
                 <![CDATA[
                     {{data.text|mark}}
-                    <small>Permalink: <a href="{{conf.site}}{{data.the_url}}">{{data.title}}</a></small>
+                    <small>Permalink: <a href="{{conf.site}}{{data.the_url}}">{{data.title}}</a> ({{conf.site}}{{data.the_url}})</small>
                 ]]>
             </description>
             <pubDate>{{data.created|feedtime}}</pubDate>
