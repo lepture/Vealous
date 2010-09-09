@@ -25,12 +25,15 @@
 
 {%block sidebar%}
 <div class="widget widget-notebook">
-{%for note in notes%}
-<li class="note"><p>
-{{note.text|escape}}
-{{note.created|humantime}}
-</p></li>
-{%endfor%}
+    <h3 class="widget-title">Note</h3>
+    <ul>
+        {%for note in notes%}
+        <li class="note"><p>
+        {{note.text|escape}}
+        {{note.created|humantime}}
+        </p></li>
+        {%endfor%}
+    </ul>
 </div>
 <div class="widget widget-links">
     <h3 class="widget-title">Links</h3>
