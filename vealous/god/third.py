@@ -68,6 +68,7 @@ class douban_access_token(webapp.RequestHandler):
 class douban_miniblog_saying(webapp.RequestHandler):
     @be_god
     def post(self):
+        self.response.headers['Content-Type'] = 'application/json'
         content = self.request.get('text', None)
         if not content:
             data = {'succeeded': False}

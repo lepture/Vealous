@@ -346,6 +346,7 @@ class edit_melody(webapp.RequestHandler):
 class add_note(webapp.RequestHandler):
     @be_god
     def post(self):
+        self.response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
         content = self.request.get('text', None)
         session = Session(self)
         if not content:
