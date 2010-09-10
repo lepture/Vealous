@@ -76,7 +76,7 @@ body {
 .soga .title {
     margin: 2px 0 10px;
 }
-.soga .time, .soga .bold {
+.soga .time, .soga .bold, .sidebar .time {
     color: gray;
     font-size: 10px;
     font-weight: bold;

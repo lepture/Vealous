@@ -17,7 +17,7 @@ $(function(){
     $('#noteform').submit(function(){
         post_note();
         douban_miniblog();
-        $('#note').text('');
+        $('#note').val('');
         return false;
     });
 });
@@ -70,7 +70,7 @@ function post_note() {
             $('.soga .message').fadeIn();
         },
         error: function(XMLHttpRequest, textStatus, errorThrown){
-            $('.soga .message').text('Server Error');
+            $('.soga .message').text('Note Save Server Error');
             $('.soga .message').fadeIn();
         }
     });
@@ -91,7 +91,7 @@ function douban_miniblog() {
             $('.soga .message').fadeIn();
         },
         error: function(XMLHttpRequest, textStatus, errorThrown){
-            $('.soga .message').text('Server Error');
+            $('.soga .message').text('Post to Douban Server Error');
             $('.soga .message').fadeIn();
         }
     });
