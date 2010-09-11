@@ -27,7 +27,7 @@ day = 86400
 
 def get_path(ua, name):
     ua = ua.lower()
-    if ua.find('mobile') != -1 or ua.find('j2me') != -1 or ua.find('symbian') != -1:
+    if ua.find('mobile') != -1 or ua.find('midp') != -1 or ua.find('mini') != -1:
         logging.info('mobile device visited this site --' + ua)
         path = os.path.join(config.ROOT, 'god','mobile' , name)
         return path
