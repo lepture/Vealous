@@ -98,6 +98,7 @@ class dashboard(webapp.RequestHandler):
         comments = mydisqus.parse_data(result)
         memcache.set('god/comments', comments, day)
         rdic['comments'] = comments
+        rdic['notes'] = dbs.Note.getten()
         return self.response.out.write(render(path,rdic))
 
 class view_article(webapp.RequestHandler):
@@ -353,6 +354,18 @@ class add_note(webapp.RequestHandler):
             return self.response.out.write('You Said Nothing')
         dbs.Note.add(content)
         return self.response.out.write('Note Saved')
+
+class delete_note(webapp.RequestHandler):
+    @be_god
+    def get(self):
+        key = self.request.get('key', None)
+        if not key:
+            return self.response.out.write('No')
+        data = db.get(key)
+        if not data:
+            return self.response.out.write('No')
+        dbs.Note.delete(data)
+        return self.response.out.write('Yes')
 
 class vigo_setting(webapp.RequestHandler):
     @be_god
