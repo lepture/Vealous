@@ -20,6 +20,7 @@ $(function(){
         $('#note').val('');
         return false;
     });
+    del_note();
 });
 function swLabel(arg) {
     $('.melodyspace').html('');
@@ -69,7 +70,6 @@ function post_note() {
             $('.soga .message').text(data.text)
             $('.soga .message').fadeIn();
             if (data.succeeded){
-                alert(data.html);
                 $('.notewrap').prepend(data.html);
             }
         },
@@ -98,5 +98,16 @@ function douban_miniblog() {
             $('.soga .message').text('Post to Douban Server Error');
             $('.soga .message').fadeIn();
         }
+    });
+}
+function del_note(){
+    $('.notewrap .action a').click(function(){
+        $(this).parentsUntil('.box').fadeOut();
+        var url = $(this).attr('href');
+        $.getJSON(url, function(data){
+            $('.soga .message').text(data.text);
+            $('.soga .message').fadeIn();
+        });
+        return false;
     });
 }

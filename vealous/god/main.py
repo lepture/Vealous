@@ -355,7 +355,7 @@ class add_note(webapp.RequestHandler):
             data = {'succeeded': False, 'text':'You Said Nothing'}
             return self.response.out.write(dumps(data))
         note = dbs.Note.add(content)
-        html = '<div class="cell"><p>%s</p><p>Created at <span class="time">Just now</span> <span class="action"><a href="/god/note/delete?key=%s">Delete</a></span></p></div>' % (content, note.key())
+        html = '<div class="cell"><p>%s</p><p>Created at <span class="time">Just now</span></p></div>' % content
         data = {'succeeded': True, 'text':'Note Saved', 'html':html}
         return self.response.out.write(dumps(data))
 
