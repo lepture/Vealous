@@ -59,12 +59,15 @@
 }
 .box:first-child {
     border-radius: 6px 6px 0 0;
+    -moz-border-radius: 6px 6px 0 0;
+    -webkit-border-radius: 6px 6px 0 0;
 }
 .box .inner {
     padding: 12px;
     font-size: 12px;
     background-color: #f7f7f7;
     border-radius: 0 0 6px 6px;
+    -webkit-border-radius: 0 0 6px 6px;
     -moz-border-radius: 0 0 6px 6px;
 }
 .button, input[type="submit"], p a.button {
@@ -123,6 +126,7 @@ input[type="text"], input[type="password"], textarea, select, .sl {
     background: #fff;
     border-radius: 3px;
     -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
     padding: 3px;
     font-size: 14px;
     border: 1px solid #ccc;
