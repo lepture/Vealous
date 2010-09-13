@@ -88,6 +88,7 @@ class dashboard(webapp.RequestHandler):
         comments = memcache.get('god/comments')
         ua = self.request.headers.get('User-Agent', 'bot')
         path = get_path(ua, 'dashboard.html')
+        rdic['notes'] = dbs.Note.getten()
         if comments is not None:
             rdic['comments'] = comments
             return self.response.out.write(render(path,rdic))
@@ -99,7 +100,6 @@ class dashboard(webapp.RequestHandler):
         comments = mydisqus.parse_data(result)
         memcache.set('god/comments', comments, day)
         rdic['comments'] = comments
-        rdic['notes'] = dbs.Note.getten()
         return self.response.out.write(render(path,rdic))
 
 class view_article(webapp.RequestHandler):
@@ -350,7 +350,6 @@ class add_note(webapp.RequestHandler):
     def post(self):
         self.response.headers['Content-Type'] = 'application/json'
         content = self.request.get('text', None)
-        session = Session(self)
         if not content:
             data = {'succeeded': False, 'text':'You Said Nothing'}
             return self.response.out.write(dumps(data))
@@ -362,6 +361,7 @@ class add_note(webapp.RequestHandler):
 class delete_note(webapp.RequestHandler):
     @be_god
     def get(self):
+        self.response.headers['Content-Type'] = 'application/json'
         key = self.request.get('key', None)
         if not key:
             data = {'succeeded': False, 'text':'No key found'}
