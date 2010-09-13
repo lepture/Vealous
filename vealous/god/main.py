@@ -13,6 +13,7 @@ except ImportError:
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.api import memcache
+from django.utils.simplejson import dumps
 
 from utils.render import render
 from utils.paginator import Paginator
@@ -347,25 +348,31 @@ class edit_melody(webapp.RequestHandler):
 class add_note(webapp.RequestHandler):
     @be_god
     def post(self):
-        self.response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
+        self.response.headers['Content-Type'] = 'application/json'
         content = self.request.get('text', None)
         session = Session(self)
         if not content:
-            return self.response.out.write('You Said Nothing')
-        dbs.Note.add(content)
-        return self.response.out.write('Note Saved')
+            data = {'succeeded': False, 'text':'You Said Nothing'}
+            return self.response.out.write(dumps(data))
+        note = dbs.Note.add(content)
+        html = '<div class="cell"><p>%s</p><p>Created at <span class="time">Just now</span> <span class="action"><a href="/god/note/delete?key=%s">Delete</a></span></p></div>' % (content, note.key())
+        data = {'succeeded': True, 'text':'Note Saved', 'html':html}
+        return self.response.out.write(dumps(data))
 
 class delete_note(webapp.RequestHandler):
     @be_god
     def get(self):
         key = self.request.get('key', None)
         if not key:
-            return self.response.out.write('No')
+            data = {'succeeded': False, 'text':'No key found'}
+            return self.response.out.write(dumps(data))
         data = db.get(key)
         if not data:
-            return self.response.out.write('No')
+            data = {'succeeded': False, 'text':'No such note'}
+            return self.response.out.write(dumps(data))
         dbs.Note.delete(data)
-        return self.response.out.write('Yes')
+        data = {'succeeded': True, 'text':'Delete Note'}
+        return self.response.out.write(dumps(data))
 
 class vigo_setting(webapp.RequestHandler):
     @be_god

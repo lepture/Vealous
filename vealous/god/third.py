@@ -75,6 +75,9 @@ class douban_miniblog_saying(webapp.RequestHandler):
             return self.response.out.write(dumps(data))
         consumer = doubanapi.set_consumer(douban_key, douban_secret)
         qs = dbs.Vigo.get('oauth_douban')
+        if not qs:
+            data = {'succeeded': False}
+            return self.response.out.write(dumps(data))
         token = doubanapi.set_qs_token(qs)
         try:
             doubanapi.miniblog_saying(consumer, token, content)

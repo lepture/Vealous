@@ -64,10 +64,14 @@ function post_note() {
         data: $("#noteform").serialize(),
         url: '/god/note/add',
         cache: false,
-        dataType: 'text',
+        dataType: 'json',
         success: function(data, textStatus){
-            $('.soga .message').text(data)
+            $('.soga .message').text(data.text)
             $('.soga .message').fadeIn();
+            if (data.succeeded){
+                alert(data.html);
+                $('.notewrap').prepend(data.html);
+            }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown){
             $('.soga .message').text('Note Save Server Error');
