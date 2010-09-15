@@ -14,7 +14,7 @@ function SoundManager(smURL,smID) {
   var self = this;
   this.enabled = false;
   this.o = null;
-  this.url = (smURL||'ui/audio_support/soundmanager2.swf');
+  this.url = (smURL||'/static/s5/audio_support/soundmanager2.swf');
   this.id = (smID||'sm2movie');
   this.oMC = null;
   this.sounds = [];
@@ -450,7 +450,7 @@ function SMSound(oSM,oOptions) {
     // Flash 8/AS2 can't "close" a stream - fake it by loading an empty MP3
     sm._writeDebug('SMSound().unload()');
     self.setPosition(0); // reset current sound positioning
-    sm.o._unload(self.sID,'ui/audio_support/null.mp3');
+    sm.o._unload(self.sID,'/static/s5/audio_support/null.mp3');
     // reset load/status flags
     self.resetProperties();
   }

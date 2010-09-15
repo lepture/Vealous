@@ -852,7 +852,7 @@ function notOperaFix() {
 	slides.setAttribute('media','screen');
 	outline.disabled = true;
 	if (isGe) {
-		slides.setAttribute('href','null');   // Gecko fix
+		slides.setAttribute('href','/');   // Gecko fix, Shiao Fix
 		slides.setAttribute('href',slideCSS); // Gecko fix
 	}
 	if ((isIE && notIE7) && document.styleSheets && document.styleSheets[0]) {
