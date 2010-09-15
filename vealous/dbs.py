@@ -96,7 +96,7 @@ class Article(db.Model):
         data = memcache.get(key)
         if data is not None:
             return data
-        q = db.GqlQuery("SELECT * FROM Article WHERE slug= :1 and draft = :2", slug, False)
+        q = Article.gql("WHERE slug= :1 and draft = :2", slug, False)
         data = q.fetch(1)
         if data:
             memcache.set(key, data[0], week)
@@ -118,7 +118,7 @@ class Article(db.Model):
         data = memcache.get('a$ten')
         if data is not None:
             return data
-        q = db.GqlQuery("SELECT * FROM Article WHERE draft = :1 ORDER BY created DESC", False)
+        q = Article.gql("WHERE draft = :1 ORDER BY created DESC", False)
         data = q.fetch(10)
         memcache.set('a$ten', data, day)
         return data
@@ -129,7 +129,7 @@ class Article(db.Model):
         data = memcache.get(key)
         if data is not None:
             return data
-        q = db.GqlQuery("SELECT * FROM Article WHERE keyword = :1 and draft = :2 ORDER BY created DESC", keyword, False)
+        q = Article.gql("WHERE keyword = :1 and draft = :2 ORDER BY created DESC", keyword, False)
         data = q.fetch(10)
         memcache.set(key, data, week)
         return data
@@ -145,7 +145,7 @@ class Vigo(db.Model):
         value = memcache.get(key)
         if value is not None:
             return value
-        q = db.GqlQuery("SELECT * FROM Vigo WHERE name = :1", name)
+        q = Vigo.gql("WHERE name = :1", name)
         data = q.fetch(1)
         if not data:
             return ''
@@ -156,7 +156,7 @@ class Vigo(db.Model):
     @classmethod
     def set(cls, name, value):
         key = 'vigo/' + name
-        q = db.GqlQuery("SELECT * FROM Vigo WHERE name = :1", name)
+        q = Vigo.gql("WHERE name = :1", name)
         data = q.fetch(1)
         if data:
             data = data[0]
@@ -230,7 +230,7 @@ class Melody(db.Model):
         data = memcache.get('melody/%s' % label)
         if data is not None:
             return data
-        q = db.GqlQuery('SELECT * FROM Melody WHERE label = :1 ORDER BY prior DESC', label)
+        q = Melody.gql('WHERE label = :1 ORDER BY prior DESC', label)
         data = q.fetch(100)
         memcache.set('melody/%s' % label, data, week)
         return data

@@ -128,7 +128,7 @@ body {
 }
 .boxnav {
     margin: 0 0 20px;
-    padding: 5px 0;
+    padding: 6px 0 5px;
 }
 .message {
     display: none;
