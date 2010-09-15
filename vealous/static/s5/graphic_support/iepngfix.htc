@@ -7,7 +7,7 @@
 // Free usage permitted as long as this notice remains intact.
 
 // This must be a path to a blank image. That's all the configuration you need here.
-var blankImg = 'ui/default/blank.gif';
+var blankImg = 'ui/graphic_support/blank.gif';
 
 var f = 'DXImageTransform.Microsoft.AlphaImageLoader';
 
