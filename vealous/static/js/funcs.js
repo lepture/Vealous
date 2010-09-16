@@ -16,7 +16,10 @@ $(function(){
     disqus_moderate();
     $('#noteform').submit(function(){
         post_note();
-        douban_miniblog();
+        var douban = $('#noteform input[name="douban"]');
+        if(douban.is(':checked')){
+            douban_miniblog();
+        }
         $('#note').val('');
         return false;
     });

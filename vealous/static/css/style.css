@@ -226,3 +226,6 @@ body {
 .page-nav .current, .page-nav .page-numbers:hover {
     background-color: #fff;
 }
+#noteform .form-row input, #noteform .form-row label {
+    vertical-align: middle;
+}
