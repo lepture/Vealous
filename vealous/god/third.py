@@ -6,7 +6,7 @@ from google.appengine.api import memcache
 from django.utils.simplejson import dumps
 #import urllib2
 
-from service import doubanapi
+from service import doubanapi, twitterapi
 from service.disqus import Disqus
 from utils.sessions import Session
 from decorators import be_god
@@ -86,6 +86,61 @@ class douban_miniblog_saying(webapp.RequestHandler):
             data = {'succeeded': False}
         return self.response.out.write(dumps(data))
 
+class twitter_request_auth(webapp.RequestHandler):
+    @be_god
+    def get(self):
+        consumer = twitterapi.set_consumer(twitter_key, twitter_secret)
+        qs = twitterapi.request_token(consumer)
+        token = twitterapi.set_qs_token(qs)
+
+        session = Session(self)
+        session['twitter_qs'] = qs
+
+        callback = SITE_URL + '/god/third/twitter/auth'
+        to = twitterapi.authorize(consumer, token, callback)
+        return self.redirect(to)
+
+class twitter_access_token(webapp.RequestHandler):
+    @be_god
+    def get(self):
+        oauth_twitter = dbs.Vigo.get('oauth_twitter')
+        if oauth_twitter:
+            return self.response.out.write('authed')
+        session = Session(self)
+        qs = session.get('twitter_qs','')
+        if not qs:
+            session['message'] = 'Request Twitter access token failed'
+            return self.redirect('/god?from=twitter')
+        consumer = twitterapi.set_consumer(twitter_key, twitter_secret)
+        token = twitterapi.set_qs_token(qs)
+        oauth_twitter = twitterapi.access_token(consumer, token)
+
+        dbs.Vigo.set('oauth_twitter', oauth_twitter)
+        session['message'] = 'Twitter Auth Success'
+        return self.redirect('/god?from=twitter')
+
+class twitter_update_status(webapp.RequestHandler):
+    @be_god
+    def post(self):
+        self.response.headers['Content-Type'] = 'application/json'
+        content = self.request.get('text', None)
+        if not content:
+            data = {'succeeded': False}
+            return self.response.out.write(dumps(data))
+        consumer = twitterapi.set_consumer(twitter_key, twitter_secret)
+        qs = dbs.Vigo.get('oauth_twitter')
+        if not qs:
+            data = {'succeeded': False}
+            return self.response.out.write(dumps(data))
+        token = twitterapi.set_qs_token(qs)
+        try:
+            twitterapi.update_status(consumer, token, content)
+            data = {'succeeded': True}
+        except:
+            data = {'succeeded': False}
+        return self.response.out.write(dumps(data))
+
+
 
 apps = webapp.WSGIApplication(
     [
@@ -93,6 +148,9 @@ apps = webapp.WSGIApplication(
         ('/god/third/douban/request', douban_request_auth),
         ('/god/third/douban/auth', douban_access_token),
         ('/god/third/douban/miniblog_saying', douban_miniblog_saying),
+        ('/god/third/twitter/request', twitter_request_auth),
+        ('/god/third/twitter/auth', twitter_access_token),
+        ('/god/third/twitter/update_status', twitter_update_status),
     ],
     debug = DEBUG,
 )
