@@ -4,6 +4,7 @@ from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 import time
+import markdown
 
 month = 2592000
 week = 604800
@@ -53,6 +54,8 @@ class Article(db.Model):
     created = db.DateTimeProperty(auto_now_add=True)
     modified = db.DateTimeProperty(auto_now=True)
     draft = db.BooleanProperty(required=True, default=False)
+    # formated text
+    html = db.TextProperty(indexed=False)
 
     @property
     def the_url(self):
@@ -65,8 +68,8 @@ class Article(db.Model):
         if data is not None:
             return data
         data = Article(
-            title=title, slug=slug, text=text,
-            draft=draft, keyword=keyword,
+            title=title, slug=slug, text=text, draft=draft,
+            keyword=keyword, html=markdown.markdown(text),
         )
         data.put()
         memcache.set(key, data, week)
@@ -83,6 +86,7 @@ class Article(db.Model):
         data.text = text
         data.draft = draft
         data.keyword = keyword
+        data.html = markdown.markdown(text)
         data.put()
         memcache.delete(key)
         memcache.delete('a$ten')
