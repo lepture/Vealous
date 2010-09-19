@@ -72,7 +72,7 @@ class Article(db.Model):
             keyword=keyword, html=markdown.markdown(text),
         )
         data.put()
-        memcache.set(key, data, week)
+        memcache.set(key, data, month)
         memcache.delete('a$ten')
         key = 'a$keyword/' + data.keyword
         memcache.delete(key)
@@ -103,7 +103,7 @@ class Article(db.Model):
         q = Article.gql("WHERE slug= :1 and draft = :2", slug, False)
         data = q.fetch(1)
         if data:
-            memcache.set(key, data[0], week)
+            memcache.set(key, data[0], month)
             return data[0]
         return None
 
