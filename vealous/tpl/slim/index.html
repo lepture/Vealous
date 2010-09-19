@@ -8,7 +8,7 @@
         <label>Created at </label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="external">{{vigo.twitter}}</a>
     </div>
     <div class="post-content">
-        {{data.text|more}}
+        {{data.html|more}}
         <p><a class="more" href="{{data.the_url}}">Get More »</a></p>
     </div>
     <div class="post-meta clearfix">
@@ -30,7 +30,7 @@
         {%for note in notes%}
         <li class="note"><p>
         {{note.text|escape}}
-        <span class="time">{{note.created|humantime}}</span>
+        <span class="time">Created at {{note.created|humantime}}</span>
         </p></li>
         {%endfor%}
     </ul>

@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 
 from google.appengine.ext.webapp import template
-import markdown
 import datetime
 import re
 try:
@@ -56,14 +55,10 @@ def gravatar(value, arg='normal'):
     return url
 
 @register.filter
-def mark(value):
-    md = markdown.markdown
-    return md(value)
-
-@register.filter
 def more(value):
     value = re.sub(r'\r\n|\r|\n', '\n', value)
-    paras = re.split('\n{2,}', value)
+    paras = re.split('\n', value)
     if not paras:
         return value
-    return markdown.markdown(paras[0])
+    content = '\n'.join(paras[:2])
+    return content
