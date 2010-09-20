@@ -74,13 +74,13 @@ class DoubanClient(object):
         if 201 != res.status_code:
             logging.error('OAuth Request Token Error: ' + str(res.status_code))
             raise Exception('OAuth Request Token Error: ' + str(res.status_code))
-        return True
+        return res.content
 
 def to_atom(content):
     atom = '<?xml version="1.0" encoding="UTF-8"?>'
     atom += '<entry xmlns:ns0="http://www.w3.org/2005/Atom" xmlns:db="http://www.douban.com/xmlns/">'
     atom += '<content>'
-    atom += content.encode('utf-8')
+    atom += content.encode('utf-8') + ' via Vealous'
     atom += '</content></entry>'
     return atom
 
