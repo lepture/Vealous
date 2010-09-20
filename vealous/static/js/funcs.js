@@ -63,45 +63,20 @@ function post_note() {
         $('.soga .message').fadeIn();
         return false
     }
-    $.ajax({
-        type: "POST",
-        data: $("#noteform").serialize(),
-        url: '/god/note/add',
-        cache: false,
-        dataType: 'json',
-        success: function(data, textStatus){
-            $('.soga .message').text(data.text)
-            $('.soga .message').fadeIn();
-            if (data.succeeded){
-                $('.notewrap').prepend(data.html);
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            $('.soga .message').text('Note Save Server Error');
-            $('.soga .message').fadeIn();
+    $.post('/god/note/add', $('#noteform').serialize(), function(data){
+        $('.soga .message').text(data.text)
+        $('.soga .message').fadeIn();
+        if (data.succeeded){
+            $('.notewrap').prepend(data.html);
         }
-    });
+    }, 'json');
 }
 function douban_miniblog() {
-    $.ajax({
-        type: "POST",
-        data: $("#noteform").serialize(),
-        url: '/god/third/douban/miniblog_saying',
-        cache: false,
-        dataType: 'json',
-        success: function(data, textStatus){
-            if(data.succeeded){
-                $('.soga .message').text('Post to Douban Success');
-            }else{
-                $('.soga .message').text('Post to Douban Failed');
-            }
-            $('.soga .message').fadeIn();
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            $('.soga .message').text('Post to Douban Server Error');
-            $('.soga .message').fadeIn();
-        }
-    });
+    $.post('/god/third/douban/miniblog_saying', $('#noteform').serialize(),
+    function(data){
+        $('.soga .message').text(data.text);
+        $('.soga .message').fadeIn();
+    },'json');
 }
 function del_note(){
     $('.notewrap .action a').click(function(){
