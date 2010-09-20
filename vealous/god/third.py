@@ -12,7 +12,7 @@ from utils.sessions import Session
 from decorators import be_god
 import dbs
 from config import SITE_URL, DEBUG
-from config import douban_key, douban_secret
+from config import douban_key, douban_secret, twitter_key, twitter_secret
 
 
 class disqus_moderate(webapp.RequestHandler):
@@ -133,6 +133,7 @@ class twitter_update_status(webapp.RequestHandler):
             data = {'succeeded': False}
             return self.response.out.write(dumps(data))
         token = twitterapi.set_qs_token(qs)
+        data = twitterapi.update_status(consumer, token, content)
         try:
             twitterapi.update_status(consumer, token, content)
             data = {'succeeded': True}

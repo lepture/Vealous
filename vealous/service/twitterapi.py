@@ -75,7 +75,7 @@ class TwiClient(object):
         if 201 != res.status_code:
             logging.error('OAuth Request Token Error: ' + str(res.status_code))
             raise Exception('OAuth Request Token Error: ' + str(res.status_code))
-        return True
+        return res
 
 def set_consumer(key, secret):
     consumer = oauth.Consumer(key, secret)

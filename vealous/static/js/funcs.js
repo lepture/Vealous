@@ -17,6 +17,7 @@ $(function(){
     $('#noteform').submit(function(){
         post_note();
         var douban = $('#noteform input[name="douban"]');
+        //var twitter = $('#noteform input[name="twitter"]');
         if(douban.is(':checked')){
             douban_miniblog();
         }
@@ -103,6 +104,28 @@ function douban_miniblog() {
         }
     });
 }
+function update_twitter() {
+    $.ajax({
+        type: "POST",
+        data: $("#noteform").serialize(),
+        url: '/god/third/twitter/update_status',
+        cache: false,
+        dataType: 'json',
+        success: function(data, textStatus){
+            if(data.succeeded){
+                $('.soga .message').text('Post to Twitter Success');
+            }else{
+                $('.soga .message').text('Post to Twitter Failed');
+            }
+            $('.soga .message').fadeIn();
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            $('.soga .message').text('Post to Twitter Server Error');
+            $('.soga .message').fadeIn();
+        }
+    });
+}
+
 function del_note(){
     $('.notewrap .action a').click(function(){
         $(this).parentsUntil('.box').fadeOut();
