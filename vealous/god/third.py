@@ -71,19 +71,19 @@ class douban_miniblog_saying(webapp.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json'
         content = self.request.get('text', None)
         if not content:
-            data = {'succeeded': False}
+            data = {'succeeded': False, 'text':'You Said Nothing'}
             return self.response.out.write(dumps(data))
         consumer = doubanapi.set_consumer(douban_key, douban_secret)
         qs = dbs.Vigo.get('oauth_douban')
         if not qs:
-            data = {'succeeded': False}
+            data = {'succeeded': False, 'text':'Not Connect to Douban Yet'}
             return self.response.out.write(dumps(data))
         token = doubanapi.set_qs_token(qs)
         try:
             doubanapi.miniblog_saying(consumer, token, content)
-            data = {'succeeded': True}
+            data = {'succeeded': True, 'text':'Post to Douban Success'}
         except:
-            data = {'succeeded': False}
+            data = {'succeeded': False, 'text':'Post to Douban Error'}
         return self.response.out.write(dumps(data))
 
 class twitter_request_auth(webapp.RequestHandler):
