@@ -10,11 +10,14 @@ except ImportError:
     import md5
     md5 = md5.new
 
+from config import TIMEZONE
+
 register = template.create_template_register()
 
 @register.filter
 def prettytime(value):
     if isinstance(value, datetime.datetime):
+        value += datetime.timedelta(hours=TIMEZONE) # fix 
         return value.strftime("%H:%M %b %d, %Y")
     return value
 
