@@ -76,7 +76,7 @@ class douban_miniblog_saying(webapp.RequestHandler):
         consumer = doubanapi.set_consumer(douban_key, douban_secret)
         qs = dbs.Vigo.get('oauth_douban')
         if not qs:
-            data = {'succeeded': False, 'text':'Not Connect to Douban Yet'}
+            data = {'succeeded': False, 'text':'Not Connect to Douban Yet, <a href="/god/third/douban/request">Click Here</a>'}
             return self.response.out.write(dumps(data))
         token = doubanapi.set_qs_token(qs)
         try:
