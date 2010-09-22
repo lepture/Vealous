@@ -13,7 +13,7 @@
         <item>
             <title>{{data.title}}</title>
             <link>{{conf.site}}{{data.the_url}}</link>
-            <author>{{confi.email}} ({{vigo.twitter}})</author>
+            <author>{{conf.email}} ({{vigo.twitter}})</author>
             <description>
                 <![CDATA[
                     {{data.html}}
