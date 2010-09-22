@@ -3,6 +3,7 @@
 import os
 import logging
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.api import memcache
 
 from utils.render import render
@@ -154,3 +155,25 @@ class error404(webapp.RequestHandler):
         path = get_path(ua, '404.html')
         self.response.set_status(404)
         self.response.out.write(render(path,rdic))
+
+
+apps = webapp.WSGIApplication(
+    [
+        ('/', index),
+        ('/search', search),
+        ('/a/(.*)', article),
+        ('/k/(.*)', keyword_article),
+        ('/s5/(.*)', melody_s5),
+        ('/feed', atom),
+        ('/feed.atom', atom),
+        ('/feed.rss', rss),
+        ('/sitemap.xml', sitemap),
+
+        ('/(.*)/', redirect),
+        ('.*', error404),
+    ],
+    debug = config.DEBUG,
+)
+
+if '__main__' == __name__:
+    run(apps)

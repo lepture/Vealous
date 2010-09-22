@@ -3,22 +3,11 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
 
-from service.main import *
 from god.main import *
 from god.console import *
 
 apps = webapp.WSGIApplication(
     [
-        ('/', index),
-        ('/search', search),
-        ('/a/(.*)', article),
-        ('/k/(.*)', keyword_article),
-        ('/s5/(.*)', melody_s5),
-        ('/feed', atom),
-        ('/feed.atom', atom),
-        ('/feed.rss', rss),
-        ('/sitemap.xml', sitemap),
-
         ('/god', dashboard),
         ('/god/login', login),
         ('/god/logout', logout),
@@ -34,9 +23,6 @@ apps = webapp.WSGIApplication(
         ('/god/note/delete', delete_note),
 
         ('/god/console/memcache', console_memcache),
-
-        ('/(.*)/', redirect),
-        ('.*', error404),
     ],
     debug = config.DEBUG,
 )

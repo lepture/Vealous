@@ -3,6 +3,7 @@
 import os
 import logging
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.api import memcache
 
 from decorators import be_god
@@ -36,3 +37,13 @@ class console_memcache(webapp.RequestHandler):
         rdic['result'] = result
         path = get_path('memcache.html')
         return self.response.out.write(render(path,rdic))
+
+apps = webapp.WSGIApplication(
+    [
+        ('/god/console/memcache', console_memcache),
+    ],
+    debug = config.DEBUG,
+)
+
+if '__main__' == __name__:
+    run(apps)
