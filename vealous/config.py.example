@@ -27,6 +27,8 @@ PASSWORD = 'SECRECT' #you first password
 SESSION_NAME = 'sessionid'
 SESSION_EXPIRE = 7200
 
+WIDGET = ''
+
 # don't change gvars
 gvars = {
     'version': VERSION,
@@ -35,4 +37,5 @@ gvars = {
     'jshost': JS_HOST,
     'email': EMAIL,
     'debug': DEBUG,
+    'widget': WIDGET,
 }
