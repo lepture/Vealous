@@ -105,7 +105,7 @@ class Article(db.Model):
         data = q.fetch(1)
         if data:
             memcache.set(key, data[0], month)
-            logging.info('Get Article from DB :' + slug)
+            logging.info('Get Article from DB by slug :' + slug)
             return data[0]
         return None
 
@@ -139,6 +139,7 @@ class Article(db.Model):
         q = Article.gql("WHERE keyword = :1 and draft = :2 ORDER BY created DESC", keyword, False)
         data = q.fetch(10)
         memcache.set(key, data, week)
+        logging.info('Get Articles from DB by keyword : ' + keyword)
         return data
 
 class Vigo(db.Model):
@@ -196,7 +197,7 @@ class Melody(db.Model):
             return None
         data = data[0]
         if data.text:
-            logging.info('Get S5 from DB : ' + slug)
+            logging.info('Get S5 from DB by slug : ' + slug)
             memcache.set(key, data, week)
             return data
         try:
