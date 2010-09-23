@@ -194,11 +194,13 @@ body {
 .post-info a:hover, .post-meta a:hover { border-bottom: 1px solid #d54e21; color: #d54e21; }
 .post-content { font-size: 13px; }
 .post-content a { border-bottom: 1px solid #dfdfdf; }
+.post-content a:hover { border-bottom: 1px solid #d54e21; }
 .post-meta { font-size: 11px; margin-top: 10px; }
 .post img {
     max-width: 630px;
     border: 4px solid #dadada;
 }
+.widget a:hover { border-bottom: 1px solid #d54e21; }
 /* miscelleanous */
 .avatar {
     border: 1px solid #ccc;

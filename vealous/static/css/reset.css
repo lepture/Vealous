@@ -86,9 +86,6 @@ body a.button {
     text-shadow: 0 1px 1px #fff;
     border-color: rgba(0,0,0,0.25) rgba(0,0,0,0.25) rgba(0,0,0,0.35);
 }
-.button:active, input[type="submit"] {
-    background-color: #e2e2e2;
-}
 .box {
     background-color: #fff;
     border: 1px solid #ccc;
