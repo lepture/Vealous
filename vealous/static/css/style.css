@@ -2,7 +2,7 @@
 body {
     background: #fff;
     color: #555;
-    font-family: "Lucida Grande", Verdana, Arial, sans-serif;
+    font-family: "Luxi Sans", "DejaVu Sans", Tahoma, "WenQuanYi Micro Hei",sans-serif;
     line-height: 150%;
     font-size: 13px;
 }
@@ -193,6 +193,7 @@ body {
 .post-info a, .post-meta a { border-bottom: 1px solid #dfdfdf; color: #777; }
 .post-info a:hover, .post-meta a:hover { border-bottom: 1px solid #d54e21; color: #d54e21; }
 .post-content { font-size: 13px; }
+.post-content a { border-bottom: 1px solid #dfdfdf; }
 .post-meta { font-size: 11px; margin-top: 10px; }
 .post img {
     max-width: 630px;

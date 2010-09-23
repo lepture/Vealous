@@ -30,7 +30,7 @@
         {%for note in notes%}
         <li class="note"><p>
         {{note.text|escape}}
-        <span class="time">Created at {{note.created|humantime}}</span>
+        »<a href="{{note.the_url}}"><span class="time">Created at {{note.created|humantime}}</span></a>
         </p></li>
         {%endfor%}
     </ul>

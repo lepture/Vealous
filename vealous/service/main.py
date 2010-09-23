@@ -53,6 +53,23 @@ class article(webapp.RequestHandler):
         html = render(path, rdic)
         self.response.out.write(html)
 
+class note(webapp.RequestHandler):
+    def get(self, slug):
+        ua = self.request.headers.get('User-Agent', 'bot')
+        rdic = {}
+        data = dbs.Note.get(slug)
+        if not data:
+            logging.info('404 , visite note ' + str(slug))
+            path = get_path(ua, '404.html')
+            self.response.set_status(404)
+            html = render(path, rdic)
+            return self.response.out.write(html)
+        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['data'] = data
+        path = get_path(ua, 'note.html')
+        html = render(path, rdic)
+        self.response.out.write(html)
+
 class keyword_article(webapp.RequestHandler):
     def get(self, keyword):
         ua = self.request.headers.get('User-Agent', 'bot')
@@ -163,6 +180,7 @@ apps = webapp.WSGIApplication(
         ('/search', search),
         ('/a/(.*)', article),
         ('/k/(.*)', keyword_article),
+        ('/t/(.*)', note),
         ('/s5/(.*)', melody_s5),
         ('/feed', atom),
         ('/feed.atom', atom),

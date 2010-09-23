@@ -14,7 +14,15 @@ class Note(db.Model):
     slug = db.StringProperty(required=False)
     text = db.TextProperty(indexed=False)
     created = db.DateTimeProperty(auto_now_add=True)
+
+    @property
+    def title(self):
+        return 'Note-%s' % self.slug
     
+    @property
+    def the_url(self):
+        return '/t/%s' % self.slug
+
     @classmethod
     def getten(cls):
         data = memcache.get('t$ten')
@@ -24,6 +32,20 @@ class Note(db.Model):
         data = q.fetch(10)
         memcache.set('t$ten', data, day)
         return data
+
+    @classmethod
+    def get(cls, slug):
+        key = 't/' + slug
+        data = memcache.get(key)
+        if data is not None:
+            return data
+        q = Note.gql("WHERE slug= :1", slug)
+        data = q.fetch(1)
+        if data:
+            memcache.set(key, data[0], week)
+            logging.info('Get Note from DB by slug :' + slug)
+            return data[0]
+        return None
 
     @classmethod
     def add(cls, text):

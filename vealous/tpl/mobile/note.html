@@ -1,0 +1,18 @@
+{% extends "layout.html"%}
+
+{%block title%}
+{{data.title}}|{{vigo.sitename|default:"Vealous"}}
+{%endblock%}
+
+{%block soga%}
+<div class="post">
+    <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>
+    <div class="post-info">
+        <label>Created at</label><span class="time">{{data.created|prettytime}}</span>
+    </div>
+    <div class="post-content">
+        {{data.html}}
+    </div>
+</div>
+{%include "disqus.html"%}
+{%endblock%}

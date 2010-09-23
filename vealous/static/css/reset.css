@@ -32,7 +32,7 @@
 .textright { text-align: right;}
 .textcenter { text-align: center; }
 .pretty {
-    font-family: Georgia, "DejaVu Serif", "Times New Roman", serif;
+    font-family: "DejaVu Serif", "Times New Roman", serif;
     font-size: 12px;
     font-style: italic;
 }
