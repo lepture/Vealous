@@ -7,7 +7,6 @@ import time
 import markdown
 import logging
 
-month = 2592000
 week = 604800
 day = 86400
 
@@ -35,7 +34,7 @@ class Note(db.Model):
             return data
         data = Note(slug=slug, text=text)
         data.put()
-        memcache.set(key, data, month)
+        memcache.set(key, data, week)
         memcache.delete('t$ten')
         return data
 
@@ -73,7 +72,7 @@ class Article(db.Model):
             keyword=keyword, html=markdown.markdown(text),
         )
         data.put()
-        memcache.set(key, data, month)
+        memcache.set(key, data, week)
         memcache.delete('a$ten')
         key = 'a$keyword/' + data.keyword
         memcache.delete(key)
@@ -104,7 +103,7 @@ class Article(db.Model):
         q = Article.gql("WHERE slug= :1 and draft = :2", slug, False)
         data = q.fetch(1)
         if data:
-            memcache.set(key, data[0], month)
+            memcache.set(key, data[0], week)
             logging.info('Get Article from DB by slug :' + slug)
             return data[0]
         return None
@@ -158,7 +157,7 @@ class Vigo(db.Model):
         if not data:
             return ''
         value = data[0].substance
-        memcache.set(key, value, month)
+        memcache.set(key, value, week)
         logging.info('Get Vigo from DB : ' + name)
         return value
 
@@ -174,7 +173,7 @@ class Vigo(db.Model):
             data.name = name
         data.substance = value
         data.put()
-        memcache.set(key, value, month)
+        memcache.set(key, value, week)
         return value
 
 class Melody(db.Model):
