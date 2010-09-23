@@ -86,7 +86,7 @@ class dashboard(webapp.RequestHandler):
             message = session.get('message','')
             session.delete('message')
         rdic['message'] = message
-        comments = memcache.get('god/comments')
+        comments = memcache.get('god$comments')
         ua = self.request.headers.get('User-Agent', 'bot')
         path = get_path(ua, 'dashboard.html')
         rdic['notes'] = dbs.Note.getten()
@@ -99,7 +99,7 @@ class dashboard(webapp.RequestHandler):
         mydisqus.get_forum_posts_rpc(disqus_forumid)
         result = mydisqus.get_forum_posts_result()
         comments = mydisqus.parse_data(result)
-        memcache.set('god/comments', comments, day)
+        memcache.set('god$comments', comments, day)
         rdic['comments'] = comments
         return self.response.out.write(render(path,rdic))
 

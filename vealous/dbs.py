@@ -91,7 +91,7 @@ class Article(db.Model):
         data.put()
         memcache.delete(key)
         memcache.delete('a$ten')
-        key = 'a/keyword/' + data.keyword
+        key = 'a$keyword/' + data.keyword
         memcache.delete(key)
         return data
 
@@ -104,8 +104,8 @@ class Article(db.Model):
         q = Article.gql("WHERE slug= :1 and draft = :2", slug, False)
         data = q.fetch(1)
         if data:
-            logging.info('Get Article from DB :' + slug)
             memcache.set(key, data[0], month)
+            logging.info('Get Article from DB :' + slug)
             return data[0]
         return None
 
@@ -158,6 +158,7 @@ class Vigo(db.Model):
             return ''
         value = data[0].substance
         memcache.set(key, value, month)
+        logging.info('Get Vigo from DB : ' + name)
         return value
 
     @classmethod
