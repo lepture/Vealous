@@ -8,10 +8,10 @@
         <link rel="alternate" type="application/rss+xml" href="{{vigo.alterfeed}}" />
         {%endif%}
         <link rel="alternate" type="application/atom+xml" href="{{conf.site}}/feed.atom" />
-        <link rel="stylesheet" href="{{conf.static}}/css/reset.css" />
-        <link rel="stylesheet" href="{{conf.static}}/css/style.css" />
+        <link rel="stylesheet" href="{{conf.static}}/css/reset.css?v={{conf.version}}" />
+        <link rel="stylesheet" href="{{conf.static}}/css/style.css?v={{conf.version}}" />
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-        <script type="text/javascript" src="{{conf.jshost}}/js/slim.js"></script>
+        <script type="text/javascript" src="{{conf.jshost}}/js/slim.js?v={{conf.version}}"></script>
         {%block extra%}{%endblock%}
         <!--[if IE 6]>
             <script type="text/javascript" src="http://letskillie6.googlecode.com/svn/trunk/letskillie6.zh_CN.pack.js"></script>
