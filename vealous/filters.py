@@ -58,6 +58,11 @@ def gravatar(value, arg='normal'):
     return url
 
 @register.filter
+def gtitle(value):
+    value = value.split('|')[0]
+    return value
+
+@register.filter
 def more(value):
     value = re.sub(r'\r\n|\r|\n', '\n', value)
     paras = re.split('\n', value)

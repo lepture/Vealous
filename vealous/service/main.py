@@ -7,6 +7,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.api import memcache
 
 from utils.render import render
+from service import searchapi
 import dbs
 
 import config
@@ -106,6 +107,13 @@ class melody_s5(webapp.RequestHandler):
 class search(webapp.RequestHandler):
     def get(self):
         rdic = {}
+        rdic['cx'] = cx = self.request.get('cx','017842580319746762888:yjj0ddawsf8')
+        rdic['q'] = q = self.request.get('q','Vealous')
+        rdic['start'] = start = self.request.get('start', '0')
+        try:
+            rdic['gres'] = searchapi.gsearch(cx, q, start)
+        except:
+            rdic['error'] = 'Oops! An Error occured!'
         rdic['navs'] = dbs.Melody.get_all('nav')
         ua = self.request.headers.get('User-Agent', 'bot')
         path = get_path(ua, 'search.html')

@@ -113,11 +113,6 @@ body {
     width: 48px;
     height: 48px;
 }
-.soga iframe {
-    width: 100%;
-    max-width: 660px !important;
-    max-height: 1000px !important;
-}
 .soga .bitch {
     width: 450px;
     overflow: hidden;
