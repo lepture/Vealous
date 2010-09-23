@@ -21,6 +21,14 @@ SITE_URL = 'http://www.example.com' #no slash
 douban_key = ''
 douban_secret = ''
 
+# twitter oauth
+twitter_key = ''
+twitter_secret = ''
+
+# flickr
+flickr_key = ''
+flickr_secret = ''
+
 SECRET = 'xhoayerqdjfat' #once decided, you should never change it
 PASSWORD = 'SECRECT' #you first password
 # for session
