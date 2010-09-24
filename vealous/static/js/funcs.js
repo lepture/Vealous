@@ -1,6 +1,6 @@
 /* message */
 $(function(){
-    var message = $('.soga .message');
+    var message = $('.message');
     if (message.text()) {
         message.fadeIn();
     }
@@ -39,8 +39,8 @@ function disqus_moderate() {
         var url = '/god/third/disqus_moderate?action=' + action + '&post_id=' + comment_id;
         $.getJSON(url, function(data){
             if(data.succeeded){
-                $('.soga .message').text('Moderate comment succeeded');
-                $('.soga .message').fadeIn();
+                $('.message').text('Moderate comment succeeded');
+                $('.message').fadeIn();
             }
         });
         if ('approve' == action){
@@ -60,13 +60,13 @@ function disqus_moderate() {
 function post_note() {
     var notelen = $('#note').val().length;
     if (notelen < 1) {
-        $('.soga .message').text('You said nothing');
-        $('.soga .message').fadeIn();
+        $('.message').text('You said nothing');
+        $('.message').fadeIn();
         return false
     }
     $.post('/god/note/add', $('#noteform').serialize(), function(data){
-        $('.soga .message').text(data.text)
-        $('.soga .message').fadeIn();
+        $('.message').text(data.text)
+        $('.message').fadeIn();
         if (data.succeeded){
             $('.notewrap').prepend(data.html);
         }
@@ -75,8 +75,8 @@ function post_note() {
 function douban_miniblog() {
     $.post('/god/third/douban/miniblog_saying', $('#noteform').serialize(),
     function(data){
-        $('.soga .message').text(data.text);
-        $('.soga .message').fadeIn();
+        $('.message').html(data.text);
+        $('.message').fadeIn();
     },'json');
 }
 function update_twitter() {
@@ -106,8 +106,8 @@ function del_note(){
         $(this).parentsUntil('.box').fadeOut();
         var url = $(this).attr('href');
         $.getJSON(url, function(data){
-            $('.soga .message').text(data.text);
-            $('.soga .message').fadeIn();
+            $('.message').text(data.text);
+            $('.message').fadeIn();
         });
         return false;
     });

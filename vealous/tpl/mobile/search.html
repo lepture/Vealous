@@ -5,14 +5,32 @@ Search|{{vigo.sitename|default:"Vealous"}}
 {%endblock%}
 
 {%block soga%}
-<p class="message">If nothing appeared below, this very likely you are in China, and Google is blocked temporarily.</p>
-<div id="cse-search-results"></div>
-<script type="text/javascript">
-    var googleSearchIframeName = "cse-search-results";
-    var googleSearchFormName = "cse-search-box";
-    var googleSearchFrameWidth = 600;
-    var googleSearchDomain = "www.google.com";
-    var googleSearchPath = "/cse";
-    </script>
-<script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
+
+{%if error%}
+<p class="message">{{error}}</p>
+{%endif%}
+
+{%if gres.cursor.estimatedResultCount%}
+<div class="gcse-result">
+    <p class="message clearfix">
+    <span class="alignleft">Found {{gres.cursor.estimatedResultCount}} results about <strong>{{q}}</strong></span>
+    <span class="pretty alignright">Powered by <a href="http://code.google.com/apis/ajaxsearch/documentation/reference.html">Google Ajax Search API</a></span></p>
+    {%for data in gres.results %}
+    <div class="post">
+        <h2 class="post-title"><a href="{{data.url}}">{{data.titleNoFormatting|gtitle}}</a></h2>
+        <div class="post-content">
+            <p>{{data.content}}</p>
+            <p>» <a class="more" rel="nofollow" href="{{data.url}}">{{data.url}}</a></p>
+        </div>
+    </div>
+    {%endfor%}
+</div>
+{%else%}
+<p class="message">Oops! No result found about <strong>{{q}}</strong></p>
+{%endif%}
+<p class="pages">
+{%for page in gres.cursor.pages%}
+<a href="/search?cx={{cx}}&start={{page.start}}&q={{q}}">{{page.label}}</a>
+{%endfor%}
+</p>
 {%endblock%}

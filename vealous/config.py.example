@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 import os
-VERSION = '1.1.1'
+VERSION = '1.1.3'
 
 DEBUG=False
 
 ROOT = os.path.dirname(__file__)
+
+TIMEZONE = 8 # eg. -1, -4, 0, 8
 
 THEME = 'slim'
 EMAIL = 'you@email.com'
@@ -23,11 +25,17 @@ douban_secret = ''
 twitter_key = ''
 twitter_secret = ''
 
+# flickr
+flickr_key = ''
+flickr_secret = ''
+
 SECRET = 'xhoayerqdjfat' #once decided, you should never change it
 PASSWORD = 'SECRECT' #you first password
 # for session
 SESSION_NAME = 'sessionid'
 SESSION_EXPIRE = 7200
+
+WIDGET = ''
 
 # don't change gvars
 gvars = {
@@ -37,4 +45,5 @@ gvars = {
     'jshost': JS_HOST,
     'email': EMAIL,
     'debug': DEBUG,
+    'widget': WIDGET,
 }
