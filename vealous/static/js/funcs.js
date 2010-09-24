@@ -18,7 +18,7 @@ $(function(){
         post_note();
         var douban = $('#noteform input[name="douban"]');
         if(douban.is(':checked')){
-            douban_miniblog();
+            douban_update();
         }
         $('#note').val('');
         return false;
@@ -71,8 +71,8 @@ function post_note() {
         }
     }, 'json');
 }
-function douban_miniblog() {
-    $.post('/god/third/douban/miniblog_saying', $('#noteform').serialize(),
+function douban_update() {
+    $.post('/god/third/douban/update.json', $('#noteform').serialize(),
     function(data){
         $('.message').html(data.text);
         $('.message').fadeIn();
