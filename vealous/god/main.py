@@ -99,7 +99,7 @@ class dashboard(webapp.RequestHandler):
         mydisqus.get_forum_posts_rpc(disqus_forumid)
         result = mydisqus.get_forum_posts_result()
         comments = mydisqus.parse_data(result)
-        memcache.set('god$comments', comments, day)
+        memcache.set('god$comments', comments, 10800) # 3 hours
         rdic['comments'] = comments
         return self.response.out.write(render(path,rdic))
 
