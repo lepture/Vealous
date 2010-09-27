@@ -16,7 +16,7 @@ Add Article|Dashboard
 {%block main%}
 <div class="soga alignleft">
     <p class="message">{{message}}</p>
-    <form class="box" action="" method="post">
+    <form id="articleform" class="box" action="" method="post">
         <div class="form-row cell">
             <input id="id_title" class="text" type="text" name="title" maxlength="100" />
             <label for="id_title" class="required">Title</label>
@@ -35,6 +35,7 @@ Add Article|Dashboard
         <div class="form-row inner">
             <input type="submit" class="button" value="Save as Draft" name="draft" />
             <input type="submit" class="button" value="Post Now" name="publish" />
+            <input type="checkbox" class="autosave" style="vertical-align:middle;" /><label style="margin-left:6px;" for="autosave">Auto Save</label>
         </div>
     </form>
 </div>
