@@ -26,7 +26,7 @@ Article|Dashboard
         {%for data in mvdata.object_list%}
         <div class="cell article clearfix">
             <div class="content alignleft">
-                <h3 class="title"><a href="{%url edit_article%}?key={{data.key}}">{{data.title}}</a></h3>
+                <h3 class="title"><a href="{{data.the_url}}">{{data.title}}</a></h3>
                 <p><label>Created at</label> <span class="time">{{data.created|prettytime}}</span> {%if data.draft%}<a href="?action=post&key={{data.key}}">Post It</a>{%else%}<a href="?action=draft&key={{data.key}}">Draft It</a>{%endif%}</p>
                 <p><label>Update at</label> <span class="time">{{data.modified|prettytime}}</span>{%if data.draft%}<span class="status">Draft</span>{%endif%}</p>
             </div>

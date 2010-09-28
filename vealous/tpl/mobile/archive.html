@@ -1,0 +1,38 @@
+{% extends "layout.html"%}
+
+{%block title%}
+Archive|{{vigo.sitename|default:"Vealous"}}
+{%endblock%}
+
+{%block soga%}
+{%for data in mvdata.object_list%}
+<div class="post">
+    <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>
+    <div class="post-info">
+        <label>Created at</label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="external">{{vigo.twitter}}</a>
+    </div>
+    <div class="post-content">
+        {{data.html|more}}
+        <p><a class="more" rel="nofollow" href="{{data.the_url}}">Get More »</a></p>
+    </div>
+    <div class="post-meta clearfix">
+        <div class="alignleft">
+            {%if data.keyword%}Keyword: <a href="/k/{{data.keyword}}">{{data.keyword}}</a>{%endif%}
+        </div>
+        <div class="alignright">
+            <a href="{{conf.site}}{{data.the_url}}#disqus_thread">Comments</a>
+        </div>
+    </div>
+</div>
+{%endfor%}
+
+<p class="pages">
+{% if mvdata.has_previous %}<a href="?p={{ mvdata.previous_num }}" class="page-numbers" title="previous">«Previous</a>{%endif%}
+
+{%for p in mvdata.page_range %}
+<a href="?p={{p}}">{{p}}</a>
+{%endfor%}
+
+{% if mvdata.has_next %}<a href="?p={{ mvdata.next_num }}" class="page-numbers" title="next">Next»</a>{% endif %}
+</p>
+{%endblock%}

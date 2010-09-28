@@ -7,6 +7,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.api import memcache
 
 from utils.render import render
+from utils.paginator import Paginator
 from service import searchapi
 import dbs
 
@@ -53,6 +54,17 @@ class article(webapp.RequestHandler):
         path = get_path(ua, 'article.html')
         html = render(path, rdic)
         self.response.out.write(html)
+
+class archive(webapp.RequestHandler):
+    def get(self):
+        rdic = {}
+        rdic['navs'] = dbs.Melody.get_all('nav')
+        ua = self.request.headers.get('User-Agent', 'bot')
+        p = self.request.get('p',1)
+        q = dbs.Article.gql("WHERE draft = :1 ORDER BY created DESC", False)
+        rdic['mvdata'] = Paginator(q, 10, p)
+        path = get_path(ua, 'archive.html')
+        self.response.out.write(render(path,rdic))
 
 class note(webapp.RequestHandler):
     def get(self, slug):
@@ -186,6 +198,7 @@ apps = webapp.WSGIApplication(
     [
         ('/', index),
         ('/search', search),
+        ('/archive', archive),
         ('/a/(.*)', article),
         ('/k/(.*)', keyword_article),
         ('/t/(.*)', note),
