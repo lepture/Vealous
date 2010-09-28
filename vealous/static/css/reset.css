@@ -199,4 +199,5 @@ blockquote { background: #f5f5f5; border: 1px solid #dadada; padding: 15px 20px;
 ul { list-style-type: none;}
 h3 { font-weight: bold; }
 h3 a { font-size: 16px;}
+hr { border-color: #bbb; }
 /* end reset */
