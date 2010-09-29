@@ -27,16 +27,16 @@
         <div id="nav">
             <div class="wrapper">
                 <ul>
-                    <li><a href="{%url dashboard%}">Dashboard</a></li>
-                    <li><a href="{%url view_article%}">Articles</a></li>
-                    <li><a href="{%url view_melody%}">Melody</a></li>
-                    <li><a href="{%url vigo_setting%}">Setting</a></li>
+                    <li><a href="/god">Dashboard</a></li>
+                    <li><a href="/god/article">Articles</a></li>
+                    <li><a href="/god/melody">Melody</a></li>
+                    <li><a href="/god/setting">Setting</a></li>
                 </ul>
             </div>
         </div>
         <div id="footer">
             <div class="wrapper">
-                {%block account%}<p class="pretty"><a href="{%url logout%}"><strong>Logout</strong></a> | <a href="{%url chpasswd%}"><strong>Change Password</strong></a> of <a href="http://i.shiao.org">Vealous God Lands</a></p>{%endblock%}
+                {%block account%}<p class="pretty"><a href="/god/logout"><strong>Logout</strong></a> | <a href="/god/chpasswd"><strong>Change Password</strong></a> of <a href="http://i.shiao.org">Vealous God Lands</a></p>{%endblock%}
                 <p class="pretty">Copyleft by <a href="http://i.shiao.org">@lepture</a> &copy; 2010-{%now "Y"%} Version {{conf.version}}</p>
             </div>
             <div class="wrapper">

@@ -36,7 +36,7 @@ def get_path(ua, name):
     path = os.path.join(config.ROOT, 'god', 'tpl', name)
     return path
 
-class login(webapp.RequestHandler):
+class Login(webapp.RequestHandler):
     def get(self):
         session = Session(self)
         try:
@@ -69,13 +69,13 @@ class login(webapp.RequestHandler):
         path = get_path(ua, 'login.html')
         return self.response.out.write(render(path,rdic))
 
-class logout(webapp.RequestHandler):
+class Logout(webapp.RequestHandler):
     def get(self):
         session = Session(self)
         session['auth'] = 0
         return self.redirect('/god/login')
 
-class dashboard(webapp.RequestHandler):
+class Dashboard(webapp.RequestHandler):
     @be_god
     def get(self):
         rdic = {}
@@ -103,7 +103,7 @@ class dashboard(webapp.RequestHandler):
         rdic['comments'] = comments
         return self.response.out.write(render(path,rdic))
 
-class view_article(webapp.RequestHandler):
+class ViewArticle(webapp.RequestHandler):
     @be_god
     def get(self):
         source = self.request.get('from', None)
@@ -158,7 +158,7 @@ class view_article(webapp.RequestHandler):
         data = dbs.Article.gql('WHERE slug =:1', key)
         return data
 
-class edit_article(webapp.RequestHandler):
+class EditArticle(webapp.RequestHandler):
     @be_god
     def get(self):
         key = self.request.get('key', None)
@@ -209,7 +209,7 @@ class edit_article(webapp.RequestHandler):
         path = get_path(ua, 'edit_article.html')
         return self.response.out.write(render(path,rdic))
 
-class add_article(webapp.RequestHandler):
+class AddArticle(webapp.RequestHandler):
     @be_god
     def get(self):
         rdic = {}
@@ -240,7 +240,7 @@ class add_article(webapp.RequestHandler):
         path = get_path(ua, 'add_article.html')
         return self.response.out.write(render(path,rdic))
 
-class view_melody(webapp.RequestHandler):
+class ViewMelody(webapp.RequestHandler):
     @be_god
     def get(self):
         source = self.request.get('from', None)
@@ -266,7 +266,7 @@ class view_melody(webapp.RequestHandler):
         data = dbs.Melody.gql('WHERE label = :1 ORDER BY prior DESC',status)
         return data
 
-class add_melody(webapp.RequestHandler):
+class AddMelody(webapp.RequestHandler):
     @be_god
     def get(self):
         rdic = {}
@@ -296,7 +296,7 @@ class add_melody(webapp.RequestHandler):
         path = get_path(ua, 'add_melody.html')
         return self.response.out.write(render(path,rdic))
 
-class edit_melody(webapp.RequestHandler):
+class EditMelody(webapp.RequestHandler):
     @be_god
     def get(self):
         key = self.request.get('key', None)
@@ -346,7 +346,7 @@ class edit_melody(webapp.RequestHandler):
         path = get_path(ua, 'edit_melody.html')
         return self.response.out.write(render(path,rdic))
 
-class add_note(webapp.RequestHandler):
+class AddNote(webapp.RequestHandler):
     @be_god
     def post(self):
         self.response.headers['Content-Type'] = 'application/json'
@@ -359,7 +359,7 @@ class add_note(webapp.RequestHandler):
         data = {'succeeded': True, 'text':'Note Saved', 'html':html}
         return self.response.out.write(dumps(data))
 
-class delete_note(webapp.RequestHandler):
+class DeleteNote(webapp.RequestHandler):
     @be_god
     def get(self):
         self.response.headers['Content-Type'] = 'application/json'
@@ -375,7 +375,7 @@ class delete_note(webapp.RequestHandler):
         data = {'succeeded': True, 'text':'Delete Note'}
         return self.response.out.write(dumps(data))
 
-class vigo_setting(webapp.RequestHandler):
+class VigoSetting(webapp.RequestHandler):
     @be_god
     def get(self):
         rdic = {}
@@ -416,7 +416,7 @@ class vigo_setting(webapp.RequestHandler):
         path = get_path(ua, 'vigo.html')
         return self.response.out.write(render(path,rdic))
 
-class chpasswd(webapp.RequestHandler):
+class Chpasswd(webapp.RequestHandler):
     @be_god
     def get(self):
         rdic = {}
@@ -446,22 +446,47 @@ class chpasswd(webapp.RequestHandler):
         rdic['message'] = "Please fill all required fields"
         return self.response.out.write(render(path,rdic))
 
+class ConsoleMemcache(webapp.RequestHandler):
+    @be_god
+    def get(self):
+        action = self.request.get('action','none')
+        key = self.request.get('key',None)
+        if 'flush' == action:
+            memcache.flush_all()
+            logging.info('flash all memcache')
+            return self.redirect('/god/console/memcache')
+        if 'delete' == action and key:
+            memcache.delete(key)
+            logging.info('delete memcache key: ' + str(key))
+            return self.redirect('/god/console/memcache')
+        elif 'display' == action and key:
+            result = memcache.get(key)
+        else:
+            result = ''
+        rdic = {}
+        memstat = memcache.get_stats()
+        rdic['memstat'] = memstat
+        rdic['result'] = result
+        path = get_path('bot','memcache.html')
+        return self.response.out.write(render(path,rdic))
+
 
 apps = webapp.WSGIApplication(
     [
-        ('/god', dashboard),
-        ('/god/login', login),
-        ('/god/logout', logout),
-        ('/god/chpasswd', chpasswd),
-        ('/god/setting', vigo_setting),
-        ('/god/article', view_article),
-        ('/god/article/add', add_article),
-        ('/god/article/edit', edit_article),
-        ('/god/melody', view_melody),
-        ('/god/melody/add', add_melody),
-        ('/god/melody/edit', edit_melody),
-        ('/god/note/add', add_note),
-        ('/god/note/delete', delete_note),
+        ('/god/?', Dashboard),
+        ('/god/login', Login),
+        ('/god/logout', Logout),
+        ('/god/chpasswd', Chpasswd),
+        ('/god/setting', VigoSetting),
+        ('/god/article', ViewArticle),
+        ('/god/article/add', AddArticle),
+        ('/god/article/edit', EditArticle),
+        ('/god/melody', ViewMelody),
+        ('/god/melody/add', AddMelody),
+        ('/god/melody/edit', EditMelody),
+        ('/god/note/add', AddNote),
+        ('/god/note/delete', DeleteNote),
+        ('/god/console/memcache', ConsoleMemcache),
     ],
     debug = config.DEBUG,
 )

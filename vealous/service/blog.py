@@ -22,7 +22,7 @@ def get_path(ua, name):
     path = os.path.join(config.ROOT, 'tpl', config.THEME, name)
     return path
 
-class index(webapp.RequestHandler):
+class Index(webapp.RequestHandler):
     def get(self):
         rdic = {}
         rdic['notes'] = dbs.Note.getten()
@@ -33,7 +33,7 @@ class index(webapp.RequestHandler):
         path = get_path(ua, 'index.html')
         self.response.out.write(render(path,rdic))
 
-class article(webapp.RequestHandler):
+class Article(webapp.RequestHandler):
     def get(self, slug):
         ua = self.request.headers.get('User-Agent', 'bot')
         rdic = {}
@@ -55,7 +55,7 @@ class article(webapp.RequestHandler):
         html = render(path, rdic)
         self.response.out.write(html)
 
-class archive(webapp.RequestHandler):
+class Archive(webapp.RequestHandler):
     def get(self):
         rdic = {}
         rdic['navs'] = dbs.Melody.get_all('nav')
@@ -66,7 +66,7 @@ class archive(webapp.RequestHandler):
         path = get_path(ua, 'archive.html')
         self.response.out.write(render(path,rdic))
 
-class note(webapp.RequestHandler):
+class Note(webapp.RequestHandler):
     def get(self, slug):
         ua = self.request.headers.get('User-Agent', 'bot')
         rdic = {}
@@ -83,7 +83,7 @@ class note(webapp.RequestHandler):
         html = render(path, rdic)
         self.response.out.write(html)
 
-class keyword_article(webapp.RequestHandler):
+class Keyword(webapp.RequestHandler):
     def get(self, keyword):
         ua = self.request.headers.get('User-Agent', 'bot')
         rdic = {}
@@ -102,7 +102,7 @@ class keyword_article(webapp.RequestHandler):
             html = render(path, rdic)
         self.response.out.write(html)
 
-class melody_s5(webapp.RequestHandler):
+class S5(webapp.RequestHandler):
     def get(self, slug):
         data = dbs.Melody.get_s5(slug)
         if not data:
@@ -116,7 +116,7 @@ class melody_s5(webapp.RequestHandler):
             html = data.text
         self.response.out.write(html)
 
-class search(webapp.RequestHandler):
+class Search(webapp.RequestHandler):
     def get(self):
         rdic = {}
         rdic['cx'] = cx = self.request.get('cx','017842580319746762888:yjj0ddawsf8')
@@ -131,7 +131,7 @@ class search(webapp.RequestHandler):
         path = get_path(ua, 'search.html')
         self.response.out.write(render(path,rdic))
 
-class atom(webapp.RequestHandler):
+class Atom(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
         html = memcache.get('xml$atom')
@@ -143,7 +143,7 @@ class atom(webapp.RequestHandler):
             memcache.set('xml$atom', html, 43200) # 12hour
         self.response.out.write(html)
 
-class rss(webapp.RequestHandler):
+class Rss(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
         html = memcache.get('xml$rss')
@@ -155,7 +155,7 @@ class rss(webapp.RequestHandler):
             memcache.set('xml$rss', html, 43200) # 12hour
         self.response.out.write(html)
 
-class sitemap (webapp.RequestHandler):
+class Sitemap (webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
         html = memcache.get('xml$sitemap')
@@ -179,12 +179,12 @@ class sitemap (webapp.RequestHandler):
             memcache.set('xml$sitemap', html, 21600) # 6hour
         self.response.out.write(html)
 
-class redirect(webapp.RequestHandler):
+class Redirect(webapp.RequestHandler):
     def get(self, path):
         logging.info('redirect from path ' + str(path))
         self.redirect('/' + path)
 
-class error404(webapp.RequestHandler):
+class Error404(webapp.RequestHandler):
     def get(self):
         logging.info('404')
         rdic = {}
@@ -196,20 +196,20 @@ class error404(webapp.RequestHandler):
 
 apps = webapp.WSGIApplication(
     [
-        ('/', index),
-        ('/search', search),
-        ('/archive', archive),
-        ('/a/(.*)', article),
-        ('/k/(.*)', keyword_article),
-        ('/t/(.*)', note),
-        ('/s5/(.*)', melody_s5),
-        ('/feed', atom),
-        ('/feed.atom', atom),
-        ('/feed.rss', rss),
-        ('/sitemap.xml', sitemap),
+        ('/', Index),
+        ('/search', Search),
+        ('/archive', Archive),
+        ('/a/(.*)', Article),
+        ('/k/(.*)', Keyword),
+        ('/t/(.*)', Note),
+        ('/s5/(.*)', S5),
+        ('/feed', Atom),
+        ('/feed.atom', Atom),
+        ('/feed.rss', Rss),
+        ('/sitemap.xml', Sitemap),
 
-        ('/(.*)/', redirect),
-        ('.*', error404),
+        ('/(.*)/', Redirect),
+        ('.*', Error404),
     ],
     debug = config.DEBUG,
 )
