@@ -116,6 +116,7 @@ class Status(webapp.RequestHandler):
             data = {'text':'Post To Twitter Success'}
         except:
             data = {'text':'Post To Twitter Failed'}
+        self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(simplejson.dumps(data))
 
 apps = webapp.WSGIApplication(

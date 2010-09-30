@@ -5,6 +5,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
+from django.utils import simplejson
 
 from libs import pydouban
 from decorators import be_god
@@ -104,9 +105,13 @@ class Miniblog(webapp.RequestHandler):
         qs = dbs.Vigo.get('oauth_douban')
         api = pydouban.Api()
         api.set_qs_oauth(config.douban_key, config.douban_secret, qs)
-        api.post_miniblog(content)
-        self.response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
-        return self.response.out.write('Post to Douban Success')
+        try:
+            api.post_miniblog(content)
+            data = {'text':'Post To Douban Success'}
+        except:
+            data = {'text':'Post To Douban Failed'}
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(simplejson.dumps(data))
 
 apps = webapp.WSGIApplication(
     [
