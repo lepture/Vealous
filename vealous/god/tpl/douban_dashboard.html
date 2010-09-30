@@ -1,0 +1,55 @@
+{%extends "layout.html"%}
+
+{%block title%}
+Douban|Dashboard
+{%endblock%}
+
+{%block main%}
+<div class="soga alignleft">
+    <p class="message">{{message}}</p>
+    <div class="box">
+        {%for miniblog in miniblogs.entry%}
+        <div class="cell clearfix">
+            <a href="{{miniblog.author.link|avatar:"alternate"}}">
+                <img src="{{miniblog.author.link|avatar}}" alt="avatar" class="avatar alignleft" />
+            </a>
+            <div class="bitch alignleft">
+                <p>{{miniblog.content.t}}</p>
+                <p><span class="bold">{{miniblog.author.name.t}}</span> created at <span class="time">{{miniblog.published.t}}</span></p>
+            </div>
+            <div class="action alignright">
+                {%ifequal miniblog.author.name.t profile.title.t%}
+                <a href="/god/douban/miniblog/delete?pk={{miniblog.id.t|pk}}">Delete</a>
+                {%endifequal%}
+                <a href="/god/douban/miniblog/reply?pk={{miniblog.id.t|pk}}">Reply</a>
+            </div>
+        </div>
+        {%endfor%}
+        <div class="inner">
+            <a class="button" href="/god/douban/inbox">Inbox</a>
+            <a class="button" href="/god/douban/oubox">Outbox</a>
+        </div>
+    </div>
+</div>
+<div class="sidebar alignright">
+    <div class="box">
+        <div class="cell clearfix">
+            <a href="{{profile.link|avatar:"alternate"}}">
+                <img src="{{profile.link|avatar}}" alt="avatar" class="avatar alignleft" />
+            </a>
+            <div class="alignleft">
+                <p><strong>{{profile.title.t}}</strong></p>
+                <p>{{profile.signature.t}}</p>
+            </div>
+        </div>
+        <form id="noteform" action="/god/douban/miniblog" method="post">
+            <div class="form-row cell">
+                <textarea id="note" name="text" rows="4" cols="20" ></textarea>
+            </div>
+            <div class="form-row inner">
+                <input type="submit" class="button" value="Post" />
+            </div>
+        </form>
+    </div>
+</div>
+{%endblock%}
