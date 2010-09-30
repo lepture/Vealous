@@ -58,13 +58,23 @@ __website__ = 'http://i.shiao.org/a/pydouban'
 
 import hmac
 import urllib
+import urllib2
 import httplib
 from hashlib import sha1
 from random import getrandbits
 from time import time
 from cgi import escape
 
-from django.utils import simplejson as json
+try:
+    import json # Python >= 2.6
+except ImportError:
+    try:
+        import simplejson as json # Python < 2.6
+    except ImportError:
+        try:
+            from django.utils import simplejson as json
+        except ImportError:
+            raise ImportError
 
 AUTH_URL = 'http://www.douban.com/service/auth'
 API_URL = 'http://api.douban.com'
@@ -129,7 +139,7 @@ class Auth(object):
     def login(self, callback=None):
         req_token_url = AUTH_URL + '/request_token'
         params = self.get_oauth_params(req_token_url, {}) 
-        res = urllib.urlopen(url=req_token_url + '?' + _dict2qs(params))
+        res = urllib2.urlopen(url=req_token_url + '?' + _dict2qs(params))
         if 200 != res.code:
             raise Exception('OAuth Request Token Error: ' + res.read())
         dic = _qs2dict(res.read())
@@ -149,7 +159,7 @@ class Auth(object):
         self._token_secret = req_token_secret
 
         params = self.get_oauth_params(acs_token_url, {})
-        res = urllib.urlopen(url=acs_token_url + '?' + _dict2qs(params))
+        res = urllib2.urlopen(url=acs_token_url + '?' + _dict2qs(params))
         if 200 != res.code:
             raise Exception('OAuth Access Token Error: ' + res.read())
         return res.read() # qs
@@ -235,7 +245,7 @@ class Api(object):
         return res.read()
     
     def _get_open(self, url):
-        res = urllib.urlopen(url)
+        res = urllib2.urlopen(url)
         if 200 != res.code:
             raise Exception('Douban Get Error : ' + str(res.code))
         if 'json' == self._alt:

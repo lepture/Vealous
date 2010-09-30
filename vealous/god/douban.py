@@ -14,7 +14,7 @@ from utils.sessions import Session
 import config
 import dbs
 
-week = 604800
+day = 86400
 
 register = template.create_template_register()
 template.register_template_library('god.douban')
@@ -60,7 +60,7 @@ class Dashboard(webapp.RequestHandler):
         profile = memcache.get('douban/profile')
         if profile is None:
             profile = api.get_profile()
-            memcache.set('douban/profile', profile, week)
+            memcache.set('douban/profile', profile, day)
         rdic['profile'] = profile
         miniblogs = memcache.get('douban/miniblogs')
         if miniblogs is None:
@@ -73,7 +73,7 @@ class Login(webapp.RequestHandler):
     @be_god
     def get(self):
         auth = pydouban.Auth(config.douban_key, config.douban_secret)
-        callback = 'http://localhost:8080/god/douban/auth'
+        callback = config.SITE_URL + '/god/douban/auth'
         dic = auth.login(callback)
         session = Session(self)
         session['douban_dic'] = dic
@@ -82,11 +82,12 @@ class Login(webapp.RequestHandler):
 class Auth(webapp.RequestHandler):
     @be_god
     def get(self):
+        session = Session(self)
         oauth_douban = dbs.Vigo.get('oauth_douban')
         if oauth_douban:
-            return self.response.out.write('authed')
+            session['message'] = 'Douban Authed Already'
+            return self.redirect('/god/douban?from=douban')
         auth = pydouban.Auth(config.douban_key, config.douban_secret)
-        session = Session(self)
         dic = session.get('douban_dic',{})
         if not dic:
             session['message'] = 'Request Douban access token failed'

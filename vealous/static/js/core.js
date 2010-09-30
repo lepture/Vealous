@@ -3,7 +3,6 @@ function showNofity() {
     var message = $('.message');
     if (message.text()) {
         message.fadeIn();
-        message.fadeOut(2000);
     }
     message.click(function(){
         message.fadeOut();
@@ -20,7 +19,6 @@ function postNote() {
     if (notelen < 1) {
         $('.message').text('You said nothing');
         $('.message').fadeIn();
-        $('.message').fadeOut(2000);
         return false
     }
     $.post('/god/note/add', $('#noteform').serialize(), function(data){
@@ -48,7 +46,6 @@ function postDoubanMiniblog(){
     function(data){
         $('.message').html(data.text);
         $('.message').fadeIn();
-        $('.message').fadeOut(2000);
     },'json');
 }
 function postTwitterStatus() {
@@ -56,7 +53,6 @@ function postTwitterStatus() {
     function(data){
         $('.message').html(data.text);
         $('.message').fadeIn();
-        $('.message').fadeOut(2000);
     },'json');
 }
 
