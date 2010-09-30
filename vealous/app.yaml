@@ -18,9 +18,12 @@ handlers:
 - url: /god/third/.*
   script: god/third.py
 
+- url: /god/douban/?.*
+  script: god/douban.py
+
 - url: /god/?.*
-  script: god/ctrl.py
+  script: god/main.py
 
 - url: /.*
-  script: service/main.py
+  script: service/blog.py
 
