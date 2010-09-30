@@ -18,9 +18,12 @@ $(function(){
     $('#noteform').submit(function(){
         post_note();
         var douban = $('#noteform input[name="douban"]');
-        //var twitter = $('#noteform input[name="twitter"]');
+        var twitter = $('#noteform input[name="twitter"]');
         if(douban.is(':checked')){
             douban_update();
+        }
+        if(twitter.is(':checked')){
+            postTwitterStatus();
         }
         $('#note').val('');
         return false;

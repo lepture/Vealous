@@ -6,6 +6,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.ext import webapp
 from google.appengine.api import memcache, urlfetch
 from google.appengine.ext.webapp import template
+from django.utils import simplejson
 
 from libs import twitter
 from decorators import be_god
@@ -103,14 +104,19 @@ class Auth(webapp.RequestHandler):
 class Status(webapp.RequestHandler):
     @be_god
     def post(self):
-        refer = self.request.headers.get('HTTP_REFERER','/')
         content = self.request.get('text', '')
         if len(content) > 140:
             content = content[:133] + '...'
+        try: content = content.encode('utf-8')
+        except UnicodeDecodeError: pass
         qs = dbs.Vigo.get('oauth_twitter')
         api = Twitter().set_qs_api(qs)
-        api.PostUpdate(content)
-        return self.redirect(refer)
+        try:
+            api.PostUpdate(content)
+            data = {'text':'Post To Twitter Success'}
+        except:
+            data = {'text':'Post To Twitter Failed'}
+        self.response.out.write(simplejson.dumps(data))
 
 apps = webapp.WSGIApplication(
     [
