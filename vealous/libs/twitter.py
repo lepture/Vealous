@@ -37,6 +37,7 @@ import gzip
 import StringIO
 
 from django.utils import simplejson
+from google.appengine.api import memcache
 
 # parse_qsl moved to urlparse module in v2.6
 try:
@@ -2888,7 +2889,7 @@ class Api(object):
       cache: an instance that supports the same API as the twitter._FileCache
     '''
     if cache == DEFAULT_CACHE:
-      self._cache = _FileCache()
+      self._cache = _MemCache()
     else:
       self._cache = cache
 
@@ -3262,7 +3263,6 @@ class _FileCache(object):
       return os.getenv('USER') or \
              os.getenv('LOGNAME') or \
              os.getenv('USERNAME') or \
-             os.getlogin() or \
              'nobody'
     except (IOError, OSError), e:
       return 'nobody'
@@ -3295,3 +3295,22 @@ class _FileCache(object):
 
   def _GetPrefix(self,hashed_key):
     return os.path.sep.join(hashed_key[0:_FileCache.DEPTH])
+
+class _MemCache(object):
+    def _GetCacheKey(self, key):
+        return 'twitter_' + key
+    def Get(self, key):
+        data = memcache.get(self._GetCacheKey(key))
+        if data is not None:
+            return data[0]
+        return None
+    def Set(self, key, data):
+        data = (data, time.time())
+        memcache.set(self._GetCacheKey(key), data)
+    def Remove(self, key):
+        memcache.delete(self._GetCacheKey(key))
+    def GetCachedTime(self, key):
+        data = memcache.get(self._GetCacheKey(key))
+        if data is not None:
+            return data[1]
+        return None

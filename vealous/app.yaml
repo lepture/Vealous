@@ -18,6 +18,9 @@ handlers:
 - url: /god/third/.*
   script: god/third.py
 
+- url: /god/twitter/?.*
+  script: god/twitter.py
+
 - url: /god/douban/?.*
   script: god/douban.py
 
