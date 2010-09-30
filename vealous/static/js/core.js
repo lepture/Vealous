@@ -1,4 +1,3 @@
-var DEMO;
 function postDoubanMiniblog(){
     $.post('/god/douban/miniblog', $('#noteform').serialize(),
     function(data){
@@ -6,7 +5,15 @@ function postDoubanMiniblog(){
         $('.message').fadeIn();
     },'text');
 }
+function postTwitterStatus() {
+    $.post('/god/twitter/status', $('#noteform').serialize(),
+    function(data){
+        $('.message').html(data.text);
+        $('.message').fadeIn();
+    },'json');
+}
 // auto save article
+var DEMO;
 function autoSave() {
     var title = $('#id_title').val();
     var slug = $('#id_slug').val();
