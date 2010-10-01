@@ -50,10 +50,26 @@ body {
     border-bottom: 3px solid #333;
     color: #333;
 }
+.nav-more>a { padding-bottom: 7px; }
+.nav-more a:hover { border-bottom: none 0;}
+.nav-more ul {
+    position: absolute;
+    background: #efefef;
+    border: 1px solid #dadada;
+    border-top: 1px solid #efefef;
+    border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+}
+.nav-more ul li {
+    float: none;
+    margin: 0;
+}
 #mainbody {
-    margin: 20px 0;
+    margin: 12px 0;
     min-height: 450px;
     font-size: 13px;
+    z-index: 0;
 }
 .soga {
     width: 690px;
@@ -225,6 +241,7 @@ body {
     -moz-border-radius: 5px;
     text-decoration: none;
     padding: 3px 6px;
+    margin: 0 2px;
 }
 .page-nav .current, .page-nav .page-numbers:hover {
     background-color: #fff;

@@ -8,22 +8,8 @@ Douban|Dashboard
 <div class="soga alignleft">
     <p class="message">{{message}}</p>
     <div class="box">
-        {%for miniblog in miniblogs.entry%}
-        <div class="cell clearfix">
-            <div class="alignleft">
-                <a href="{{miniblog.author.link|avatar:"alternate"}}"><img src="{{miniblog.author.link|avatar}}" alt="avatar" class="avatar" /></a>
-            </div>
-            <div class="widow alignright">
-                <p><strong>{{miniblog.author.name.t|escape}}</strong> Published at <span class="time">{{miniblog.published.t|timesince|split:","}} ago</span></p>
-                <div class="sep"></div>
-                <p>{{miniblog.content.t}}</p>
-            </div>
-        </div>
-        {%endfor%}
-        <div class="inner">
-            <a class="button" href="/god/douban/inbox">Inbox</a>
-            <a class="button" href="/god/douban/oubox">Outbox</a>
-        </div>
+        {%include "include/douban_statuses.html"%}
+        <div class="inner"></div>
     </div>
 </div>
 <div class="sidebar alignright">

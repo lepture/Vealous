@@ -18,12 +18,21 @@
                         <h2><a href="/">{{vigo.sitename|default:"Vealous"}}</a></h2>
                         <p class="pretty">{{vigo.sitetag|default:"Love its people, but never trust its government"}}</p>
                     </div>
-                    {%block nav%}
+                    {%block login%}
                     <ul class="alignright nav">
+                        {%block nav%}
                         <li class="current"><a href="/god">Dashboard</a></li>
                         <li><a href="/god/article">Articles</a></li>
                         <li><a href="/god/melody">Melody</a></li>
-                        <li><a href="/god/setting">Setting</a></li>
+                        <li><a href="/god/note">Note</a></li>
+                        {%endblock%}
+                        <li class="nav-more"><a href="#">More</a>
+                        <ul class="hide">
+                            <li><a href="/god/douban">Douban</a></li>
+                            <li><a href="/god/twitter">Twitter</a></li>
+                            <li><a href="/god/console/memcache">Console</a></li>
+                        </ul>
+                        </li>
                     </ul>
                     {%endblock%}
                 </div>

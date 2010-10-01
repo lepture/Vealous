@@ -23,4 +23,8 @@ $(function(){
         var arg = $(this).val();
         melodyLable(arg);
     });
+    $('.nav-more>a').click(function(){
+        $('.nav-more ul').slideToggle('fast');
+        return false;
+    });
 });
