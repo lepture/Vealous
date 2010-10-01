@@ -29,8 +29,8 @@
     <ul>
         {%for note in notes%}
         <li class="note"><p>
-        {{note.text|escape}}
-        »<a href="{{note.the_url}}"><span class="time">Created at {{note.created|humantime}}</span></a>
+        {{note.text|escape|urlize}}
+        »<a href="{{note.the_url}}"><span class="time">Created at {{note.created|timesince|split:","}} ago</span></a>
         </p></li>
         {%endfor%}
     </ul>
