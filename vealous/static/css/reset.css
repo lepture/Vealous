@@ -23,14 +23,13 @@
     word-break: break-all;
     overflow: hidden;
 }
-.hide {
-    display: none;
-}
+.hide { display: none; }
 .alignleft { float: left;}
 .alignright{ float: right;}
 .textleft { text-align: left;}
 .textright { text-align: right;}
 .textcenter { text-align: center; }
+.sep { margin-bottom: 5px;}
 .pretty {
     font-family: "DejaVu Serif", "Times New Roman", serif;
     font-size: 12px;

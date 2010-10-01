@@ -10,18 +10,13 @@ Douban|Dashboard
     <div class="box">
         {%for miniblog in miniblogs.entry%}
         <div class="cell clearfix">
-            <a href="{{miniblog.author.link|avatar:"alternate"}}">
-                <img src="{{miniblog.author.link|avatar}}" alt="avatar" class="avatar alignleft" />
-            </a>
-            <div class="bitch alignleft">
-                <p>{{miniblog.content.t}}</p>
-                <p><span class="bold">{{miniblog.author.name.t}}</span> created at <span class="time">{{miniblog.published.t}}</span></p>
+            <div class="alignleft">
+                <a href="{{miniblog.author.link|avatar:"alternate"}}"><img src="{{miniblog.author.link|avatar}}" alt="avatar" class="avatar" /></a>
             </div>
-            <div class="action alignright">
-                {%ifequal miniblog.author.name.t profile.title.t%}
-                <a href="/god/douban/miniblog/delete?pk={{miniblog.id.t|pk}}">Delete</a>
-                {%endifequal%}
-                <a href="/god/douban/miniblog/reply?pk={{miniblog.id.t|pk}}">Reply</a>
+            <div class="widow alignright">
+                <p><strong>{{miniblog.author.name.t|escape}}</strong> Published at <span class="time">{{miniblog.published.t|timesince|split:","}} ago</span></p>
+                <div class="sep"></div>
+                <p>{{miniblog.content.t}}</p>
             </div>
         </div>
         {%endfor%}

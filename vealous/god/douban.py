@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 import os
+import datetime
 from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -65,6 +66,10 @@ class Dashboard(webapp.RequestHandler):
         miniblogs = memcache.get('douban/miniblogs')
         if miniblogs is None:
             miniblogs = api.get_contacts_miniblog()
+            for i in range(len(miniblogs.entry)):
+                miniblogs.entry[i].published.t = datetime.datetime.strptime(
+                    miniblogs.entry[i].published.t, '%Y-%m-%dT%H:%M:%S+08:00')
+                miniblogs.entry[i].published.t -= datetime.timedelta(hours=8)
             memcache.set('douban/miniblogs', miniblogs, 240)
         rdic['miniblogs'] = miniblogs
         return self.response.out.write(render(path, rdic))

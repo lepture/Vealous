@@ -51,7 +51,7 @@
         {% for data in notes %}
         <div class="cell">
             <p>{{data.text}}</p>
-            <p>Created at <span class="time">{{data.created|humantime}}</span> <span class="action"><a href="/god/note/delete?key={{data.key}}">Delete</a></span></p>
+            <p>Created at <span class="time">{{data.created|timesince|split:","}}</span> <span class="action"><a href="/god/note/delete?key={{data.key}}">Delete</a></span></p>
         </div>
         {% endfor %}
     </div>
