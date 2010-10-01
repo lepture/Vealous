@@ -150,6 +150,7 @@ a.status:hover {
     text-decoration: none;
     color: #fff;
 }
+.snow { color: rgba(0,0,0,0.15); }
 input[type="text"], input[type="password"], textarea, select, .sl, .text {
     background: #fff;
     border-radius: 3px;

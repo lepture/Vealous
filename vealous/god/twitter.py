@@ -2,6 +2,7 @@
 
 import os
 import logging
+import datetime, time
 from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.ext import webapp
 from google.appengine.api import memcache, urlfetch
@@ -69,6 +70,14 @@ class Dashboard(webapp.RequestHandler):
         if not qs:
             return self.redirect('/god/twitter/login')
         api = Twitter().set_qs_api(qs)
+        statuses = memcache.get('twitter/home')
+        if statuses is None:
+            statuses = api.GetFriendsTimeline(count=30, retweets=True)
+            for i in range(len(statuses)):
+                statuses[i].datetime = datetime.datetime.\
+                        fromtimestamp(time.mktime(time.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')))
+            memcache.set('twitter/home', statuses, 120)
+        rdic['statuses'] = statuses
         return self.response.out.write(render(path, rdic))
 
 class Login(webapp.RequestHandler):

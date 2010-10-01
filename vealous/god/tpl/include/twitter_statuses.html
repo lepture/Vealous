@@ -1,0 +1,13 @@
+{%for status in statuses%}
+<div class="cell clearfix twitter">
+    <div class="alignleft">
+        <a href="/god/twitter/user/{{status.user.screen_name}}"><img src="{{status.user.profile_image_url}}" class="avatar" /></a>
+    </div>
+    <div class="alignright widow">
+        <p><strong>{{status.user.name}}</strong> @<a href="/god/twitter/user/{{status.user.screen_name}}">{{status.user.screen_name}}</a>
+        <strong class="snow"><small>{{status.datetime|timesince}} ago via {{status.source}}</small></strong>
+        </p>
+        <p>{{status.text|urlize}}</p>
+    </div>
+</div>
+{%endfor%}

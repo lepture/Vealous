@@ -118,6 +118,11 @@ body {
     overflow: hidden;
     word-wrap: break-word;
 }
+.soga .widow {
+    width: 600px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
 .soga .bitch p {
     margin-bottom: 2px;
 }
