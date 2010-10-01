@@ -36,6 +36,7 @@ SESSION_NAME = 'sessionid'
 SESSION_EXPIRE = 7200
 
 WIDGET = ''
+META = ''
 
 # don't change gvars
 gvars = {
@@ -46,4 +47,5 @@ gvars = {
     'email': EMAIL,
     'debug': DEBUG,
     'widget': WIDGET,
+    'meta': META,
 }

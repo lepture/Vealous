@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>{%block title%}Home|{{vigo.sitename|default:"Vealous"}}{%endblock%}</title>
+        {{conf.meta}}
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         {%if vigo.alterfeed%}
         <link rel="alternate" type="application/rss+xml" href="{{vigo.alterfeed}}" />
