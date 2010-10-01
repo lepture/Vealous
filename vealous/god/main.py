@@ -346,6 +346,11 @@ class EditMelody(webapp.RequestHandler):
         path = get_path(ua, 'edit_melody.html')
         return self.response.out.write(render(path,rdic))
 
+class ViewNote(webapp.RequestHandler):
+    @be_god
+    def get(self):
+        self.redirect('/god')
+
 class AddNote(webapp.RequestHandler):
     @be_god
     def post(self):
@@ -484,6 +489,7 @@ apps = webapp.WSGIApplication(
         ('/god/melody', ViewMelody),
         ('/god/melody/add', AddMelody),
         ('/god/melody/edit', EditMelody),
+        ('/god/note', ViewNote),
         ('/god/note/add', AddNote),
         ('/god/note/delete', DeleteNote),
         ('/god/console/memcache', ConsoleMemcache),
