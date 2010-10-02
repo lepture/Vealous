@@ -30,7 +30,7 @@ Search|{{vigo.sitename|default:"Vealous"}}
 {%endif%}
 <p class="pages">
 {%for page in gres.cursor.pages%}
-<a href="/search?cx={{cx}}&start={{page.start}}&q={{q}}">{{page.label}}</a>
+<a href="/search?&start={{page.start}}&q={{q}}">{{page.label}}</a>
 {%endfor%}
 </p>
 {%endblock%}

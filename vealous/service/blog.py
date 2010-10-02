@@ -2,13 +2,15 @@
 
 import os
 import logging
+from urllib2 import quote
+from django.utils.simplejson import loads as parse_json
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.api import memcache
+from google.appengine.api import urlfetch
 
 from utils.render import render
 from utils.paginator import Paginator
-from service import searchapi
 import dbs
 
 import config
@@ -119,11 +121,11 @@ class S5(webapp.RequestHandler):
 class Search(webapp.RequestHandler):
     def get(self):
         rdic = {}
-        rdic['cx'] = cx = self.request.get('cx','017842580319746762888:yjj0ddawsf8')
+        cx = dbs.Vigo.get('gcse')
         rdic['q'] = q = self.request.get('q','Vealous')
         rdic['start'] = start = self.request.get('start', '0')
         try:
-            rdic['gres'] = searchapi.gsearch(cx, q, start)
+            rdic['gres'] = gsearch(q, start, cx)
         except:
             rdic['error'] = 'Oops! An Error occured!'
         rdic['navs'] = dbs.Melody.get_all('nav')
@@ -193,6 +195,30 @@ class Error404(webapp.RequestHandler):
         self.response.set_status(404)
         self.response.out.write(render(path,rdic))
 
+
+def gsearch(q, start, cx=''):
+    GSEARCH_URL = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&rsz=filtered_cse&cx=%(cx)s&q=%(q)s&start=%(start)s'
+    if not cx:
+        GSEARCH_URL = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&rsz=filtered_cse&q=%(q)s&start=%(start)s'
+    try:
+        q = quote(q.encode('utf-8'))
+    except:
+        q = quote(q)
+    gdic = dict(cx=cx,q=q,start=start)
+    url = GSEARCH_URL % gdic
+    try:
+        res = urlfetch.fetch(url)
+    except urlfetch.DownloadError, e:
+        logging.error('Search Download Error: ' + str(e))
+        raise urlfetch.DownloadError
+    if 200 != res.status_code:
+        logging.error('Search Status Error: ' + str(res.status_code))
+        raise Exception('Search Status Error: ' + str(res.status_code))
+    gres = parse_json(res.content)
+    if 200 != gres['responseStatus']:
+        logging.error('Search responseStatus Error: ' + str(gres['responseDetails']))
+        raise Exception('Search responseStatus Error: ' + str(gres['responseDetails']))
+    return gres['responseData']
 
 apps = webapp.WSGIApplication(
     [
