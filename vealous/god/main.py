@@ -19,7 +19,7 @@ from django.utils.simplejson import dumps
 from utils.render import render
 from utils.paginator import Paginator
 from utils.sessions import Session
-from service.disqus import Disqus
+from god.disqus import Disqus
 import dbs
 import config
 from decorators import be_god
@@ -86,7 +86,7 @@ class Dashboard(webapp.RequestHandler):
             message = session.get('message','')
             session.delete('message')
         rdic['message'] = message
-        comments = memcache.get('god$comments')
+        comments = memcache.get('disqus$comments')
         ua = self.request.headers.get('User-Agent', 'bot')
         path = get_path(ua, 'dashboard.html')
         rdic['notes'] = dbs.Note.getten()

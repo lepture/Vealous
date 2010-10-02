@@ -1,9 +1,17 @@
 #-*- coding: utf-8 -*-
 
-from google.appengine.api import urlfetch
+from google.appengine.ext import webapp
+from google.appengine.ext.webapp.util import run_wsgi_app as run
+from google.appengine.api import memcache
+from django.utils.simplejson import dumps
 from django.utils.simplejson import loads as parse_json
+from google.appengine.api import urlfetch
 import urllib
 import logging
+
+from decorators import be_god
+from config import DEBUG
+import dbs
 
 class Disqus(object):
     rpc = None
@@ -94,3 +102,32 @@ class Disqus(object):
             logging.info('moderate post failed')
             return {'succeeded': False}
         return json
+
+class DisqusModerate(webapp.RequestHandler):
+    @be_god
+    def get(self):
+        action = self.request.get('action',None)
+        post_id = self.request.get('post_id',None)
+        forum_key = dbs.Vigo.get('forum_key')
+        disqus_key = dbs.Vigo.get('disqus_key')
+        self.response.headers['Content-Type'] = 'application/json'
+        if action and post_id and forum_key and disqus_key:
+            d = Disqus(disqus_key)
+            data = d.moderate_post(forum_key,post_id,action)
+            if data['succeeded']:
+                memcache.delete('disqus$comments')
+            return self.response.out.write(dumps(data))
+        data = {'succeeded': False}
+        return self.response.out.write(dumps(data))
+
+
+
+apps = webapp.WSGIApplication(
+    [
+        ('/god/disqus/moderate', DisqusModerate),
+    ],
+    debug = DEBUG,
+)
+
+if '__main__' == __name__:
+    run(apps)

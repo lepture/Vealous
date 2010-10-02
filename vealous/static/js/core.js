@@ -61,7 +61,7 @@ function disqusModerate() {
         var action = $(this).text().toLowerCase();
         var label = $(this).parent().siblings('.bitch').find('.status');
         var comment_id = $(this).attr('class');
-        var url = '/god/third/disqus_moderate?action=' + action + '&post_id=' + comment_id;
+        var url = '/god/disqus/moderate?action=' + action + '&post_id=' + comment_id;
         $.getJSON(url, function(data){
             if(data.succeeded){
                 $('.message').text('Moderate comment succeeded');
