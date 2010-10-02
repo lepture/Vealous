@@ -70,15 +70,42 @@ class Dashboard(webapp.RequestHandler):
         if not qs:
             return self.redirect('/god/twitter/login')
         api = Twitter().set_qs_api(qs)
-        statuses = memcache.get('twitter/home')
+        statuses = memcache.get('twitter$home')
         if statuses is None:
             statuses = api.GetFriendsTimeline(count=30, retweets=True)
             for i in range(len(statuses)):
                 statuses[i].datetime = datetime.datetime.\
                         fromtimestamp(time.mktime(time.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')))
-            memcache.set('twitter/home', statuses, 120)
+            memcache.set('twitter$home', statuses, 120)
         rdic['statuses'] = statuses
         return self.response.out.write(render(path, rdic))
+
+class UserStatus(webapp.RequestHandler):
+    @be_god
+    def get(self, username):
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'twitter_user.html')
+        rdic = {}
+        rdic['username'] = username
+        qs = dbs.Vigo.get('oauth_twitter')
+        if not qs:
+            return self.redirect('/god/twitter/login')
+        api = Twitter().set_qs_api(qs)
+        statuses = memcache.get('twitter$status$' + username)
+        if statuses is None:
+            statuses = api.GetUserTimeline(count=30, screen_name=username)
+            for i in range(len(statuses)):
+                statuses[i].datetime = datetime.datetime.\
+                        fromtimestamp(time.mktime(time.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')))
+            memcache.set('twitter$status$' + username, statuses, 240)
+        rdic['statuses'] = statuses
+        #profile = memcache.get('twitter$profile$' + username)
+        #if profile is None:
+        #    profile = api.GetUser(username)
+        #    memcache.set('twitter$profile$'+username, profile, 86400)
+        #rdic['profile'] = profile
+        return self.response.out.write(render(path, rdic))
+
 
 class Login(webapp.RequestHandler):
     @be_god
@@ -134,6 +161,7 @@ apps = webapp.WSGIApplication(
         ('/god/twitter/login', Login),
         ('/god/twitter/auth', Auth),
         ('/god/twitter/status', Status),
+        ('/god/twitter/user/(.*)', UserStatus),
     ],
     debug = config.DEBUG,
 )
