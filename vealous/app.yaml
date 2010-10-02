@@ -27,6 +27,11 @@ handlers:
 - url: /god/?.*
   script: god/main.py
 
+- url: /_ah/xmpp/message/chat/
+  script: service/chat.py
+
 - url: /.*
   script: service/blog.py
 
+inbound_services:
+- xmpp_message
