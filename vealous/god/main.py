@@ -14,6 +14,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.ext import db
 from google.appengine.api import memcache
+from google.appengine.api import urlfetch
 from django.utils.simplejson import dumps
 
 from utils.render import render
@@ -233,6 +234,8 @@ class AddArticle(webapp.RequestHandler):
             data = dbs.Article.add(title,slug,text,draft,keyword)
             session = Session(self)
             session['message'] = 'New article <a href="/god/article/edit?key=%s">%s</a> has been created' % (data.key(), data.title)
+            gping = 'http://blogsearch.google.com/ping?url=%s/feed.atom' % config.SITE_URL
+            urlfetch.fetch(gping)
             return self.redirect('/god/article?from=add')
         message = 'Please fill the required fields'
         rdic['message'] = message
