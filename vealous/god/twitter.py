@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 import os
+import re
 import logging
 import datetime, time
 from google.appengine.ext.webapp.util import run_wsgi_app as run
@@ -18,8 +19,12 @@ import dbs
 
 week = 604800
 
-#register = template.create_template_register()
-#template.register_template_library('god.twitter')
+register = template.create_template_register()
+template.register_template_library('god.twitter')
+@register.filter
+def at(value):
+    value = re.sub(r'@([a-zA-Z0-9\_]+)',r'@<a href="/god/twitter/user/\1">\1</a>', value) 
+    return value
 
 class Twitter(object):
     def __init__(self, token=None):
