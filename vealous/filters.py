@@ -61,9 +61,9 @@ def more(value):
 @register.filter
 def embed(value):
     #gist
-    value = re.sub(r'(http://gist.github.com/[\d]+)',r'<script src="\1.js"></script>', value) 
+    value = re.sub(r'(http://gist.github.com/[\d]+)',r'<small><a rel="nofollow" href="\1">\1</a></small><script src="\1.js"></script>', value) 
     #youku
-    value = re.sub(r'http://v.youku.com/v_show/id_([a-zA-Z0-9\=]+).html', r'<embed src="http://player.youku.com/player.php/sid/\1/v.swf" quality="high" width="480" height="400" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"></embed>', value)
+    value = re.sub(r'http://v.youku.com/v_show/id_([a-zA-Z0-9\=]+).html', r'<small><a rel="nofollow" href="http://v.youku.com/v_show/id_\1.html">Youku Source</a></small><br /><embed src="http://player.youku.com/player.php/sid/\1/v.swf" quality="high" width="480" height="400" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"></embed>', value)
     #tudou
-    value = re.sub(r'http://www.tudou.com/programs/view/([a-zA-z0-9\-\=]+)/',r'<embed src="http://www.tudou.com/v/\1/v.swf" width="480" height="400" allowScriptAccess="sameDomain" wmode="opaque" type="application/x-shockwave-flash"></embed>', value)
+    value = re.sub(r'http://www.tudou.com/programs/view/([a-zA-z0-9\-\=]+)/',r'<small><a rel="nofollow" href="http://www.tudou.com/programs/view/\1/">Tudou Source</a></small><br /><embed src="http://www.tudou.com/v/\1/v.swf" width="480" height="400" allowScriptAccess="sameDomain" wmode="opaque" type="application/x-shockwave-flash"></embed>', value)
     return value
