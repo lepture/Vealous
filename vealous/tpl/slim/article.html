@@ -4,25 +4,14 @@
 {{data.title}}|{{vigo.sitename|default:"Vealous"}}
 {%endblock%}
 
-{%block extra%}
-<link rel="stylesheet" href="{{conf.static}}/css/syntax.css" />
-<script type="text/javascript" src="{{conf.jshost}}/lib/syntax/shCore.js"></script>
-<script type="text/javascript" src="{{conf.jshost}}/lib/syntax/shBrushPython.js"></script>
-<script type="text/javascript">
-    window.onload = function(){
-        dp.SyntaxHighlighter.HighlightAll('code');
-    }
-</script>
-{%endblock%}
-
 {%block soga%}
 <div class="post">
     <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>
     <div class="post-info">
-        <label>Created at</label><span class="time">{{data.created|prettytime}}</span>
+        <label>Created at </label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="external">{{vigo.twitter}}</a>
     </div>
     <div class="post-content">
-        {{data.html}}
+        {{data.html|embed}}
     </div>
     <div class="post-meta clearfix">
         <div class="alignleft">
