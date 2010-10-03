@@ -10,7 +10,7 @@ from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 
 from utils.render import render
-from utils.paginator import Paginator
+from utils import Paginator
 from utils import is_mobile
 import dbs
 
@@ -59,8 +59,8 @@ class Archive(webapp.RequestHandler):
         rdic = {}
         rdic['navs'] = dbs.Melody.get_all('nav')
         p = self.request.get('p',1)
-        q = dbs.Article.gql("WHERE draft = :1 ORDER BY created DESC", False)
-        rdic['mvdata'] = Paginator(q, 10, p)
+        data = dbs.Article.get_archive()
+        rdic['mvdata'] = Paginator(data, 10, p)
         path = get_path(self.request, 'archive.html')
         self.response.out.write(render(path,rdic))
 
@@ -83,14 +83,15 @@ class Note(webapp.RequestHandler):
 class Keyword(webapp.RequestHandler):
     def get(self, keyword):
         rdic = {}
-        articles = dbs.Article.keyword_article(keyword)
-        if not articles:
+        data = dbs.Article.get_kw_articles(keyword)
+        if not data:
             logging.info('404 , visite keyword ' + str(keyword))
             path = get_path(self.request, '404.html')
             html = render(path, rdic)
             self.response.set_status(404)
         else:
-            rdic['articles'] = articles
+            p = self.request.get('p',1)
+            rdic['mvdata'] = Paginator(data, 10, p)
             rdic['navs'] = dbs.Melody.get_all('nav')
             rdic['links'] = dbs.Melody.get_all('link')
             rdic['keyword'] = keyword
@@ -134,7 +135,7 @@ class Atom(webapp.RequestHandler):
             rdic['datas'] = dbs.Article.getten()
             path = os.path.join(config.ROOT, 'tpl', 'atom.xml')
             html = render(path, rdic)
-            memcache.set('xml$atom', html, 43200) # 12hour
+            memcache.set('xml$atom', html)
         self.response.out.write(html)
 
 class Rss(webapp.RequestHandler):
@@ -146,7 +147,7 @@ class Rss(webapp.RequestHandler):
             rdic['datas'] = dbs.Article.getten()
             path = os.path.join(config.ROOT, 'tpl', 'rss.xml')
             html = render(path, rdic)
-            memcache.set('xml$rss', html, 43200) # 12hour
+            memcache.set('xml$rss', html)
         self.response.out.write(html)
 
 class Sitemap (webapp.RequestHandler):
@@ -170,7 +171,7 @@ class Sitemap (webapp.RequestHandler):
             rdic['urlset'] = urlset
             path = os.path.join(config.ROOT, 'tpl', 'sitemap.xml')
             html = render(path, rdic)
-            memcache.set('xml$sitemap', html, 21600) # 6hour
+            memcache.set('xml$sitemap', html)
         self.response.out.write(html)
 
 class Redirect(webapp.RequestHandler):

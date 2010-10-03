@@ -4,6 +4,10 @@
 {{data.title}}|{{vigo.sitename|default:"Vealous"}}
 {%endblock%}
 
+{%block extra%}
+<meta name="keywords" content="{{conf.sitename|default:"Vealous"}},{{data.title}}" />
+{%endblock%}
+
 {%block soga%}
 <div class="post">
     <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>

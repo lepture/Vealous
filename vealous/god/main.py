@@ -441,7 +441,7 @@ class ConsoleMemcache(WebHandler):
         memstat = memcache.get_stats()
         rdic['memstat'] = memstat
         rdic['result'] = result
-        path = get_path('bot','memcache.html')
+        path = get_path(self.request,'memcache.html')
         return self.response.out.write(render(path,rdic))
 
 

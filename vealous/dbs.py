@@ -28,7 +28,7 @@ class Note(db.Model):
         data = memcache.get('t$ten')
         if data is not None:
             return data
-        q = Note.gql("ORDER BY created DESC")
+        q = cls.gql("ORDER BY created DESC")
         data = q.fetch(10)
         memcache.set('t$ten', data, day)
         return data
@@ -39,7 +39,7 @@ class Note(db.Model):
         data = memcache.get(key)
         if data is not None:
             return data
-        q = Note.gql("WHERE slug= :1", slug)
+        q = cls.gql("WHERE slug= :1", slug)
         data = q.fetch(1)
         if data:
             memcache.set(key, data[0])
@@ -88,13 +88,13 @@ class Article(db.Model):
         data = memcache.get(key)
         if data is not None:
             return data
-        data = Article(
+        data = cls(
             title=title, slug=slug, text=text, draft=draft,
             keyword=keyword, html=markdown.markdown(text),
         )
         data.put()
         memcache.set(key, data)
-        keys = ['a$ten', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss']
+        keys = ['a$ten', 'a$archive', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss', 'xml$sitemap']
         memcache.delete_multi(keys)
         return data
 
@@ -108,7 +108,7 @@ class Article(db.Model):
         data.html = markdown.markdown(text)
         data.put()
 
-        keys = ['a/'+data.slug, 'a$ten', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss']
+        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss', 'xml$sitemap']
         memcache.delete_multi(keys)
         return data
 
@@ -118,7 +118,7 @@ class Article(db.Model):
         data = memcache.get(key)
         if data is not None:
             return data
-        q = Article.gql("WHERE slug= :1 and draft = :2", slug, False)
+        q = cls.gql("WHERE slug= :1 and draft = :2", slug, False)
         data = q.fetch(1)
         if data:
             memcache.set(key, data[0])
@@ -128,7 +128,7 @@ class Article(db.Model):
 
     @classmethod
     def delete(cls, data):
-        keys = ['a/'+data.slug, 'a$ten', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss']
+        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss', 'xml$sitemap']
         memcache.delete_multi(keys)
         db.delete(data)
         return data
@@ -138,21 +138,32 @@ class Article(db.Model):
         data = memcache.get('a$ten')
         if data is not None:
             return data
-        q = Article.gql("WHERE draft = :1 ORDER BY created DESC", False)
+        q = cls.gql("WHERE draft = :1 ORDER BY created DESC", False)
         data = q.fetch(10)
         logging.info('Get Ten Article from DB')
-        memcache.set('a$ten', data, week)
+        memcache.set('a$ten', data)
         return data
 
     @classmethod
-    def keyword_article(cls, keyword):
+    def get_archive(cls):
+        data = memcache.get('a$archive')
+        if data is not None:
+            return data
+        q = cls.gql("WHERE draft = :1 ORDER BY created DESC", False)
+        data = q.fetch(1000)
+        memcache.set('a$archive', data)
+        logging.info('Get Archive from DB')
+        return data
+
+    @classmethod
+    def get_kw_articles(cls, keyword):
         key = 'a$keyword/' + keyword
         data = memcache.get(key)
         if data is not None:
             return data
-        q = Article.gql("WHERE keyword = :1 and draft = :2 ORDER BY created DESC", keyword, False)
-        data = q.fetch(10)
-        memcache.set(key, data, week)
+        q = cls.gql("WHERE keyword = :1 and draft = :2 ORDER BY created DESC", keyword, False)
+        data = q.fetch(1000)
+        memcache.set(key, data)
         logging.info('Get Articles from DB by keyword : ' + keyword)
         return data
 
@@ -167,7 +178,7 @@ class Vigo(db.Model):
         value = memcache.get(key)
         if value is not None:
             return value
-        q = Vigo.gql("WHERE name = :1", name)
+        q = cls.gql("WHERE name = :1", name)
         data = q.fetch(1)
         if not data:
             return ''
@@ -179,7 +190,7 @@ class Vigo(db.Model):
     @classmethod
     def set(cls, name, value):
         key = 'vigo/' + name
-        q = Vigo.gql("WHERE name = :1", name)
+        q = cls.gql("WHERE name = :1", name)
         data = q.fetch(1)
         if data:
             data = data[0]
@@ -205,7 +216,7 @@ class Melody(db.Model):
         data = memcache.get(key)
         if data is not None:
             return data
-        q = Melody.gql("WHERE ext = :1 and label = :2", slug, 's5')
+        q = cls.gql("WHERE ext = :1 and label = :2", slug, 's5')
         data = q.fetch(1)
         if not data:
             return None
@@ -256,7 +267,7 @@ class Melody(db.Model):
         data = memcache.get('melody/%s' % label)
         if data is not None:
             return data
-        q = Melody.gql('WHERE label = :1 ORDER BY prior DESC', label)
+        q = cls.gql('WHERE label = :1 ORDER BY prior DESC', label)
         data = q.fetch(100)
         memcache.set('melody/%s' % label, data, week)
         return data
