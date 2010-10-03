@@ -19,7 +19,7 @@ from django.utils.simplejson import dumps
 
 from utils import is_mobile, be_god
 from utils.render import render
-from utils.paginator import Paginator
+from utils import Paginator
 from utils.handler import WebHandler
 from god.disqus import Disqus
 import dbs
@@ -104,17 +104,11 @@ class ViewArticle(WebHandler):
         key = self.request.get('key', 'none')
         status = self.request.get('draft', '2')
         if 'draft' == action or 'post' == action:
-            art = db.get(key)
-            if art and 'draft' == action:
-                art.draft = True
-                art.put()
-                memcache.delete('a/' + art.slug)
-                memcache.delete('a$ten')
-            elif art and 'post' == action:
-                art.draft = False
-                art.put()
-                memcache.delete('a/' + art.slug)
-                memcache.delete('a$ten')
+            data = db.get(key)
+            if data and 'draft' == action:
+                data.sw_status(data)
+            elif data and 'post' == action:
+                data.sw_status(data, False)
             else:
                 self.session['message'] = "Can't find the article"
             return self.redirect('/god/article?from='+action)
@@ -441,6 +435,7 @@ class ConsoleMemcache(WebHandler):
         memstat = memcache.get_stats()
         rdic['memstat'] = memstat
         rdic['result'] = result
+        self.request.headers['User-Agent'] = 'bot'
         path = get_path(self.request,'memcache.html')
         return self.response.out.write(render(path,rdic))
 

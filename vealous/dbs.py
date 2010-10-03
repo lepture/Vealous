@@ -113,6 +113,14 @@ class Article(db.Model):
         return data
 
     @classmethod
+    def sw_status(cls, data, draft=True):
+        data.draft = draft
+        data.put()
+        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss', 'xml$sitemap']
+        memcache.delete_multi(keys)
+        return data
+
+    @classmethod
     def get(cls, slug):
         key = 'a/' + slug
         data = memcache.get(key)
