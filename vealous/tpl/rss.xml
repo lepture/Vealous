@@ -16,7 +16,7 @@
             <author>{{vigo.twitter}}@twitter.com ({{vigo.twitter}})</author>
             <description>
                 <![CDATA[
-                    {{data.html|embed}}
+                    {{data.html|embed_feed}}
                     <small>Permalink: <a href="{{conf.site}}{{data.the_url}}">{{data.title}}</a> ({{conf.site}}{{data.the_url}})</small>
                 ]]>
             </description>
