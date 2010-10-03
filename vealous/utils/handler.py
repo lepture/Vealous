@@ -12,10 +12,12 @@ Here is a simple example:
     from handler import WebHandler
     class MainPage(WebHandler):
         def get(self):
-            self.cookies['cookie1'] = 'webhandler'
-            self.cookies.set_cookie('cookie2','webhandler')
+            self.cookie.get('cookie','')
+            self.cookie.delete('cookie')
+            self.cookie['cookie1'] = 'webhandler'
+            self.session.get('session','')
+            self.session.delete('session')
             self.session['session1'] = 'session'
-            self.session.set_session('session1', 'session')
 """
 
 __AUTHOR__ = 'marvour <marvour@gmail.com>'
@@ -35,9 +37,10 @@ from Cookie import BaseCookie
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 
-SECRET = 'secret'
-SESSION_NAME = 'sessionid'
-SESSION_EXPIRE = 7200
+#SECRET = 'secret'
+#SESSION_NAME = 'sessionid'
+#SESSION_EXPIRE = 7200
+from config import SECRET, SESSION_NAME, SESSION_EXPIRE
 
 
 class WebHandler(webapp.RequestHandler):
@@ -97,9 +100,8 @@ class Cookie(object):
         header_value = cookies[key].output(header='').lstrip()
         self.response.headers._headers.append(('Set-Cookie', header_value))
 
-    def delete_cookie(self, key, path='/', domain=None):
+    def delete(self, key, path='/', domain=None):
         self.set_cookie(key, '', path=path, domain=domain, max_age=0)
-
 
 class Session(object):
     def __init__(self, request, response):
