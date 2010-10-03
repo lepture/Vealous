@@ -42,7 +42,7 @@ class Note(db.Model):
         q = Note.gql("WHERE slug= :1", slug)
         data = q.fetch(1)
         if data:
-            memcache.set(key, data[0], week)
+            memcache.set(key, data[0])
             logging.info('Get Note from DB by slug :' + slug)
             return data[0]
         return None
@@ -56,16 +56,15 @@ class Note(db.Model):
             return data
         data = Note(slug=slug, text=text)
         data.put()
-        memcache.set(key, data, week)
+        memcache.set(key, data)
         memcache.delete('t$ten')
         return data
 
     @classmethod
     def delete(cls, data):
-        key = 't/' + data.slug
-        memcache.delete(key)
+        keys = ['t/' + data.slug, 't$ten']
+        memcache.delete_multi(keys)
         db.delete(data)
-        memcache.delete('t$ten')
         return data
 
 class Article(db.Model):
@@ -94,15 +93,13 @@ class Article(db.Model):
             keyword=keyword, html=markdown.markdown(text),
         )
         data.put()
-        memcache.set(key, data, week)
-        memcache.delete('a$ten')
-        key = 'a$keyword/' + data.keyword
-        memcache.delete(key)
+        memcache.set(key, data)
+        keys = ['a$ten', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss']
+        memcache.delete_multi(keys)
         return data
 
     @classmethod
     def update(cls, data, title, slug, text, draft, keyword='nokeyword'):
-        key = 'a/' + data.slug
         data.title = title
         data.slug = slug
         data.text = text
@@ -110,10 +107,9 @@ class Article(db.Model):
         data.keyword = keyword
         data.html = markdown.markdown(text)
         data.put()
-        memcache.delete(key)
-        memcache.delete('a$ten')
-        key = 'a$keyword/' + data.keyword
-        memcache.delete(key)
+
+        keys = ['a/'+data.slug, 'a$ten', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss']
+        memcache.delete_multi(keys)
         return data
 
     @classmethod
@@ -125,18 +121,15 @@ class Article(db.Model):
         q = Article.gql("WHERE slug= :1 and draft = :2", slug, False)
         data = q.fetch(1)
         if data:
-            memcache.set(key, data[0], week)
+            memcache.set(key, data[0])
             logging.info('Get Article from DB by slug :' + slug)
             return data[0]
         return None
 
     @classmethod
     def delete(cls, data):
-        key = 'a/' + data.slug
-        memcache.delete(key)
-        key = 'a$keyword/' + data.keyword
-        memcache.delete(key)
-        memcache.delete('a$ten')
+        keys = ['a/'+data.slug, 'a$ten', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss']
+        memcache.delete_multi(keys)
         db.delete(data)
         return data
 
