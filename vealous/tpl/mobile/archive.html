@@ -1,15 +1,11 @@
 {% extends "layout.html"%}
 
 {%block title%}
-{{keyword}}|{{vigo.sitename|default:"Vealous"}}
-{%endblock%}
-
-{%block extra%}
-<meta name="keywords" content="Vealous, {{conf.sitename|default:"Vealous"}},{{keyword}}" />
+Archive|{{vigo.sitename|default:"Vealous"}}
 {%endblock%}
 
 {%block soga%}
-{%for data in articles%}
+{%for data in mvdata.object_list%}
 <div class="post">
     <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>
     <div class="post-info">
@@ -24,22 +20,19 @@
             {%if data.keyword%}Keyword: <a href="/k/{{data.keyword}}">{{data.keyword}}</a>{%endif%}
         </div>
         <div class="alignright">
-            <a href="{{data.the_url}}#disqus_thread">Comments</a>
+            <a href="{{conf.site}}{{data.the_url}}#disqus_thread">Comments</a>
         </div>
     </div>
 </div>
 {%endfor%}
-{%endblock%}
 
-{%block sidebar%}
-<div class="widget widget-links">
-    <h3 class="widget-title">Links</h3>
-    <ul>
-        {%for link in links%}
-        <li><a href="{{link.url}}" rel="{{link.ext}}">{{link.title}}</a>
-        {%if link.text%}<p>{{link.text}}</p>{%endif%}
-        </li>
-        {%endfor%}
-    </ul>
-</div>
+<p class="pages">
+{% if mvdata.has_previous %}<a href="?p={{ mvdata.previous_num }}" class="page-numbers" title="previous">«Previous</a>{%endif%}
+
+{%for p in mvdata.page_range %}
+<a href="?p={{p}}">{{p}}</a>
+{%endfor%}
+
+{% if mvdata.has_next %}<a href="?p={{ mvdata.next_num }}" class="page-numbers" title="next">Next»</a>{% endif %}
+</p>
 {%endblock%}

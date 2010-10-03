@@ -2,14 +2,18 @@
 
 {%block main%}
 <div class="boxnav">
-    <a href="{%url add_article%}" class="button">Add Article</a>
-    <a href="{%url add_melody%}" class="button">Add Melody</a>
+    <a href="/god/article/add" class="button">Add Article</a>
+    <a href="/god/melody/add" class="button">Add Melody</a>
 </div>
 <p class="message">{{message}}</p>
 <div class="box">
     <form id="noteform" action="/god/note/add" method="post">
         <div class="form-row cell">
             <textarea id="note" name="text"></textarea>
+        </div>
+        <div class="form-row cell">
+            <input type="checkbox" checked="checked" name="douban" /><label for="douban">Douban</label>
+            <input type="checkbox" checked="checked" name="twitter" /><label for="twitter">Twitter</label>
         </div>
         <div class="form-row inner">
             <input type="submit" class="button" value="Save Note" />

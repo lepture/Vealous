@@ -5,8 +5,8 @@ from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 import time
 import markdown
+import logging
 
-month = 2592000
 week = 604800
 day = 86400
 
@@ -14,7 +14,15 @@ class Note(db.Model):
     slug = db.StringProperty(required=False)
     text = db.TextProperty(indexed=False)
     created = db.DateTimeProperty(auto_now_add=True)
+
+    @property
+    def title(self):
+        return 'Note-%s' % self.slug
     
+    @property
+    def the_url(self):
+        return '/t/%s' % self.slug
+
     @classmethod
     def getten(cls):
         data = memcache.get('t$ten')
@@ -26,6 +34,20 @@ class Note(db.Model):
         return data
 
     @classmethod
+    def get(cls, slug):
+        key = 't/' + slug
+        data = memcache.get(key)
+        if data is not None:
+            return data
+        q = Note.gql("WHERE slug= :1", slug)
+        data = q.fetch(1)
+        if data:
+            memcache.set(key, data[0], week)
+            logging.info('Get Note from DB by slug :' + slug)
+            return data[0]
+        return None
+
+    @classmethod
     def add(cls, text):
         slug = str(int(time.time()))
         key = 't/' + slug
@@ -34,7 +56,7 @@ class Note(db.Model):
             return data
         data = Note(slug=slug, text=text)
         data.put()
-        memcache.set(key, data, month)
+        memcache.set(key, data, week)
         memcache.delete('t$ten')
         return data
 
@@ -72,7 +94,7 @@ class Article(db.Model):
             keyword=keyword, html=markdown.markdown(text),
         )
         data.put()
-        memcache.set(key, data, month)
+        memcache.set(key, data, week)
         memcache.delete('a$ten')
         key = 'a$keyword/' + data.keyword
         memcache.delete(key)
@@ -90,7 +112,7 @@ class Article(db.Model):
         data.put()
         memcache.delete(key)
         memcache.delete('a$ten')
-        key = 'a/keyword/' + data.keyword
+        key = 'a$keyword/' + data.keyword
         memcache.delete(key)
         return data
 
@@ -103,7 +125,8 @@ class Article(db.Model):
         q = Article.gql("WHERE slug= :1 and draft = :2", slug, False)
         data = q.fetch(1)
         if data:
-            memcache.set(key, data[0], month)
+            memcache.set(key, data[0], week)
+            logging.info('Get Article from DB by slug :' + slug)
             return data[0]
         return None
 
@@ -124,7 +147,8 @@ class Article(db.Model):
             return data
         q = Article.gql("WHERE draft = :1 ORDER BY created DESC", False)
         data = q.fetch(10)
-        memcache.set('a$ten', data, day)
+        logging.info('Get Ten Article from DB')
+        memcache.set('a$ten', data, week)
         return data
 
     @classmethod
@@ -136,6 +160,7 @@ class Article(db.Model):
         q = Article.gql("WHERE keyword = :1 and draft = :2 ORDER BY created DESC", keyword, False)
         data = q.fetch(10)
         memcache.set(key, data, week)
+        logging.info('Get Articles from DB by keyword : ' + keyword)
         return data
 
 class Vigo(db.Model):
@@ -154,7 +179,8 @@ class Vigo(db.Model):
         if not data:
             return ''
         value = data[0].substance
-        memcache.set(key, value, month)
+        memcache.set(key, value, week)
+        logging.info('Get Vigo from DB : ' + name)
         return value
 
     @classmethod
@@ -169,7 +195,7 @@ class Vigo(db.Model):
             data.name = name
         data.substance = value
         data.put()
-        memcache.set(key, value, month)
+        memcache.set(key, value, week)
         return value
 
 class Melody(db.Model):
@@ -192,18 +218,21 @@ class Melody(db.Model):
             return None
         data = data[0]
         if data.text:
+            logging.info('Get S5 from DB by slug : ' + slug)
             memcache.set(key, data, week)
             return data
         try:
             result = urlfetch.fetch(data.url)
             if 200 != result.status_code:
+                logging.error('S5 Status Error: ' + str(result.status_code))
                 return None
             text = unicode(result.content, 'utf-8')
             data.text = text
             data.put()
             memcache.set(key, data, week)
             return data
-        except urlfetch.DownloadError:
+        except urlfetch.DownloadError, k:
+            logging.error('S5 DownloadError : ' + str(k))
             return None
         return None
 

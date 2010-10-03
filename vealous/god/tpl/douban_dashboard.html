@@ -1,0 +1,39 @@
+{%extends "layout.html"%}
+
+{%block title%}
+Douban|Dashboard
+{%endblock%}
+
+{%block main%}
+<div class="soga alignleft">
+    <p class="message">{{message}}</p>
+    <div class="box">
+        {%include "include/douban_statuses.html"%}
+        <div class="inner"></div>
+    </div>
+</div>
+<div class="sidebar alignright">
+    <div class="box">
+        <div class="cell clearfix">
+            <a href="{{profile.link|avatar:"alternate"}}">
+                <img src="{{profile.link|avatar}}" alt="avatar" class="avatar alignleft" />
+            </a>
+            <div class="alignleft">
+                <p><strong>{{profile.title.t}}</strong></p>
+                <p>{{profile.signature.t}}</p>
+            </div>
+        </div>
+        <form id="noteform" action="/god/douban/miniblog" method="post">
+            <div class="form-row cell">
+                <textarea id="note" name="text" rows="4" cols="20" ></textarea>
+            </div>
+            <div class="hide">
+                <input type="checkbox" checked="checked" name="douban" />
+            </div>
+            <div class="form-row inner">
+                <input type="submit" class="button" value="Post" />
+            </div>
+        </form>
+    </div>
+</div>
+{%endblock%}

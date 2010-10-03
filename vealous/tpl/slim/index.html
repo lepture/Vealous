@@ -9,7 +9,7 @@
     </div>
     <div class="post-content">
         {{data.html|more}}
-        <p><a class="more" href="{{data.the_url}}">Get More »</a></p>
+        <p><a class="more" rel="nofollow" href="{{data.the_url}}">Get More »</a></p>
     </div>
     <div class="post-meta clearfix">
         <div class="alignleft">
@@ -29,8 +29,8 @@
     <ul>
         {%for note in notes%}
         <li class="note"><p>
-        {{note.text|escape}}
-        <span class="time">Created at {{note.created|humantime}}</span>
+        {{note.text|escape|urlize}}
+        »<a href="{{note.the_url}}"><span class="time">Created at {{note.created|timesince|split:","}} ago</span></a>
         </p></li>
         {%endfor%}
     </ul>

@@ -1,12 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<!DOCTYPE HTML>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <meta charset="UTF-8">
         <title>{%block title%}Dashboard{%endblock%}</title>
         <link rel="stylesheet" href="{{conf.static}}/css/reset.css" />
         <link rel="stylesheet" href="{{conf.static}}/css/style.css" />
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-        <script type="text/javascript" src="{{conf.jshost}}/js/funcs.js"></script>
+        <script type="text/javascript" src="{{conf.jshost}}/js/core.js"></script>
+        <script type="text/javascript" src="{{conf.jshost}}/js/god.js"></script>
         {%block extra%}{%endblock%}
     </head>
     <body>
@@ -17,12 +18,22 @@
                         <h2><a href="/">{{vigo.sitename|default:"Vealous"}}</a></h2>
                         <p class="pretty">{{vigo.sitetag|default:"Love its people, but never trust its government"}}</p>
                     </div>
-                    {%block nav%}
+                    {%block login%}
                     <ul class="alignright nav">
-                        <li class="current"><a href="{%url dashboard%}">Dashboard</a></li>
-                        <li><a href="{%url view_article%}">Articles</a></li>
-                        <li><a href="{%url view_melody%}">Melody</a></li>
-                        <li><a href="{%url vigo_setting%}">Setting</a></li>
+                        {%block nav%}
+                        <li class="current"><a href="/god">Dashboard</a></li>
+                        <li><a href="/god/article">Articles</a></li>
+                        <li><a href="/god/melody">Melody</a></li>
+                        <li><a href="/god/note">Note</a></li>
+                        {%endblock%}
+                        <li class="nav-more"><a href="#">More</a>
+                        <ul class="hide">
+                            <li><a href="/god/douban">Douban</a></li>
+                            <li><a href="/god/twitter">Twitter</a></li>
+                            <li><a href="/god/console/memcache">Console</a></li>
+                            <li><a href="/god/setting">Setting</a></li>
+                        </ul>
+                        </li>
                     </ul>
                     {%endblock%}
                 </div>
@@ -35,7 +46,7 @@
             <div id="footer">
                 <div class="wrapper clearfix">
                     <div class="alignleft">
-                        {%block account%}<p class="pretty"><a href="{%url logout%}"><strong>Logout</strong></a> | <a href="{%url chpasswd%}"><strong>Change Password</strong></a> of <a href="http://i.shiao.org">Vealous God Lands</a></p>{%endblock%}
+                        {%block account%}<p class="pretty"><a href="/god/logout"><strong>Logout</strong></a> | <a href="/god/chpasswd"><strong>Change Password</strong></a> of <a href="http://i.shiao.org">Vealous God Lands</a></p>{%endblock%}
                         <p class="pretty">Copyleft by <a href="http://i.shiao.org">@lepture</a> &copy; 2010-{%now "Y"%} Version {{conf.version}}</p>
                     </div>
                     <div class="alignright">

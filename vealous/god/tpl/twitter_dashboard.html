@@ -1,0 +1,27 @@
+{%extends "layout.html"%}
+
+{%block main%}
+<div class="soga alignleft">
+    <p class="message">{{message}}</p>
+    <div class="box comment">
+        {%include "include/twitter_statuses.html"%}
+        <div class="inner">
+        </div>
+    </div>
+</div>
+<div class="sidebar alignright">
+    <div class="box">
+        <form id="noteform" action="/god/note/add" method="post">
+            <div class="form-row cell">
+                <textarea id="note" name="text" rows="4" cols="20" ></textarea>
+            </div>
+            <div class="hide">
+                <input type="checkbox" checked="checked" name="twitter" />
+            </div>
+            <div class="form-row inner">
+                <input type="submit" class="button" value="Tweet" />
+            </div>
+        </form>
+    </div>
+</div>
+{%endblock%}

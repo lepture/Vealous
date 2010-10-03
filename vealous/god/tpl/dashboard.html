@@ -3,8 +3,8 @@
 {%block main%}
 <div class="soga alignleft">
     <div class="boxnav">
-        <a href="{%url add_article%}" class="button">Add Article</a>
-        <a href="{%url console_memcache%}" class="button">Memcache</a>
+        <a href="/god/article/add" class="button">Add Article</a>
+        <a href="/god/console/memcache" class="button">Memcache</a>
     </div>
     <p class="message">{{message}}</p>
     <div class="box comment">
@@ -32,7 +32,6 @@
     </div>
 </div>
 <div class="sidebar alignright">
-    <p class="message"></p>
     <div class="box">
         <form id="noteform" action="/god/note/add" method="post">
             <div class="form-row cell">
@@ -52,7 +51,7 @@
         {% for data in notes %}
         <div class="cell">
             <p>{{data.text}}</p>
-            <p>Created at <span class="time">{{data.created|humantime}}</span> <span class="action"><a href="/god/note/delete?key={{data.key}}">Delete</a></span></p>
+            <p>Created at <span class="time">{{data.created|timesince|split:","}}</span> <span class="action"><a href="/god/note/delete?key={{data.key}}">Delete</a></span></p>
         </div>
         {% endfor %}
     </div>

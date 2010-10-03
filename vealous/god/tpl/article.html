@@ -5,18 +5,16 @@ Article|Dashboard
 {%endblock%}
 
 {%block nav%}
-<ul class="alignright nav">
-    <li><a href="{%url dashboard%}">Dashboard</a></li>
-    <li class="current"><a href="{%url view_article%}">Articles</a></li>
-    <li><a href="{%url view_melody%}">Melody</a></li>
-    <li><a href="{%url vigo_setting%}">Setting</a></li>
-</ul>
+<li><a href="/god">Dashboard</a></li>
+<li class="current"><a href="/god/article">Articles</a></li>
+<li><a href="/god/melody">Melody</a></li>
+<li><a href="/god/note">Note</a></li>
 {%endblock%}
 
 {%block main%}
 <div class="soga alignleft">
     <div class="boxnav clearfix">
-        <a href="{%url add_article%}" class="button">Add Article</a>
+        <a href="/god/article/add" class="button">Add Article</a>
         <div class="page-nav alignright">
             {%include "p.html"%}
         </div>
@@ -26,13 +24,13 @@ Article|Dashboard
         {%for data in mvdata.object_list%}
         <div class="cell article clearfix">
             <div class="content alignleft">
-                <h3 class="title"><a href="{%url edit_article%}?key={{data.key}}">{{data.title}}</a></h3>
+                <h3 class="title"><a href="{{data.the_url}}">{{data.title}}</a></h3>
                 <p><label>Created at</label> <span class="time">{{data.created|prettytime}}</span> {%if data.draft%}<a href="?action=post&key={{data.key}}">Post It</a>{%else%}<a href="?action=draft&key={{data.key}}">Draft It</a>{%endif%}</p>
                 <p><label>Update at</label> <span class="time">{{data.modified|prettytime}}</span>{%if data.draft%}<span class="status">Draft</span>{%endif%}</p>
             </div>
             <div class="action alignright">
-                <a href="{%url edit_article%}?key={{data.key}}" class="edit">Edit</a>
-                <a href="{%url edit_article%}?key={{data.key}}&action=delete" class="delete">Delete</a>
+                <a href="/god/article/edit?key={{data.key}}" class="edit">Edit</a>
+                <a href="/god/article/edit?key={{data.key}}&action=delete" class="delete">Delete</a>
             </div>
         </div>
         {%endfor%}

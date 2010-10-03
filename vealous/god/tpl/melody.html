@@ -5,18 +5,16 @@ Melody|Dashboard
 {%endblock%}
 
 {%block nav%}
-<ul class="alignright nav">
-    <li><a href="{%url dashboard%}">Dashboard</a></li>
-    <li><a href="{%url view_article%}">Articles</a></li>
-    <li class="current"><a href="{%url view_melody%}">Melody</a></li>
-    <li><a href="{%url vigo_setting%}">Setting</a></li>
-</ul>
+<li><a href="/god">Dashboard</a></li>
+<li><a href="/god/article">Articles</a></li>
+<li class="current"><a href="/god/melody">Melody</a></li>
+<li><a href="/god/note">Note</a></li>
 {%endblock%}
 
 {%block main%}
 <div class="soga alignleft">
     <div class="boxnav clearfix">
-        <a href="{%url add_melody%}" class="button">Add Melody</a>
+        <a href="/god/melody/add" class="button">Add Melody</a>
         <div class="page-nav alignright">
             {%include "p.html"%}
         </div>
@@ -26,13 +24,13 @@ Melody|Dashboard
         {%for data in mvdata.object_list%}
         <div class="cell article clearfix">
             <div class="content alignleft">
-                <h3 class="title"><a href="{%url edit_melody%}?key={{data.key}}">{{data.title}}</a></h3>
+                <h3 class="title"><a href="/god/melody/edit?key={{data.key}}">{{data.title}}</a></h3>
                 <p><label>URL</label> <span class="bold">{{data.url}}</span></p>
                 <p><label>Priorty:</label><span class="bold">{{data.prior}}</span> <span class="status">{{data.label}}</span> </p>
             </div>
             <div class="action alignright">
-                <a href="{%url edit_melody%}?key={{data.key}}" class="edit">Edit</a>
-                <a href="{%url edit_melody%}?key={{data.key}}&action=delete" class="delete">Delete</a>
+                <a href="/god/melody/edit?key={{data.key}}" class="edit">Edit</a>
+                <a href="/god/melody/edit?key={{data.key}}&action=delete" class="delete">Delete</a>
             </div>
         </div>
         {%endfor%}

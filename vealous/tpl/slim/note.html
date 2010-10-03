@@ -11,16 +11,12 @@
         <label>Created at</label><span class="time">{{data.created|prettytime}}</span>
     </div>
     <div class="post-content">
-        {{data.html|embed}}
-    </div>
-    <div class="post-meta clearfix">
-        <div class="alignleft">
-            {%if data.keyword%}Keyword: <a href="/k/{{data.keyword}}">{{data.keyword}}</a>{%endif%}
-        </div>
-        <div class="alignright">
-            <a href="{{data.the_url}}?mode=plaintext">Get Source Code</a>
-        </div>
+        <p>{{data.text}}</p>
     </div>
 </div>
 {%include "disqus.html"%}
+{%endblock%}
+
+{%block sidebar%}
+{{conf.widget}}
 {%endblock%}

@@ -15,9 +15,18 @@ handlers:
 - url: /static
   static_dir: static
 
-- url: /god/third/.*
-  script: god/third.py
+- url: /god/disqus/?.*
+  script: god/disqus.py
 
-- url: .*
-  script: ctrl.py
+- url: /god/twitter/?.*
+  script: god/twitter.py
+
+- url: /god/douban/?.*
+  script: god/douban.py
+
+- url: /god/?.*
+  script: god/main.py
+
+- url: /.*
+  script: service/blog.py
 

@@ -1,0 +1,13 @@
+{%for miniblog in miniblogs.entry%}
+<div class="cell clearfix">
+    <div class="alignleft">
+        <a href="{{miniblog.author.link|avatar:"alternate"}}"><img src="{{miniblog.author.link|avatar}}" alt="avatar" class="avatar" /></a>
+    </div>
+    <div class="widow alignright">
+        <p><strong>{{miniblog.author.name.t|escape}}</strong> Published at <span class="time">{{miniblog.published.t|timesince|split:","}} ago</span></p>
+        <div class="sep"></div>
+        <p>{{miniblog.content.t}}</p>
+    </div>
+</div>
+{%endfor%}
+

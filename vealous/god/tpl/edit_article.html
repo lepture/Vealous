@@ -5,18 +5,16 @@ Edit Article|Dashboard
 {%endblock%}
 
 {%block nav%}
-<ul class="alignright nav">
-    <li><a href="{%url dashboard%}">Dashboard</a></li>
-    <li class="current"><a href="{%url view_article%}">Articles</a></li>
-    <li><a href="{%url view_melody%}">Melody</a></li>
-    <li><a href="{%url vigo_setting%}">Setting</a></li>
-</ul>
+<li><a href="/god">Dashboard</a></li>
+<li class="current"><a href="/god/article">Articles</a></li>
+<li><a href="/god/melody">Melody</a></li>
+<li><a href="/god/note">Note</a></li>
 {%endblock%}
 
 {%block main%}
 <div class="soga alignleft">
     <p class="message">{{message}}</p>
-    <form class="box" action="" method="post">
+    <form id="articleform" class="box edit" action="" method="post">
         <div class="form-row cell">
             <input id="id_title" class="text" type="text" name="title" maxlength="100" value="{{data.title}}" />
             <label for="id_title">Title</label>
@@ -35,6 +33,7 @@ Edit Article|Dashboard
         <div class="form-row inner">
             <input type="submit" class="button" value="Save as Draft" name="draft" />
             <input type="submit" class="button" value="Post Now" />
+            <input type="checkbox" class="autosave" style="vertical-align:middle;" /><label style="margin-left:6px;" for="autosave">Auto Save</label>
         </div>
     </form>
 </div>

@@ -10,30 +10,15 @@ except ImportError:
     import md5
     md5 = md5.new
 
+from config import TIMEZONE
+
 register = template.create_template_register()
 
 @register.filter
 def prettytime(value):
     if isinstance(value, datetime.datetime):
+        value += datetime.timedelta(hours=TIMEZONE) # fix 
         return value.strftime("%H:%M %b %d, %Y")
-    return value
-
-@register.filter
-def humantime(value):
-    if isinstance(value, datetime.datetime):
-        now = datetime.datetime.now()
-        time = now - value
-        days = time.days
-        if days:
-            return '%s days ago' % days
-        seconds = time.seconds
-        if seconds < 10:
-            return 'Just now'
-        if seconds / 3600:
-            return '%i hours ago' % int(seconds/3600)
-        if seconds / 60:
-            return '%i minutes ago' % int(seconds/60)
-        return '%i seconds ago' % seconds
     return value
 
 @register.filter
@@ -41,6 +26,11 @@ def feedtime(value):
     if isinstance(value, datetime.datetime):
         return value.strftime("%a, %d %b %Y %H:%M:%S GMT")
     return value
+
+@register.filter
+def split(value,arg,num=0):
+    num = int(num)
+    return value.split(arg)[num]
 
 @register.filter
 def gravatar(value, arg='normal'):
@@ -55,6 +45,11 @@ def gravatar(value, arg='normal'):
     return url
 
 @register.filter
+def gtitle(value):
+    value = value.split('|')[0]
+    return value
+
+@register.filter
 def more(value):
     value = re.sub(r'\r\n|\r|\n', '\n', value)
     paras = re.split('\n', value)
@@ -62,3 +57,13 @@ def more(value):
         return value
     content = '\n'.join(paras[:2])
     return content
+
+@register.filter
+def embed(value):
+    #gist
+    value = re.sub(r'(http://gist.github.com/[\d]+)',r'<small><a rel="nofollow" href="\1">\1</a></small><script src="\1.js"></script>', value) 
+    #youku
+    value = re.sub(r'http://v.youku.com/v_show/id_([a-zA-Z0-9\=]+).html', r'<small><a rel="nofollow" href="http://v.youku.com/v_show/id_\1.html">Youku Source</a></small><br /><embed src="http://player.youku.com/player.php/sid/\1/v.swf" quality="high" width="480" height="400" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"></embed>', value)
+    #tudou
+    value = re.sub(r'http://www.tudou.com/programs/view/([a-zA-z0-9\-\=]+)/',r'<small><a rel="nofollow" href="http://www.tudou.com/programs/view/\1/">Tudou Source</a></small><br /><embed src="http://www.tudou.com/v/\1/v.swf" width="480" height="400" allowScriptAccess="sameDomain" wmode="opaque" type="application/x-shockwave-flash"></embed>', value)
+    return value
