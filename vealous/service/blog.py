@@ -165,7 +165,7 @@ class Sitemap (webapp.RequestHandler):
                     'priority': priority,
                 }
                 urlset.append(url)
-            articles = dbs.Article.getten()
+            articles = dbs.Article.get_archive()
             for art in articles:
                 addurl(art.the_url, art.modified,'weekly',0.5)
             rdic['urlset'] = urlset

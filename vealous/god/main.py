@@ -177,7 +177,10 @@ class EditArticle(WebHandler):
         if title and slug:
             dbs.Article.update(data, title, slug, text, draft, keyword)
             self.session['message'] = 'Article <a href="/god/article/edit?key=%s">%s</a> has been modified' % (data.key(), data.title)
-            gping = 'http://blogsearch.google.com/ping?url=%s/feed.atom' % config.SITE_URL
+            gping = 'http://blogsearch.google.com/ping?name='
+            gping += urllib.quote(dbs.Vigo.get('sitename'))
+            gping += '&url=%s' % urllib.quote(config.SITE_URL)
+            gping += '&changesURL=%s/sitemap.xml' % urllib.quote(config.SITE_URL)
             urlfetch.fetch(gping)
             return self.redirect('/god/article?from=edit')
         rdic['data'] = data
@@ -208,7 +211,10 @@ class AddArticle(WebHandler):
         if title and slug:
             data = dbs.Article.add(title,slug,text,draft,keyword)
             self.session['message'] = 'New article <a href="/god/article/edit?key=%s">%s</a> has been created' % (data.key(), data.title)
-            gping = 'http://blogsearch.google.com/ping?url=%s/feed.atom' % config.SITE_URL
+            gping = 'http://blogsearch.google.com/ping?name='
+            gping += urllib.quote(dbs.Vigo.get('sitename'))
+            gping += '&url=%s' % urllib.quote(config.SITE_URL)
+            gping += '&changesURL=%s/sitemap.xml' % urllib.quote(config.SITE_URL)
             urlfetch.fetch(gping)
             return self.redirect('/god/article?from=add')
         message = 'Please fill the required fields'
