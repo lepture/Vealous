@@ -25,7 +25,7 @@ Memcache|Dashboard
         {%endif%}
         <form action="">
             <div class="cell">
-                <input type="text" name="key" />
+                <input type="text" name="key" value="{{key|default:""|escape}}" />
             </div>
             <div class="inner">
                 <input type="submit" class="button" name="action" value="display" />
@@ -38,17 +38,18 @@ Memcache|Dashboard
     <div class="help">
         <h4>xml</h4>
         <ul>
-            <li>xml$atom 12h</li>
-            <li>xml$rss 12h</li>
-            <li>xml$sitemap 6h</li>
+            <li>xml$atom</li>
+            <li>xml$rss</li>
+            <li>xml$sitemap</li>
         </ul>
     </div>
     <div class="help">
         <h4>Article</h4>
         <ul>
-            <li>a/{slug} 1week</li>
-            <li>a$keyword/{keyword} 1week</li>
-            <li>a$ten 1day</li>
+            <li>a/{slug}</li>
+            <li>a$keyword/{keyword}</li>
+            <li>a$ten</li>
+            <li>a$archive</li>
         </ul>
     </div>
     <div class="help">
@@ -75,7 +76,7 @@ Memcache|Dashboard
     <div class="help">
         <h4>Other</h4>
         <ul>
-            <li>god$comments  3hours</li>
+            <li>disqus$comments  3hours</li>
         </ul>
     </div>
 </div>

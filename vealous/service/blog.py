@@ -2,21 +2,22 @@
 
 import os
 import logging
+from urllib2 import quote
+from django.utils.simplejson import loads as parse_json
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.api import memcache
+from google.appengine.api import urlfetch
 
 from utils.render import render
-from utils.paginator import Paginator
-from service import searchapi
+from utils import Paginator
+from utils import is_mobile
 import dbs
 
 import config
 
-def get_path(ua, name):
-    ua = ua.lower()
-    if ua.find('mobile') != -1 or ua.find('midp') != -1 or ua.find('mini') != -1:
-        logging.info('mobile device visited this site --' + ua)
+def get_path(request, name):
+    if is_mobile(request):
         path = os.path.join(config.ROOT, 'tpl','mobile' , name)
         return path
     path = os.path.join(config.ROOT, 'tpl', config.THEME, name)
@@ -29,18 +30,16 @@ class Index(webapp.RequestHandler):
         rdic['articles'] = dbs.Article.getten()
         rdic['navs'] = dbs.Melody.get_all('nav')
         rdic['links'] = dbs.Melody.get_all('link')
-        ua = self.request.headers.get('User-Agent', 'bot')
-        path = get_path(ua, 'index.html')
+        path = get_path(self.request, 'index.html')
         self.response.out.write(render(path,rdic))
 
 class Article(webapp.RequestHandler):
     def get(self, slug):
-        ua = self.request.headers.get('User-Agent', 'bot')
         rdic = {}
         data = dbs.Article.get(slug)
         if not data:
             logging.info('404 , visite article ' + str(slug))
-            path = get_path(ua, '404.html')
+            path = get_path(self.request, '404.html')
             self.response.set_status(404)
             html = render(path, rdic)
             return self.response.out.write(html)
@@ -51,7 +50,7 @@ class Article(webapp.RequestHandler):
             return self.response.out.write(html)
         rdic['navs'] = dbs.Melody.get_all('nav')
         rdic['data'] = data
-        path = get_path(ua, 'article.html')
+        path = get_path(self.request, 'article.html')
         html = render(path, rdic)
         self.response.out.write(html)
 
@@ -59,46 +58,44 @@ class Archive(webapp.RequestHandler):
     def get(self):
         rdic = {}
         rdic['navs'] = dbs.Melody.get_all('nav')
-        ua = self.request.headers.get('User-Agent', 'bot')
         p = self.request.get('p',1)
-        q = dbs.Article.gql("WHERE draft = :1 ORDER BY created DESC", False)
-        rdic['mvdata'] = Paginator(q, 10, p)
-        path = get_path(ua, 'archive.html')
+        data = dbs.Article.get_archive()
+        rdic['mvdata'] = Paginator(data, 10, p)
+        path = get_path(self.request, 'archive.html')
         self.response.out.write(render(path,rdic))
 
 class Note(webapp.RequestHandler):
     def get(self, slug):
-        ua = self.request.headers.get('User-Agent', 'bot')
         rdic = {}
         data = dbs.Note.get(slug)
         if not data:
             logging.info('404 , visite note ' + str(slug))
-            path = get_path(ua, '404.html')
+            path = get_path(self.request, '404.html')
             self.response.set_status(404)
             html = render(path, rdic)
             return self.response.out.write(html)
         rdic['navs'] = dbs.Melody.get_all('nav')
         rdic['data'] = data
-        path = get_path(ua, 'note.html')
+        path = get_path(self.request, 'note.html')
         html = render(path, rdic)
         self.response.out.write(html)
 
 class Keyword(webapp.RequestHandler):
     def get(self, keyword):
-        ua = self.request.headers.get('User-Agent', 'bot')
         rdic = {}
-        articles = dbs.Article.keyword_article(keyword)
-        if not articles:
+        data = dbs.Article.get_kw_articles(keyword)
+        if not data:
             logging.info('404 , visite keyword ' + str(keyword))
-            path = get_path(ua, '404.html')
+            path = get_path(self.request, '404.html')
             html = render(path, rdic)
             self.response.set_status(404)
         else:
-            rdic['articles'] = articles
+            p = self.request.get('p',1)
+            rdic['mvdata'] = Paginator(data, 10, p)
             rdic['navs'] = dbs.Melody.get_all('nav')
             rdic['links'] = dbs.Melody.get_all('link')
             rdic['keyword'] = keyword
-            path = get_path(ua, 'keyword.html')
+            path = get_path(self.request, 'keyword.html')
             html = render(path, rdic)
         self.response.out.write(html)
 
@@ -108,8 +105,7 @@ class S5(webapp.RequestHandler):
         if not data:
             rdic = {}
             logging.info('404 , visite s5 ' + str(slug))
-            ua = self.request.headers.get('User-Agent', 'bot')
-            path = get_path(ua, '404.html')
+            path = get_path(self.request, '404.html')
             self.response.set_status(404)
             html = render(path, rdic)
         else:
@@ -119,16 +115,15 @@ class S5(webapp.RequestHandler):
 class Search(webapp.RequestHandler):
     def get(self):
         rdic = {}
-        rdic['cx'] = cx = self.request.get('cx','017842580319746762888:yjj0ddawsf8')
+        cx = dbs.Vigo.get('gcse')
         rdic['q'] = q = self.request.get('q','Vealous')
         rdic['start'] = start = self.request.get('start', '0')
         try:
-            rdic['gres'] = searchapi.gsearch(cx, q, start)
+            rdic['gres'] = gsearch(q, start, cx)
         except:
             rdic['error'] = 'Oops! An Error occured!'
         rdic['navs'] = dbs.Melody.get_all('nav')
-        ua = self.request.headers.get('User-Agent', 'bot')
-        path = get_path(ua, 'search.html')
+        path = get_path(self.request, 'search.html')
         self.response.out.write(render(path,rdic))
 
 class Atom(webapp.RequestHandler):
@@ -140,7 +135,7 @@ class Atom(webapp.RequestHandler):
             rdic['datas'] = dbs.Article.getten()
             path = os.path.join(config.ROOT, 'tpl', 'atom.xml')
             html = render(path, rdic)
-            memcache.set('xml$atom', html, 43200) # 12hour
+            memcache.set('xml$atom', html)
         self.response.out.write(html)
 
 class Rss(webapp.RequestHandler):
@@ -152,7 +147,7 @@ class Rss(webapp.RequestHandler):
             rdic['datas'] = dbs.Article.getten()
             path = os.path.join(config.ROOT, 'tpl', 'rss.xml')
             html = render(path, rdic)
-            memcache.set('xml$rss', html, 43200) # 12hour
+            memcache.set('xml$rss', html)
         self.response.out.write(html)
 
 class Sitemap (webapp.RequestHandler):
@@ -170,13 +165,13 @@ class Sitemap (webapp.RequestHandler):
                     'priority': priority,
                 }
                 urlset.append(url)
-            articles = dbs.Article.getten()
+            articles = dbs.Article.get_archive()
             for art in articles:
                 addurl(art.the_url, art.modified,'weekly',0.5)
             rdic['urlset'] = urlset
             path = os.path.join(config.ROOT, 'tpl', 'sitemap.xml')
             html = render(path, rdic)
-            memcache.set('xml$sitemap', html, 21600) # 6hour
+            memcache.set('xml$sitemap', html)
         self.response.out.write(html)
 
 class Redirect(webapp.RequestHandler):
@@ -188,11 +183,34 @@ class Error404(webapp.RequestHandler):
     def get(self):
         logging.info('404')
         rdic = {}
-        ua = self.request.headers.get('User-Agent', 'bot')
-        path = get_path(ua, '404.html')
+        path = get_path(self.request, '404.html')
         self.response.set_status(404)
         self.response.out.write(render(path,rdic))
 
+
+def gsearch(q, start, cx=''):
+    GSEARCH_URL = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&rsz=filtered_cse&cx=%(cx)s&q=%(q)s&start=%(start)s'
+    if not cx:
+        GSEARCH_URL = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&rsz=filtered_cse&q=%(q)s&start=%(start)s'
+    try:
+        q = quote(q.encode('utf-8'))
+    except:
+        q = quote(q)
+    gdic = dict(cx=cx,q=q,start=start)
+    url = GSEARCH_URL % gdic
+    try:
+        res = urlfetch.fetch(url)
+    except urlfetch.DownloadError, e:
+        logging.error('Search Download Error: ' + str(e))
+        raise urlfetch.DownloadError
+    if 200 != res.status_code:
+        logging.error('Search Status Error: ' + str(res.status_code))
+        raise Exception('Search Status Error: ' + str(res.status_code))
+    gres = parse_json(res.content)
+    if 200 != gres['responseStatus']:
+        logging.error('Search responseStatus Error: ' + str(gres['responseDetails']))
+        raise Exception('Search responseStatus Error: ' + str(gres['responseDetails']))
+    return gres['responseData']
 
 apps = webapp.WSGIApplication(
     [

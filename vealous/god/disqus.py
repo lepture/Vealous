@@ -9,7 +9,8 @@ from google.appengine.api import urlfetch
 import urllib
 import logging
 
-from decorators import be_god
+from utils import be_god
+from utils.handler import WebHandler
 from config import DEBUG
 import dbs
 
@@ -103,7 +104,7 @@ class Disqus(object):
             return {'succeeded': False}
         return json
 
-class DisqusModerate(webapp.RequestHandler):
+class DisqusModerate(WebHandler):
     @be_god
     def get(self):
         action = self.request.get('action',None)
