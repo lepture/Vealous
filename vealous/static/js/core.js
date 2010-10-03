@@ -90,7 +90,7 @@ function autoSave() {
     var text = $('#id_text').val();
     var keyword = $('#id_keyword').val();
     localStorage.title = title;
-    localStorage.slug = title;
+    localStorage.slug = slug;
     localStorage.text = text;
     localStorage.keyword = keyword;
     $('.message').text('auto saved');
