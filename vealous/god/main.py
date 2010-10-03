@@ -433,6 +433,7 @@ class ConsoleMemcache(WebHandler):
             result = ''
         rdic = {}
         memstat = memcache.get_stats()
+        rdic['key'] = key
         rdic['memstat'] = memstat
         rdic['result'] = result
         self.request.headers['User-Agent'] = 'bot'
