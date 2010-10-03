@@ -17,14 +17,13 @@ from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 from django.utils.simplejson import dumps
 
+from utils import is_mobile, be_god
 from utils.render import render
 from utils.paginator import Paginator
-from utils.sessions import Session
-from utils import is_mobile
+from utils.handler import WebHandler
 from god.disqus import Disqus
 import dbs
 import config
-from decorators import be_god
 
 count = 10
 day = 86400
@@ -36,14 +35,9 @@ def get_path(request , name):
     path = os.path.join(config.ROOT, 'god', 'tpl', name)
     return path
 
-class Login(webapp.RequestHandler):
+class Login(WebHandler):
     def get(self):
-        session = Session(self)
-        try:
-            auth = session['auth']
-        except:
-            auth = 0
-            pass
+        auth = self.session.get('auth',0)
         if 1 == auth:
             self.redirect('/god')
         rdic = {}
@@ -58,8 +52,7 @@ class Login(webapp.RequestHandler):
         passwd = sha1(passwd + config.SECRET).hexdigest()
         to = self.request.get('to')
         if passwd == password:
-            session = Session(self)
-            session['auth'] = 1
+            self.session['auth'] = 1
             return self.redirect(urllib.unquote(to))
         rdic = {}
         message = 'Are you really a God?'
@@ -67,22 +60,20 @@ class Login(webapp.RequestHandler):
         path = get_path(self.request, 'login.html')
         return self.response.out.write(render(path,rdic))
 
-class Logout(webapp.RequestHandler):
+class Logout(WebHandler):
     def get(self):
-        session = Session(self)
-        session['auth'] = 0
+        self.session['auth'] = 0
         return self.redirect('/god/login')
 
-class Dashboard(webapp.RequestHandler):
+class Dashboard(WebHandler):
     @be_god
     def get(self):
         rdic = {}
         source = self.request.get('from', None)
         message = ''
         if source:
-            session = Session(self)
-            message = session.get('message','')
-            session.delete('message')
+            message = self.session.get('message','')
+            self.session.delete('message')
         rdic['message'] = message
         comments = memcache.get('disqus$comments')
         path = get_path(self.request, 'dashboard.html')
@@ -100,15 +91,14 @@ class Dashboard(webapp.RequestHandler):
         rdic['comments'] = comments
         return self.response.out.write(render(path,rdic))
 
-class ViewArticle(webapp.RequestHandler):
+class ViewArticle(WebHandler):
     @be_god
     def get(self):
         source = self.request.get('from', None)
         message = ''
         if source:
-            session = Session(self)
-            message = session.get('message','')
-            session.delete('message')
+            message = self.session.get('message','')
+            self.session.delete('message')
         rdic = {}
         action = self.request.get('action', 'none').lower()
         key = self.request.get('key', 'none')
@@ -126,8 +116,7 @@ class ViewArticle(webapp.RequestHandler):
                 memcache.delete('a/' + art.slug)
                 memcache.delete('a$ten')
             else:
-                session = Session(self)
-                session['message'] = "Can't find the article"
+                self.session['message'] = "Can't find the article"
             return self.redirect('/god/article?from='+action)
         if 'filter' == action:
             data = self.get_filter(status)
@@ -154,7 +143,7 @@ class ViewArticle(webapp.RequestHandler):
         data = dbs.Article.gql('WHERE slug =:1', key)
         return data
 
-class EditArticle(webapp.RequestHandler):
+class EditArticle(WebHandler):
     @be_god
     def get(self):
         key = self.request.get('key', None)
@@ -166,8 +155,7 @@ class EditArticle(webapp.RequestHandler):
         action = self.request.get('action', None)
         if 'delete' == action:
             dbs.Article.delete(data)
-            session = Session(self)
-            session['message'] = 'Article <strong>%s</strong> has been deleted' % data.title
+            self.session['message'] = 'Article <strong>%s</strong> has been deleted' % data.title
             return self.redirect('/god/article?from=delete')
         rdic = {}
         rdic['data'] = data
@@ -194,8 +182,7 @@ class EditArticle(webapp.RequestHandler):
             draft = False
         if title and slug:
             dbs.Article.update(data, title, slug, text, draft, keyword)
-            session = Session(self)
-            session['message'] = 'Article <a href="/god/article/edit?key=%s">%s</a> has been modified' % (data.key(), data.title)
+            self.session['message'] = 'Article <a href="/god/article/edit?key=%s">%s</a> has been modified' % (data.key(), data.title)
             return self.redirect('/god/article?from=edit')
         rdic['data'] = data
         message = 'Please fill the required fields'
@@ -203,7 +190,7 @@ class EditArticle(webapp.RequestHandler):
         path = get_path(self.request, 'edit_article.html')
         return self.response.out.write(render(path,rdic))
 
-class AddArticle(webapp.RequestHandler):
+class AddArticle(WebHandler):
     @be_god
     def get(self):
         rdic = {}
@@ -224,8 +211,7 @@ class AddArticle(webapp.RequestHandler):
             draft = False
         if title and slug:
             data = dbs.Article.add(title,slug,text,draft,keyword)
-            session = Session(self)
-            session['message'] = 'New article <a href="/god/article/edit?key=%s">%s</a> has been created' % (data.key(), data.title)
+            self.session['message'] = 'New article <a href="/god/article/edit?key=%s">%s</a> has been created' % (data.key(), data.title)
             gping = 'http://blogsearch.google.com/ping?url=%s/feed.atom' % config.SITE_URL
             urlfetch.fetch(gping)
             return self.redirect('/god/article?from=add')
@@ -234,15 +220,14 @@ class AddArticle(webapp.RequestHandler):
         path = get_path(self.request, 'add_article.html')
         return self.response.out.write(render(path,rdic))
 
-class ViewMelody(webapp.RequestHandler):
+class ViewMelody(WebHandler):
     @be_god
     def get(self):
         source = self.request.get('from', None)
         message = ''
         if source:
-            session = Session(self)
-            message = session.get('message','')
-            session.delete('message')
+            message = self.session.get('message','')
+            self.session.delete('message')
         status = self.request.get('filter', 'none')
         rdic = {}
         rdic['message'] = message
@@ -259,7 +244,7 @@ class ViewMelody(webapp.RequestHandler):
         data = dbs.Melody.gql('WHERE label = :1 ORDER BY prior DESC',status)
         return data
 
-class AddMelody(webapp.RequestHandler):
+class AddMelody(WebHandler):
     @be_god
     def get(self):
         rdic = {}
@@ -279,15 +264,14 @@ class AddMelody(webapp.RequestHandler):
             try: prior = int(prior)
             except: prior = 0
             data = dbs.Melody.add(title,url,label,prior,ext,text)
-            session = Session(self)
-            session['message'] = 'New %s <a href="/god/melody/edit?key=%s">%s</a> has been created' % (data.label, data.key(), data.title)
+            self.session['message'] = 'New %s <a href="/god/melody/edit?key=%s">%s</a> has been created' % (data.label, data.key(), data.title)
             return self.redirect('/god/melody?from=add')
         message = 'Please fill the required fields'
         rdic['message'] = message
         path = get_path(self.request, 'add_melody.html')
         return self.response.out.write(render(path,rdic))
 
-class EditMelody(webapp.RequestHandler):
+class EditMelody(WebHandler):
     @be_god
     def get(self):
         key = self.request.get('key', None)
@@ -299,8 +283,7 @@ class EditMelody(webapp.RequestHandler):
         action = self.request.get('action', None)
         if 'delete' == action:
             dbs.Melody.delete(data)
-            session = Session(self)
-            session['message'] = '%s <strong>%s</strong> has been deleted' % (data.label.upper(), data.title)
+            self.session['message'] = '%s <strong>%s</strong> has been deleted' % (data.label.upper(), data.title)
             return self.redirect('/god/melody?from=delete')
         rdic = {}
         rdic['data'] = data
@@ -326,8 +309,7 @@ class EditMelody(webapp.RequestHandler):
             try: prior = int(prior)
             except: prior = 0
             dbs.Melody.update(data, title,url,label,prior,ext,text)
-            session = Session(self)
-            session['message'] = '%s <a href="/god/melody/edit?key=%s">%s</a> has been modified' % (data.label.upper(), data.key(), data.title)
+            self.session['message'] = '%s <a href="/god/melody/edit?key=%s">%s</a> has been modified' % (data.label.upper(), data.key(), data.title)
             return self.redirect('/god/melody?from=edit')
         rdic['data'] = data
         message = 'Please fill the required fields'
@@ -335,12 +317,12 @@ class EditMelody(webapp.RequestHandler):
         path = get_path(self.request, 'edit_melody.html')
         return self.response.out.write(render(path,rdic))
 
-class ViewNote(webapp.RequestHandler):
+class ViewNote(WebHandler):
     @be_god
     def get(self):
         self.redirect('/god')
 
-class AddNote(webapp.RequestHandler):
+class AddNote(WebHandler):
     @be_god
     def post(self):
         self.response.headers['Content-Type'] = 'application/json'
@@ -353,7 +335,7 @@ class AddNote(webapp.RequestHandler):
         data = {'succeeded': True, 'text':'Note Saved', 'html':html}
         return self.response.out.write(dumps(data))
 
-class DeleteNote(webapp.RequestHandler):
+class DeleteNote(WebHandler):
     @be_god
     def get(self):
         self.response.headers['Content-Type'] = 'application/json'
@@ -369,7 +351,7 @@ class DeleteNote(webapp.RequestHandler):
         data = {'succeeded': True, 'text':'Delete Note'}
         return self.response.out.write(dumps(data))
 
-class VigoSetting(webapp.RequestHandler):
+class VigoSetting(WebHandler):
     @be_god
     def get(self):
         rdic = {}
@@ -408,7 +390,7 @@ class VigoSetting(webapp.RequestHandler):
         path = get_path(self.request, 'vigo.html')
         return self.response.out.write(render(path,rdic))
 
-class Chpasswd(webapp.RequestHandler):
+class Chpasswd(WebHandler):
     @be_god
     def get(self):
         rdic = {}
@@ -436,7 +418,7 @@ class Chpasswd(webapp.RequestHandler):
         rdic['message'] = "Please fill all required fields"
         return self.response.out.write(render(path,rdic))
 
-class ConsoleMemcache(webapp.RequestHandler):
+class ConsoleMemcache(WebHandler):
     @be_god
     def get(self):
         action = self.request.get('action','none')

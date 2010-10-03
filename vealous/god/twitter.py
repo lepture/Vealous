@@ -11,9 +11,9 @@ from google.appengine.ext.webapp import template
 from django.utils import simplejson
 
 from libs import twitter
-from decorators import be_god
+from utils import be_god
+from utils.handler import WebHandler
 from utils.render import render
-from utils.sessions import Session
 import config
 import dbs
 
@@ -58,7 +58,7 @@ def get_path(ua, name):
     path = os.path.join(config.ROOT, 'god', 'tpl', name)
     return path
 
-class Dashboard(webapp.RequestHandler):
+class Dashboard(WebHandler):
     @be_god
     def get(self):
         ua = self.request.headers.get('User-Agent', 'bot')
@@ -67,9 +67,8 @@ class Dashboard(webapp.RequestHandler):
         source = self.request.get('from', None)
         message = ''
         if source:
-            session = Session(self)
-            message = session.get('message','')
-            session.delete('message')
+            message = self.session.get('message','')
+            self.session.delete('message')
         rdic['message'] = message
         qs = dbs.Vigo.get('oauth_twitter')
         if not qs:
@@ -85,7 +84,7 @@ class Dashboard(webapp.RequestHandler):
         rdic['statuses'] = statuses
         return self.response.out.write(render(path, rdic))
 
-class UserStatus(webapp.RequestHandler):
+class UserStatus(WebHandler):
     @be_god
     def get(self, username):
         ua = self.request.headers.get('User-Agent', 'bot')
@@ -112,37 +111,35 @@ class UserStatus(webapp.RequestHandler):
         return self.response.out.write(render(path, rdic))
 
 
-class Login(webapp.RequestHandler):
+class Login(WebHandler):
     @be_god
     def get(self):
         auth = Twitter()
         url = auth.get_url(twitter.REQUEST_TOKEN_URL)
         qs = auth.fetch(url)
-        session = Session(self)
-        session['twitter_qs'] = qs
+        self.session['twitter_qs'] = qs
         auth.set_qs_token(qs)
         to = auth.get_url(twitter.AUTHORIZATION_URL)
         return self.redirect(to)
 
-class Auth(webapp.RequestHandler):
+class Auth(WebHandler):
     @be_god
     def get(self):
         qs = dbs.Vigo.get('oauth_twitter')
         if qs:
             return self.response.out.write('authed')
-        session = Session(self)
-        qs = session.get('twitter_qs','')
+        qs = self.session.get('twitter_qs','')
         if not qs:
-            session['message'] = 'Request Twitter access token failed'
+            self.session['message'] = 'Request Twitter access token failed'
             return self.redirect('/god?from=twitter')
         auth = Twitter()
         auth.set_qs_token(qs)
         url = auth.get_url(twitter.ACCESS_TOKEN_URL)
         dbs.Vigo.set('oauth_twitter', qs)
-        session['message'] = 'Twitter Auth Success'
+        self.session['message'] = 'Twitter Auth Success'
         return self.redirect('/god/twitter?from=auth')
 
-class Status(webapp.RequestHandler):
+class Status(WebHandler):
     @be_god
     def post(self):
         content = self.request.get('text', '')

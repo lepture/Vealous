@@ -9,9 +9,9 @@ from google.appengine.ext.webapp import template
 from django.utils import simplejson
 
 from libs import pydouban
-from decorators import be_god
+from utils import be_god
+from utils.handler import WebHandler
 from utils.render import render
-from utils.sessions import Session
 import config
 import dbs
 
@@ -40,7 +40,7 @@ def get_path(ua, name):
     path = os.path.join(config.ROOT, 'god', 'tpl', name)
     return path
 
-class Dashboard(webapp.RequestHandler):
+class Dashboard(WebHandler):
     @be_god
     def get(self):
         ua = self.request.headers.get('User-Agent', 'bot')
@@ -49,9 +49,8 @@ class Dashboard(webapp.RequestHandler):
         source = self.request.get('from', None)
         message = ''
         if source:
-            session = Session(self)
-            message = session.get('message','')
-            session.delete('message')
+            message = self.session.get('message','')
+            self.session.delete('message')
         rdic['message'] = message
         qs = dbs.Vigo.get('oauth_douban')
         if not qs:
@@ -74,35 +73,33 @@ class Dashboard(webapp.RequestHandler):
         rdic['miniblogs'] = miniblogs
         return self.response.out.write(render(path, rdic))
 
-class Login(webapp.RequestHandler):
+class Login(WebHandler):
     @be_god
     def get(self):
         auth = pydouban.Auth(config.douban_key, config.douban_secret)
         callback = config.SITE_URL + '/god/douban/auth'
         dic = auth.login(callback)
-        session = Session(self)
-        session['douban_dic'] = dic
+        self.session['douban_dic'] = dic
         return self.redirect(dic['url'])
 
-class Auth(webapp.RequestHandler):
+class Auth(WebHandler):
     @be_god
     def get(self):
-        session = Session(self)
         oauth_douban = dbs.Vigo.get('oauth_douban')
         if oauth_douban:
-            session['message'] = 'Douban Authed Already'
+            self.session['message'] = 'Douban Authed Already'
             return self.redirect('/god/douban?from=douban')
         auth = pydouban.Auth(config.douban_key, config.douban_secret)
-        dic = session.get('douban_dic',{})
+        dic = self.session.get('douban_dic',{})
         if not dic:
-            session['message'] = 'Request Douban access token failed'
+            self.session['message'] = 'Request Douban access token failed'
             return self.redirect('/god?from=douban')
         qs = auth.get_acs_token(dic['oauth_token'],dic['oauth_token_secret'])
         dbs.Vigo.set('oauth_douban', qs)
-        session['message'] = 'Douban Auth Success'
+        self.session['message'] = 'Douban Auth Success'
         return self.redirect('/god/douban?from=douban')
 
-class Miniblog(webapp.RequestHandler):
+class Miniblog(WebHandler):
     @be_god
     def post(self):
         content = self.request.get('text', None)
