@@ -2,13 +2,26 @@
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
-from google.appengine.api import xmpp
+from google.appengine.api import xmpp, memcache
 
 from utils.mardict import DictCN, GoogleDict
 from libs import pydouban
 from libs import twitter
 import dbs
 import config
+
+def star_rate(num):
+    ''' 0 <= num <= 5'''
+    num = str(num)
+    d = {
+        '0':u'☆☆☆☆☆',
+        '1':u'☆☆☆☆★',
+        '2':u'☆☆☆★★',
+        '3':u'☆☆★★★',
+        '4':u'☆★★★★',
+        '5':u'★★★★★',
+    }
+    return d[num]
 
 class CMD(object):
     def __init__(self, content):
@@ -22,6 +35,13 @@ class CMD(object):
         self.has_cmd = True
         self._cmd = cmd[1:]
         self._content = ' '.join(sp[1:])
+        if 'log' == self._cmd:
+            return self._log()
+        if 'rating' == self._cmd:
+            return self._rating()
+        if 'mark' == self._cmd:
+            return self._mark()
+
         if not self._content:
             return 'You asked nothing'
         if '2' in self._cmd:
@@ -52,6 +72,9 @@ class CMD(object):
         d = DictCN(self._content)
         data = d.reply()
         if data:
+            if 'ec' == data['lang']:
+                dbs.DictBook.add(data['word'], data['pron'], data['define'])
+                memcache.set('dict$last', data)
             return data['reply']
         return 'Not Found'
     def _google(self):
@@ -64,6 +87,65 @@ class CMD(object):
         if data:
             return data['reply']
         return 'Not Found'
+    def _log(self):
+        sp = self._content.split()
+        if len(sp) == 0:
+            start = 0
+            end = 10
+        elif len(sp) == 1:
+            start = 0
+            end = sp[0]
+        elif len(sp) == 2:
+            start = sp[0]
+            end = sp[1]
+        else:
+            start = 0
+            end = 10
+        logs = dbs.DictBook.get_log(start=start, end=end)
+        reply = ''
+        for data in logs:
+            reply += '%s [%s]\n%s\n' % (data.word, data.pron, data.define)
+        if not reply:
+            return 'Not Found'
+        return reply
+    def _rating(self):
+        sp = self._content.split()
+        if len(sp) == 0:
+            rating = 1
+            start = 0
+            end = 10
+        elif len(sp) == 1:
+            rating = sp[0]
+            start = 0
+            end = 10
+        elif len(sp) == 2:
+            rating = sp[0]
+            start = 0
+            end = sp[1]
+        elif len(sp) == 3:
+            rating = sp[0]
+            start = sp[1]
+            end = sp[2]
+        logs = dbs.DictBook.get_rating(rating = rating, start=start, end=end)
+        reply = ''
+        for data in logs:
+            reply += '%s [%s]\n%s\n' % (data.word, data.pron, data.define)
+        if not reply:
+            return 'Not Found'
+        return reply
+    def _mark(self):
+        if self._content:
+            data = dbs.DictBook.mark(self._content)
+            reply = u'\n%s [%s]\n%s\n' % (data.word, data.pron, data.define)
+            reply += u'Has been marked %s' % star_rate(data.rating)
+            return reply
+        data = memcache.get('dict$last')
+        if data is None:
+            return 'Mark word Failed'
+        data = dbs.DictBook.mark(data['word'])
+        reply = '%s [%s]\n%s\n' % (data.word, data.pron, data.define)
+        reply += u'Has been marked %s' % star_rate(data.rating)
+        return reply
     def _note(self):
         note = dbs.Note.add(self._content)
         return 'Note Saved'

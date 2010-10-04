@@ -286,3 +286,68 @@ class Melody(db.Model):
         memcache.delete(key)
         db.delete(data)
         return data
+
+
+class DictBook(db.Model):
+    # settings: key - value
+    word = db.StringProperty(required=True, indexed=True)
+    pron = db.StringProperty(required=False)
+    define = db.TextProperty(required=False, indexed=False)
+    rating = db.IntegerProperty(default=0, indexed=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+    modified = db.DateTimeProperty(auto_now=True)
+
+    @classmethod
+    def add(cls, word, pron, define):
+        data = cls.get(word)
+        if data is not None:
+            return data
+        data = cls(word=word, pron=pron, define=define)
+        data.put()
+        memcache.set('dict/' + word, data)
+        keys = ['dict$rating/0']
+        memcache.delete_multi(keys)
+        return data
+    @classmethod
+    def get(cls, word):
+        key = 'dict/' + word
+        data = memcache.get(key)
+        if data is not None:
+            return data
+        q = cls.gql('WHERE word = :1', word)
+        data = q.fetch(1)
+        if data:
+            memcache.set(key, data[0])
+            return data[0]
+        return None
+    @classmethod
+    def get_log(cls, start=0, end=10):
+        data = cls.get_rating(0, start, end)
+        return data[start:end]
+    @classmethod
+    def mark(cls, word):
+        data = cls.get(word)
+        if data.rating < 5:
+            data.rating += 1
+        data.put()
+        keys = ['dict$rating/'+str(data.rating), 'dict$rating/'+str(data.rating-1), 'dict/'+data.word]
+        memcache.delete_multi(keys)
+        return data
+    @classmethod
+    def get_rating(cls, rating=1, start=0, end=10):
+        try: rating = int(rating)
+        except: rating = 1
+        try: start = int(start)
+        except: start = 0
+        try: end = int(end)
+        except: end = 10
+        if rating > 5:
+            rating = 5
+        elif rating < 0:
+            rating = 0
+        data = memcache.get('dict$rating/' + str(rating))
+        if data is not None:
+            return data
+        q = cls.gql('WHERE rating=:1 ORDER BY created DESC', rating)
+        data = q.fetch(1000)
+        return data[start:end]

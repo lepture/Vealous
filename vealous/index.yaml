@@ -23,6 +23,12 @@ indexes:
   - name: created
     direction: desc
 
+- kind: DictBook
+  properties:
+  - name: rating
+  - name: created
+    direction: desc
+
 - kind: Melody
   properties:
   - name: label
