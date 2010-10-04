@@ -1,5 +1,6 @@
 $(function(){
     showNofity();
+    tweetClick();
     autoSaveArticle();
     disqusModerate();
     delNote();

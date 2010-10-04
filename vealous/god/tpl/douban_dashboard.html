@@ -15,8 +15,8 @@ Douban|Dashboard
 <div class="sidebar alignright">
     <div class="box">
         <div class="cell clearfix">
-            <a href="{{profile.link|avatar:"alternate"}}">
-                <img src="{{profile.link|avatar}}" alt="avatar" class="avatar alignleft" />
+            <a href="{{profile.link|selectlink:"alternate"}}">
+                <img src="{{profile.link|selectlink|default:"http://img3.douban.com/icon/user_normal.jpg"}}" alt="avatar" class="avatar alignleft" />
             </a>
             <div class="alignleft">
                 <p><strong>{{profile.title.t}}</strong></p>

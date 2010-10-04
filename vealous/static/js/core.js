@@ -13,6 +13,22 @@ function melodyLable(arg) {
     var choice = '.choices .' + arg;
     $('.melodyspace').html($(choice).html());
 }
+function tweetClick() {
+    $('a.reply').click(function(){
+        var who = $(this).attr('href').replace('#','@') + ' ';
+        $('#noteform #note').val(who);
+        $('#noteform #note').focus();
+        return false;
+    });
+    $('a.rt').click(function(){
+        var who = $(this).attr('href').replace('#','@') + ' ';
+        var text = $(this).parentsUntil('.widow').siblings('.tw-content').text();
+        var text = 'RT ' + who + text;
+        $('#noteform #note').val(text);
+        $('#noteform #note').focus();
+        return false;
+    });
+}
 // ajax
 function postNote() {
     var notelen = $('#note').val().length;

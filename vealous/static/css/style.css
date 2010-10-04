@@ -136,7 +136,6 @@ body {
 }
 .soga .widow {
     width: 600px;
-    overflow: hidden;
     word-wrap: break-word;
 }
 .soga .bitch p {
@@ -190,7 +189,7 @@ body {
 }
 .sidebar textarea {
     width: 98%;
-    height: 90px;
+    height: 100px;
 }
 #footer {
     background: #eee;

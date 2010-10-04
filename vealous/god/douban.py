@@ -21,17 +21,13 @@ register = template.create_template_register()
 template.register_template_library('god.douban')
 
 @register.filter
-def avatar(links, arg='icon'):
-    avatar = {}
-    avatar['icon'] = None
+def selectlink(links, arg='icon'):
+    if not isinstance(links, list):
+        return ''
     for link in links:
-        if 'icon' == link.rel:
-            avatar['icon'] = link.href
-        elif 'alternate' == link.rel:
-            avatar['alternate'] = link.href
-    if not avatar['icon']:
-        avatar['icon'] = 'http://img3.douban.com/icon/user_normal.jpg'
-    return avatar[arg]
+        if arg == link.rel:
+            return link.href
+    return ''
 @register.filter
 def pk(link):
     return link.split('/')[-1]
