@@ -7,6 +7,12 @@
         <lastmod>{%now "Y-m-d"%}</lastmod>
         <priority>1</priority>
     </url>
+    <url>
+        <loc>{{conf.site}}/archive</loc>
+        <changefreq>daily</changefreq>
+        <lastmod>{%now "Y-m-d"%}</lastmod>
+        <priority>1</priority>
+    </url>
     {% for url in urlset %}
     <url>
         <loc>{{conf.site}}{{ url.location }}</loc>
