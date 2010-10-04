@@ -82,7 +82,8 @@ class CMD(object):
         lan = g.detect()
         if lan in ('zh-CN' or 'zh-TW'):
             g = GoogleDict(self._content, lan, 'en')
-        g = GoogleDict(self._content, lan, 'zh')
+        else:
+            g = GoogleDict(self._content, lan, 'zh')
         data = g.reply()
         if data:
             return data['reply']
@@ -151,6 +152,8 @@ class CMD(object):
         return 'Note Saved'
     def _douban(self):
         qs = dbs.Vigo.get('oauth_douban')
+        if not qs:
+            return 'Douban Not Authed'
         api = pydouban.Api()
         api.set_qs_oauth(config.douban_key, config.douban_secret, qs)
         try:
@@ -159,12 +162,14 @@ class CMD(object):
             return 'Post to Douban Failed'
         return 'Post to Douban Success'
     def _twitter(self):
+        qs = dbs.Vigo.get('oauth_twitter')
+        if not qs:
+            return 'Twitter Not Authed'
         content = self._content
         if len(self._content) > 140:
             content = content[:133] + '...'
         try: content = content.encode('utf-8')
         except UnicodeDecodeError: pass
-        qs = dbs.Vigo.get('oauth_twitter')
         token = twitter.oauth.Token.from_string(qs)
         api = twitter.Api(config.twitter_key, config.twitter_secret,
                           token.key, token.secret)

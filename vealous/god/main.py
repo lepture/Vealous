@@ -220,6 +220,9 @@ class AddArticle(WebHandler):
         return self.response.out.write(render(path,rdic))
 
     def tweet(self, data):
+        qs = dbs.Vigo.get('oauth_twitter')
+        if not qs:
+            return 'Twitter Not Authed'
         url = urllib.quote(config.SITE_URL + data.the_url)
         bitly = 'http://api.bit.ly/v3/shorten?login=%s&apiKey=%s&longUrl=%s&format=json' % (config.bitly_login, config.bitly_apikey, url)
         try:
@@ -238,7 +241,6 @@ class AddArticle(WebHandler):
             content = content + ' via ' + url
         try: content = content.encode('utf-8')
         except UnicodeDecodeError: pass
-        qs = dbs.Vigo.get('oauth_twitter')
         token = twitter.oauth.Token.from_string(qs)
         api = twitter.Api(config.twitter_key, config.twitter_secret,
                           token.key, token.secret)
