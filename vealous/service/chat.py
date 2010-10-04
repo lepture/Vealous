@@ -50,11 +50,13 @@ class CMD(object):
             return self._dict()
         if 'g' == self._cmd or 'google' == self._cmd:
             return self._google()
-        if 'n' == self._cmd or 'note' == self._cmd:
+        if 'ntb' == self._cmd or 'nbt' == self._cmd:
             reply = self._note() + '\n'
             reply += self._twitter() + '\n'
             reply += self._douban()
             return reply
+        if 'note' == self._cmd:
+            return self._note()
         if 'db' == self._cmd or 'douban' == self._cmd:
             return self._douban()
         if 't' == self._cmd or 'twitter' == self._cmd:
