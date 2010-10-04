@@ -29,6 +29,10 @@ twitter_secret = ''
 flickr_key = ''
 flickr_secret = ''
 
+# bit.ly
+bitly_login = ''
+bitly_apikey = ''
+
 SECRET = 'xhoayerqdjfat' #once decided, you should never change it
 PASSWORD = 'SECRECT' #you first password
 # for session

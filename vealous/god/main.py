@@ -15,13 +15,15 @@ from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
-from django.utils.simplejson import dumps
+from google.appengine.api.labs import taskqueue
+from django.utils.simplejson import dumps, loads
 
 from utils import is_mobile, be_god
 from utils.render import render
 from utils import Paginator
 from utils.handler import WebHandler
 from god.disqus import Disqus
+from libs import twitter
 import dbs
 import config
 
@@ -177,11 +179,8 @@ class EditArticle(WebHandler):
         if title and slug:
             dbs.Article.update(data, title, slug, text, draft, keyword)
             self.session['message'] = 'Article <a href="/god/article/edit?key=%s">%s</a> has been modified' % (data.key(), data.title)
-            gping = 'http://blogsearch.google.com/ping?name='
-            gping += urllib.quote(dbs.Vigo.get('sitename'))
-            gping += '&url=%s' % urllib.quote(config.SITE_URL)
-            gping += '&changesURL=%s/sitemap.xml' % urllib.quote(config.SITE_URL)
-            urlfetch.fetch(gping)
+            if not draft:
+                taskqueue.add(url='/god/task/ping', method="GET")
             return self.redirect('/god/article?from=edit')
         rdic['data'] = data
         message = 'Please fill the required fields'
@@ -211,16 +210,43 @@ class AddArticle(WebHandler):
         if title and slug:
             data = dbs.Article.add(title,slug,text,draft,keyword)
             self.session['message'] = 'New article <a href="/god/article/edit?key=%s">%s</a> has been created' % (data.key(), data.title)
-            gping = 'http://blogsearch.google.com/ping?name='
-            gping += urllib.quote(dbs.Vigo.get('sitename'))
-            gping += '&url=%s' % urllib.quote(config.SITE_URL)
-            gping += '&changesURL=%s/sitemap.xml' % urllib.quote(config.SITE_URL)
-            urlfetch.fetch(gping)
+            if not draft:
+                self.tweet(data)
+                taskqueue.add(url='/god/task/ping', method='GET')
             return self.redirect('/god/article?from=add')
         message = 'Please fill the required fields'
         rdic['message'] = message
         path = get_path(self.request, 'add_article.html')
         return self.response.out.write(render(path,rdic))
+
+    def tweet(self, data):
+        url = urllib.quote(config.SITE_URL + data.the_url)
+        bitly = 'http://api.bit.ly/v3/shorten?login=%s&apiKey=%s&longUrl=%s&format=json' % (config.bitly_login, config.bitly_apikey, url)
+        try:
+            result = urlfetch.fetch(bitly)
+            if 200 == result.status_code:
+                data = loads(result.content)
+                url = data['data']['url']
+            else:
+                url = config.SITE_URL + data.the_url
+        except:
+            url = config.SITE_URL + data.the_url
+        content = '<' +  data.title + '> ' + data.text[:100]
+        if len(content) > 110:
+            content = content[:100] + '... via ' + url
+        else:
+            content = content + ' via ' + url
+        try: content = content.encode('utf-8')
+        except UnicodeDecodeError: pass
+        qs = dbs.Vigo.get('oauth_twitter')
+        token = twitter.oauth.Token.from_string(qs)
+        api = twitter.Api(config.twitter_key, config.twitter_secret,
+                          token.key, token.secret)
+        try:
+            api.PostUpdate(content)
+        except:
+            return 'Post to Twitter Failed'
+        return 'Post to Twitter Success'
 
 class ViewMelody(WebHandler):
     @be_god
@@ -446,6 +472,19 @@ class ConsoleMemcache(WebHandler):
         path = get_path(self.request,'memcache.html')
         return self.response.out.write(render(path,rdic))
 
+class TaskPing(WebHandler):
+    def get(self):
+        gping = 'http://blogsearch.google.com/ping?name='
+        gping += urllib.quote(dbs.Vigo.get('sitename'))
+        gping += '&url=%s' % urllib.quote(config.SITE_URL)
+        gping += '&changesURL=%s/sitemap.xml' % urllib.quote(config.SITE_URL)
+        try:
+            result = urlfetch.fetch(gping)
+            if 200 == result.status_code:
+                return self.response.out.write('Google Blog Ping: ' + gping)
+            return self.response.out.write('Google Blog Ping Error: ' + str(result.status_code))
+        except:
+            return self.response.out.write('Google Blog Ping Failed')
 
 apps = webapp.WSGIApplication(
     [
@@ -464,6 +503,7 @@ apps = webapp.WSGIApplication(
         ('/god/note/add', AddNote),
         ('/god/note/delete', DeleteNote),
         ('/god/console/memcache', ConsoleMemcache),
+        ('/god/task/ping', TaskPing),
     ],
     debug = config.DEBUG,
 )
