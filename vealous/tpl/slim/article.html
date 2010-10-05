@@ -12,7 +12,7 @@
 <div class="post">
     <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>
     <div class="post-info">
-        <label>Created at </label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="external">{{vigo.twitter}}</a>
+        <label>Created at</label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="external">{{vigo.twitter}}</a>
     </div>
     <div class="post-content">
         {{data.html|embed}}
@@ -26,7 +26,7 @@
         </div>
     </div>
 </div>
-{%include "disqus.html"%}
+{%include "_disqus.html"%}
 {%endblock%}
 
 {%block sidebar%}

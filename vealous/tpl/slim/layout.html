@@ -33,6 +33,11 @@
                         {%for nav in navs%}
                         <li class="nav-{{forloop.counter}}"><a href="{{nav.url}}">{{nav.title}}</a></li>
                         {%endfor%}
+                        <li class="nav-more"><a href="#">More</a>
+                        <ul class="hide">
+                            <li><a href="/utils/dict">My Dict</a></li>
+                        </ul>
+                        </li>
                     </ul>
                     {%endblock%}
                 </div>
@@ -45,7 +50,7 @@
                     <div class="sidebar alignright">
                         {%block searchform%}
                         <div class="searchbox widget">
-                            {%include "gcse.html"%}
+                            {%include "_gcse.html"%}
                         </div>
                         {%endblock%}
                         {%block sidebar%}{%endblock%}
@@ -63,6 +68,8 @@
                 </div>
             </div>
         </div>
-        {%include "footer.html"%}
+        {%include "_ga.html"%}
+        {%block footer%}
+        {%endblock%}
     </body>
 </html>

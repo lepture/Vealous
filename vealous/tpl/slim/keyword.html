@@ -9,6 +9,9 @@
 {%endblock%}
 
 {%block soga%}
+<div class="kw">
+    <p><a href="/">Home</a> » <a href="/archive">Archive</a> » {{keyword}}</p>
+</div>
 {%include "_list.html"%}
 {%endblock%}
 
@@ -23,4 +26,8 @@
         {%endfor%}
     </ul>
 </div>
+{%endblock%}
+
+{%block footer%}
+{%include "_dc.html"%}
 {%endblock%}

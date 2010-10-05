@@ -10,4 +10,8 @@ $(function(){
     message.click(function(){
         message.fadeOut();
     });
+    $('.nav-more>a').click(function(){
+        $('.nav-more ul').slideToggle('fast');
+        return false;
+    });
 });
