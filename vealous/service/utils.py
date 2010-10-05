@@ -11,6 +11,7 @@ from google.appengine.api import urlfetch
 
 from utils.render import render
 from utils import Paginator
+from libs import twitter
 #from utils import is_mobile
 import dbs
 
@@ -34,9 +35,31 @@ class UtilsDict(webapp.RequestHandler):
         path = get_path(self.request, 'utils_dict.html')
         self.response.out.write(render(path,rdic))
 
+class UtilsTwitter(webapp.RequestHandler):
+    def get(self):
+        rdic = {}
+        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['links'] = dbs.Melody.get_all('link')
+        rdic['tweets'] = self.tweets()
+        path = get_path(self.request, 'utils_twitter.html')
+        self.response.out.write(render(path,rdic))
+
+    def tweets(self):
+        username = dbs.Vigo.get('twitter')
+        if not username:
+            return []
+        data = memcache.get('twitter$status$' + username)
+        if data is not None:
+            return data
+        api = twitter.Api()
+        data = api.GetUserTimeline(screen_name=username, count=30)
+        memcache.set('twitter$status$' + username, data, 240)
+        return data
+
 apps = webapp.WSGIApplication(
     [
         ('/utils/dict', UtilsDict),
+        ('/utils/twitter', UtilsTwitter),
     ],
     debug = config.DEBUG,
 )

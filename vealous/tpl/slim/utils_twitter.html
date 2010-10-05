@@ -1,0 +1,34 @@
+{% extends "layout.html"%}
+
+{%block title%}
+Twitter|{{vigo.sitename|default:"Vealous"}}
+{%endblock%}
+
+{%block soga%}
+{%for status in tweets%}
+<div class="post clearfix" style="margin-bottom:12px;">
+    <div class="alignleft">
+        <a href="https://twitter.com/{{status.user.screen_name}}"><img src="{{status.user.profile_image_url}}" class="avatar" /></a>
+    </div>
+    <div class="alignright" style="width: 580px;">
+        <p style="margin-bottom: 3px;" class="tw-info"><strong>{{status.user.name}}</strong> @<a href="https://twitter.com/{{status.user.screen_name}}">{{status.user.screen_name}}</a>
+        <strong class="snow"><small>{{status.datetime|timesince}} ago via {{status.source}}</small></strong>
+        </p>
+        <p class="tw-content">{{status.text|urlize}}</p>
+    </div>
+</div>
+{%endfor%}
+{%endblock%}
+
+{%block sidebar%}
+<div class="widget widget-links">
+    <h3 class="widget-title">Links</h3>
+    <ul>
+        {%for link in links%}
+        <li><a href="{{link.url}}" rel="{{link.ext}}">{{link.title}}</a>
+        {%if link.text%}<p>{{link.text}}</p>{%endif%}
+        </li>
+        {%endfor%}
+    </ul>
+</div>
+{%endblock%}
