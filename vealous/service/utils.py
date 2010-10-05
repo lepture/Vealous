@@ -2,6 +2,8 @@
 
 import os
 import logging
+import time
+import datetime
 from urllib2 import quote
 from django.utils.simplejson import loads as parse_json
 from google.appengine.ext import webapp
@@ -52,9 +54,13 @@ class UtilsTwitter(webapp.RequestHandler):
         if data is not None:
             return data
         api = twitter.Api()
-        data = api.GetUserTimeline(screen_name=username, count=30)
-        memcache.set('twitter$status$' + username, data, 240)
-        return data
+        statuses = api.GetUserTimeline(screen_name=username, count=30)
+        for i in range(len(statuses)):
+            statuses[i].datetime = datetime.datetime.\
+                    fromtimestamp(time.mktime(time.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')))
+
+        memcache.set('twitter$status$' + username, statuses, 240)
+        return statuses
 
 apps = webapp.WSGIApplication(
     [
