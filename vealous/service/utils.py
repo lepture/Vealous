@@ -12,15 +12,15 @@ from google.appengine.api import urlfetch
 from utils.render import render
 from utils import Paginator
 from libs import twitter
-#from utils import is_mobile
+from utils import is_mobile
 import dbs
 
 import config
 
 def get_path(request, name):
-    #if is_mobile(request):
-    #    path = os.path.join(config.ROOT, 'tpl','mobile' , name)
-    #    return path
+    if is_mobile(request):
+        path = os.path.join(config.ROOT, 'tpl','mobile' , name)
+        return path
     path = os.path.join(config.ROOT, 'tpl', config.THEME, name)
     return path
 
