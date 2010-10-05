@@ -1,4 +1,5 @@
 User-agent: *
 Disallow: /s5/
 Disallow: /god/
+Disallow: /utils/
 Disallow: /search

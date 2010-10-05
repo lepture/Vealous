@@ -355,7 +355,7 @@ class DictBook(db.Model):
         data = memcache.get('dict$all')
         if data is not None:
             return data
-        q = cls.all()
+        q = cls.gql('ORDER BY created DESC')
         data = q.fetch(1000)
         memcache.set('dict$all', data)
         return data
