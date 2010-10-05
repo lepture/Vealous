@@ -62,10 +62,16 @@ class UtilsTwitter(webapp.RequestHandler):
         memcache.set('twitter$status$' + username, statuses, 240)
         return statuses
 
+class Redirect(webapp.RequestHandler):
+    def get(self, path):
+        logging.info('redirect from path ' + str(path))
+        self.redirect('/' + path)
+
 apps = webapp.WSGIApplication(
     [
         ('/utils/dict', UtilsDict),
         ('/utils/twitter', UtilsTwitter),
+        ('/(.*)/', Redirect),
     ],
     debug = config.DEBUG,
 )

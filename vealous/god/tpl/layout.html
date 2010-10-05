@@ -5,9 +5,6 @@
         <title>{%block title%}Dashboard{%endblock%}</title>
         <link rel="stylesheet" href="{{conf.static}}/css/reset.css" />
         <link rel="stylesheet" href="{{conf.static}}/css/style.css" />
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-        <script type="text/javascript" src="{{conf.jshost}}/js/core.js"></script>
-        <script type="text/javascript" src="{{conf.jshost}}/js/god.js"></script>
         {%block extra%}{%endblock%}
     </head>
     <body>
@@ -55,5 +52,8 @@
                 </div>
             </div>
         </div>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+        <script type="text/javascript" src="{{conf.jshost}}/js/core.js"></script>
+        <script type="text/javascript" src="{{conf.jshost}}/js/god.js"></script>
     </body>
 </html>
