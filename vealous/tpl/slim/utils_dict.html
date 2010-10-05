@@ -7,7 +7,7 @@ MyDict|{{vigo.sitename|default:"Vealous"}}
 {%block soga%}
 
 {%for data in mvdata.object_list%}
-<div class="post">
+<div class="post" style="margin-bottom:12px;">
     <div class="post-title"><strong>{{data.word}}</strong> [{{data.pron}}] {{data.rating|star}}</div>
     <div class="post-info">
         <label>Created at</label><span class="time">{{data.created|prettytime}}</span> 
