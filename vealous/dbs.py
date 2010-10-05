@@ -320,6 +320,15 @@ class DictBook(db.Model):
             return data[0]
         return None
     @classmethod
+    def delete(cls, word):
+        data = cls.get(word)
+        if data:
+            db.delete(data)
+            keys = ['dict/'+data.word, 'dict$all', 'dict$rating/'+str(data.rating)]
+            memcache.delete_multi(keys)
+            return data
+        return None
+    @classmethod
     def get_log(cls, start=0, end=10):
         data = cls.get_rating(0, start, end)
         return data[start:end]
@@ -329,7 +338,7 @@ class DictBook(db.Model):
         if data.rating < 5:
             data.rating += 1
         data.put()
-        keys = ['dict$rating/'+str(data.rating), 'dict$rating/'+str(data.rating-1), 'dict/'+data.word]
+        keys = ['dict$rating/'+str(data.rating), 'dict$rating/'+str(data.rating-1), 'dict/'+data.word, 'dict$all']
         memcache.delete_multi(keys)
         return data
     @classmethod

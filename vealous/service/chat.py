@@ -41,6 +41,8 @@ class CMD(object):
             return self._rating()
         if 'mark' == self._cmd:
             return self._mark()
+        if 'del' == self._cmd:
+            return self._delete()
 
         if not self._content:
             return 'You asked nothing'
@@ -149,6 +151,21 @@ class CMD(object):
         reply = '%s [%s]\n%s\n' % (data.word, data.pron, data.define)
         reply += u'Has been marked %s' % star_rate(data.rating)
         return reply
+    def _delete(self):
+        if self._content:
+            word = self._content
+        else:
+            data = memcache.get('dict$last')
+            if not data:
+                return 'Word Not Found'
+            word = data.word
+        if not word:
+            return 'Word Not Found'
+        data = dbs.DictBook.delete(word)
+        if data:
+            return '[%s] has been deleted' % word
+        return '[%s] not in Dict book' %  word
+
     def _note(self):
         note = dbs.Note.add(self._content)
         return 'Note Saved'
