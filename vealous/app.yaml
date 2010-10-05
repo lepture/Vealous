@@ -30,6 +30,9 @@ handlers:
 - url: /_ah/xmpp/message/chat/
   script: service/chat.py
 
+- url: /utils/.*
+  script: service/utils.py
+
 - url: /.*
   script: service/blog.py
 

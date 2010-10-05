@@ -289,7 +289,6 @@ class Melody(db.Model):
 
 
 class DictBook(db.Model):
-    # settings: key - value
     word = db.StringProperty(required=True, indexed=True)
     pron = db.StringProperty(required=False)
     define = db.TextProperty(required=False, indexed=False)
@@ -305,7 +304,7 @@ class DictBook(db.Model):
         data = cls(word=word, pron=pron, define=define)
         data.put()
         memcache.set('dict/' + word, data)
-        keys = ['dict$rating/0']
+        keys = ['dict$rating/0', 'dict$all']
         memcache.delete_multi(keys)
         return data
     @classmethod
@@ -351,3 +350,12 @@ class DictBook(db.Model):
         q = cls.gql('WHERE rating=:1 ORDER BY created DESC', rating)
         data = q.fetch(1000)
         return data[start:end]
+    @classmethod
+    def get_all(cls):
+        data = memcache.get('dict$all')
+        if data is not None:
+            return data
+        q = cls.all()
+        data = q.fetch(1000)
+        memcache.set('dict$all', data)
+        return data
