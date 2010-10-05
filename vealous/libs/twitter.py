@@ -2214,8 +2214,9 @@ class Api(object):
 
     url = '%s/statuses/update.json' % self.base_url
 
-    if isinstance(status, unicode) or self._input_encoding is None:
+    if isinstance(status, unicode):
       u_status = status
+      status = status.encode(self._input_encoding)
     else:
       u_status = unicode(status, self._input_encoding)
 

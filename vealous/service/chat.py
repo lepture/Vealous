@@ -15,10 +15,10 @@ def star_rate(num):
     num = str(num)
     d = {
         '0':u'☆☆☆☆☆',
-        '1':u'☆☆☆☆★',
-        '2':u'☆☆☆★★',
-        '3':u'☆☆★★★',
-        '4':u'☆★★★★',
+        '1':u'★☆☆☆☆',
+        '2':u'★★☆☆☆',
+        '3':u'★★★☆☆',
+        '4':u'★★★★☆',
         '5':u'★★★★★',
     }
     return d[num]
@@ -170,15 +170,13 @@ class CMD(object):
         content = self._content
         if len(self._content) > 140:
             content = content[:133] + '...'
-        try: content = content.encode('utf-8')
-        except UnicodeDecodeError: pass
         token = twitter.oauth.Token.from_string(qs)
         api = twitter.Api(config.twitter_key, config.twitter_secret,
-                          token.key, token.secret)
+                          token.key, token.secret, 'utf-8')
         try:
             api.PostUpdate(content)
-        except:
-            return 'Post to Twitter Failed'
+        except twitter.TwitterError, e:
+            return str(e)
         return 'Post to Twitter Success'
 
 class Chat(webapp.RequestHandler):

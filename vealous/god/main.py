@@ -239,15 +239,13 @@ class AddArticle(WebHandler):
             content = content[:100] + '... via ' + url
         else:
             content = content + ' via ' + url
-        try: content = content.encode('utf-8')
-        except UnicodeDecodeError: pass
         token = twitter.oauth.Token.from_string(qs)
         api = twitter.Api(config.twitter_key, config.twitter_secret,
                           token.key, token.secret)
         try:
             api.PostUpdate(content)
-        except:
-            return 'Post to Twitter Failed'
+        except twitter.TwitterError, e:
+            return str(e)
         return 'Post to Twitter Success'
 
 class ViewMelody(WebHandler):

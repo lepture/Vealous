@@ -48,10 +48,10 @@ class Twitter(object):
             logging.error('Twitter: ' + str(e))
             raise Exception('Twitter: ' + str(e))
         return res.content
-    def set_qs_api(self, qs):
+    def set_qs_api(self, qs, input_encoding=None):
         self.token = twitter.oauth.Token.from_string(qs)
         api = twitter.Api(self.consumer.key, self.consumer.secret,
-                          self.token.key, self.token.secret)
+                          self.token.key, self.token.secret, input_encoding)
         return api
 
 def get_path(ua, name):
@@ -145,15 +145,13 @@ class Status(WebHandler):
         content = self.request.get('text', '')
         if len(content) > 140:
             content = content[:133] + '...'
-        try: content = content.encode('utf-8')
-        except UnicodeDecodeError: pass
         qs = dbs.Vigo.get('oauth_twitter')
-        api = Twitter().set_qs_api(qs)
+        api = Twitter().set_qs_api(qs, 'utf-8')
         try:
             api.PostUpdate(content)
             data = {'text':'Post To Twitter Success'}
-        except:
-            data = {'text':'Post To Twitter Failed'}
+        except twitter.TwitterError, e:
+            data = {'text':str(e)}
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(simplejson.dumps(data))
 
