@@ -50,7 +50,7 @@
     <div style="margin-top:10px; min-height:30px;" class="box notewrap">
         {% for data in notes %}
         <div class="cell">
-            <p>{{data.text}}</p>
+            <p>{{data.text|escape}}</p>
             <p>Created at <span class="time">{{data.created|timesince|split:","}} ago</span> <span class="action"><a href="/god/note/delete?key={{data.key}}">Delete</a></span></p>
         </div>
         {% endfor %}

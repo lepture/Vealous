@@ -3,7 +3,7 @@
 import os
 import re
 import logging
-import datetime, time
+import datetime
 from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.ext import webapp
 from google.appengine.api import memcache, urlfetch
@@ -78,8 +78,7 @@ class Dashboard(WebHandler):
         if statuses is None:
             statuses = api.GetFriendsTimeline(count=30, retweets=True)
             for i in range(len(statuses)):
-                statuses[i].datetime = datetime.datetime.\
-                        fromtimestamp(time.mktime(time.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')))
+                statuses[i].datetime = datetime.datetime.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')
             memcache.set('twitter$home', statuses, 120)
         rdic['statuses'] = statuses
         return self.response.out.write(render(path, rdic))
@@ -99,8 +98,7 @@ class UserStatus(WebHandler):
         if statuses is None:
             statuses = api.GetUserTimeline(count=30, screen_name=username)
             for i in range(len(statuses)):
-                statuses[i].datetime = datetime.datetime.\
-                        fromtimestamp(time.mktime(time.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')))
+                statuses[i].datetime = datetime.datetime.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')
             memcache.set('twitter$status$' + username, statuses, 240)
         rdic['statuses'] = statuses
         #profile = memcache.get('twitter$profile$' + username)

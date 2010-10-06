@@ -2,7 +2,6 @@
 
 import os
 import logging
-import time
 import datetime
 from urllib2 import quote
 from django.utils.simplejson import loads as parse_json
@@ -53,12 +52,20 @@ class UtilsTwitter(webapp.RequestHandler):
         data = memcache.get('twitter$status$' + username)
         if data is not None:
             return data
-        api = twitter.Api()
-        statuses = api.GetUserTimeline(screen_name=username, count=30)
+        qs = dbs.Vigo.get('oauth_twitter')
+        if qs:
+            token = twitter.oauth.Token.from_string(qs)
+            api = twitter.Api(
+                config.twitter_key, config.twitter_secret,
+                token.key, token.secret)
+        else:
+            api = twitter.Api()
+        try:
+            statuses = api.GetUserTimeline(screen_name=username, count=30)
+        except:
+            return []
         for i in range(len(statuses)):
-            statuses[i].datetime = datetime.datetime.\
-                    fromtimestamp(time.mktime(time.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')))
-
+            statuses[i].datetime = datetime.datetime.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')
         memcache.set('twitter$status$' + username, statuses, 240)
         return statuses
 
