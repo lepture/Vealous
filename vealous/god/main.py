@@ -228,8 +228,7 @@ class AddArticle(WebHandler):
         try:
             result = urlfetch.fetch(bitly)
             if 200 == result.status_code:
-                data = loads(result.content)
-                url = data['data']['url']
+                url = loads(result.content)['data']['url']
             else:
                 url = config.SITE_URL + data.the_url
         except:
@@ -241,7 +240,7 @@ class AddArticle(WebHandler):
             content = content + ' via ' + url
         token = twitter.oauth.Token.from_string(qs)
         api = twitter.Api(config.twitter_key, config.twitter_secret,
-                          token.key, token.secret)
+                          token.key, token.secret, 'utf-8')
         try:
             api.PostUpdate(content)
         except twitter.TwitterError, e:

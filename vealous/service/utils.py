@@ -63,10 +63,11 @@ class UtilsTwitter(webapp.RequestHandler):
         try:
             statuses = api.GetUserTimeline(screen_name=username, count=30)
         except:
+            logging.error('Error in utils/twitter')
             return []
         for i in range(len(statuses)):
             statuses[i].datetime = datetime.datetime.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')
-        memcache.set('twitter$status$' + username, statuses, 240)
+        memcache.set('twitter$status$' + username, statuses, 480)
         return statuses
 
 class Redirect(webapp.RequestHandler):
