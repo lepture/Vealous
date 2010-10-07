@@ -12,6 +12,7 @@ from libs import pydouban
 from utils import be_god
 from utils.handler import WebHandler
 from utils.render import render
+from god import get_path
 import config
 import dbs
 
@@ -32,15 +33,11 @@ def selectlink(links, arg='icon'):
 def pk(link):
     return link.split('/')[-1]
 
-def get_path(ua, name):
-    path = os.path.join(config.ROOT, 'god', 'tpl', name)
-    return path
 
 class Dashboard(WebHandler):
     @be_god
     def get(self):
-        ua = self.request.headers.get('User-Agent', 'bot')
-        path = get_path(ua, 'douban_dashboard.html')
+        path = get_path(self.request, 'douban_dashboard.html')
         rdic = {}
         source = self.request.get('from', None)
         message = ''

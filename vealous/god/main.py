@@ -1,6 +1,5 @@
 #-*- coding: utf-8 -*-
 
-import os
 import logging
 import urllib
 try:
@@ -18,24 +17,18 @@ from google.appengine.api import urlfetch
 from google.appengine.api.labs import taskqueue
 from django.utils.simplejson import dumps, loads
 
-from utils import is_mobile, be_god
+from utils import be_god
 from utils.render import render
 from utils import Paginator
 from utils.handler import WebHandler
 from god.disqus import Disqus
+from god import get_path
 from libs import twitter
 import dbs
 import config
 
 count = 10
 day = 86400
-
-def get_path(request , name):
-    if is_mobile(request):
-        path = os.path.join(config.ROOT, 'god','mobile' , name)
-        return path
-    path = os.path.join(config.ROOT, 'god', 'tpl', name)
-    return path
 
 class Login(WebHandler):
     def get(self):
@@ -233,11 +226,12 @@ class AddArticle(WebHandler):
                 url = config.SITE_URL + data.the_url
         except:
             url = config.SITE_URL + data.the_url
-        content = '<' +  data.title + '> ' + data.text[:100]
+
+        content = data.title + ' : ' + data.text[:100]
         if len(content) > 110:
             content = content[:100] + '... via ' + url
         else:
-            content = content + ' via ' + url
+            content = content + '... via ' + url
         token = twitter.oauth.Token.from_string(qs)
         api = twitter.Api(config.twitter_key, config.twitter_secret,
                           token.key, token.secret, 'utf-8')

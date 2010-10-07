@@ -1,0 +1,38 @@
+{%extends "layout.html"%}
+
+{%block title%}
+Douban|Dashboard
+{%endblock%}
+
+{%block main%}
+<p class="message">{{message}}</p>
+<div class="box">
+    <form id="noteform" action="/god/note/add" method="post">
+        <div class="form-row cell">
+            <textarea id="note" name="text"></textarea>
+        </div>
+        <div class="hide">
+            <input type="checkbox" checked="checked" name="douban" />
+        </div>
+        <div class="form-row inner">
+            <input type="submit" class="button" value="Save Note" />
+        </div>
+    </form>
+</div>
+
+<div class="box" style="margin-top:10px;">
+    {%for miniblog in miniblogs.entry%}
+    <div class="cell clearfix">
+        <div class="alignleft">
+            <a href="{{miniblog.author.link|selectlink:"alternate"}}"><img src="{{miniblog.author.link|selectlink:"icon"|default:"http://img3.douban.com/icon/user_normal.jpg"}}" alt="avatar" class="avatar" /></a>
+        </div>
+        <div class="bitch">
+            <p><strong>{{miniblog.author.name.t|escape}}</strong> Published at <span class="time">{{miniblog.published.t|timesince|split:","}} ago</span></p>
+            <div class="sep"></div>
+            <p>{{miniblog.content.t}}</p>
+        </div>
+    </div>
+    {%endfor%}
+</div>
+
+{%endblock%}
