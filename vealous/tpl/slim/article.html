@@ -32,3 +32,13 @@
 {%block sidebar%}
 {{conf.widget}}
 {%endblock%}
+
+{%block footer%}
+<script type="text/javascript" src="{{conf.jshost}}/js/FancyZoom.js"></script>
+<script type="text/javascript" src="{{conf.jshost}}/js/FancyZoomHTML.js"></script>
+<script type="text/javascript">
+    window.onload = function() {
+        setupZoom();
+    }
+</script>
+{%endblock%}

@@ -208,12 +208,15 @@ body {
 .post-info a, .post-meta a { border-bottom: 1px solid #dfdfdf; color: #777; }
 .post-info a:hover, .post-meta a:hover { border-bottom: 1px solid #d54e21; color: #d54e21; }
 .post-content { font-size: 13px; }
-.post-content a { border-bottom: 1px solid #dfdfdf; }
-.post-content a:hover { border-bottom: 1px solid #d54e21; }
+.post-content a { border-bottom: none 0; text-decoration: underline; }
+.post-content a:hover { border-bottom: none 0; }
 .post-meta { font-size: 11px; margin-top: 10px; }
 .post img {
     max-width: 630px;
-    border: 4px solid #dadada;
+    background: #fff;
+    -moz-box-shadow: 2px 2px 3px rgba(66, 66, 66, 0.4);
+    -webkit-box-shadow: 2px 2px 3px rgba(66, 66, 66, 0.4);
+    box-shadow: 2px 2px 3px rgba(66, 66, 66, 0.4);
 }
 .kw { margin-bottom: 10px;}
 .widget a:hover { border-bottom: 1px solid #d54e21; }
