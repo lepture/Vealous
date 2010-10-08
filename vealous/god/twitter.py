@@ -77,9 +77,9 @@ class Dashboard(WebHandler):
         statuses = memcache.get('twitter$home')
         if statuses is None:
             statuses = api.GetFriendsTimeline(count=30, retweets=True)
-            for i in range(len(statuses)):
-                statuses[i].datetime = datetime.datetime.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')
-            memcache.set('twitter$home', statuses, 120)
+            for status in statuses:
+                status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
+            memcache.set('twitter$home', statuses, 240)
         rdic['statuses'] = statuses
         return self.response.out.write(render(path, rdic))
 
@@ -96,9 +96,13 @@ class UserStatus(WebHandler):
         api = Twitter().set_qs_api(qs)
         statuses = memcache.get('twitter$status$' + username)
         if statuses is None:
-            statuses = api.GetUserTimeline(count=30, screen_name=username)
-            for i in range(len(statuses)):
-                statuses[i].datetime = datetime.datetime.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')
+            try:
+                statuses = api.GetUserTimeline(count=30, screen_name=username)
+            except twitter.TwitterError, e:
+                logging.error(str(e))
+                return self.redirect('/god/twitter')
+            for status in statuses:
+                status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
             memcache.set('twitter$status$' + username, statuses, 240)
         rdic['statuses'] = statuses
         #profile = memcache.get('twitter$profile$' + username)

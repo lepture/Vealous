@@ -65,8 +65,8 @@ class UtilsTwitter(webapp.RequestHandler):
         except:
             logging.error('Error in utils/twitter')
             return []
-        for i in range(len(statuses)):
-            statuses[i].datetime = datetime.datetime.strptime(statuses[i].created_at, '%a %b %d %H:%M:%S +0000 %Y')
+        for status in statuses:
+            status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
         memcache.set('twitter$status$' + username, statuses, 480)
         return statuses
 
