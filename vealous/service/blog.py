@@ -24,6 +24,9 @@ def get_path(request, name):
     return path
 
 class Index(webapp.RequestHandler):
+    def head(self):
+        pass
+
     def get(self):
         rdic = {}
         rdic['notes'] = dbs.Note.getten()
@@ -34,6 +37,9 @@ class Index(webapp.RequestHandler):
         self.response.out.write(render(path,rdic))
 
 class Article(webapp.RequestHandler):
+    def head(self, url):
+        pass
+
     def get(self, slug):
         rdic = {}
         data = dbs.Article.get(slug)
@@ -55,6 +61,9 @@ class Article(webapp.RequestHandler):
         self.response.out.write(html)
 
 class Archive(webapp.RequestHandler):
+    def head(self):
+        pass
+
     def get(self):
         rdic = {}
         rdic['navs'] = dbs.Melody.get_all('nav')
@@ -65,6 +74,9 @@ class Archive(webapp.RequestHandler):
         self.response.out.write(render(path,rdic))
 
 class Note(webapp.RequestHandler):
+    def head(self, slug):
+        pass
+
     def get(self, slug):
         rdic = {}
         data = dbs.Note.get(slug)
@@ -81,6 +93,8 @@ class Note(webapp.RequestHandler):
         self.response.out.write(html)
 
 class Keyword(webapp.RequestHandler):
+    def head(self, keyword):
+        pass
     def get(self, keyword):
         rdic = {}
         data = dbs.Article.get_kw_articles(keyword)
