@@ -4,8 +4,8 @@ var disqus_identifier = '{{data.the_url}}';
 var disqus_title = '{{data.title}}';
 (function() {
  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
- dsq.src = 'http://shiao.disqus.com/embed.js';
+ dsq.src = 'http://{{conf.disqus_shortname}}.disqus.com/embed.js';
  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
  })();
 </script>
-<noscript><p>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=shiao">comments powered by Disqus.</a></p></noscript>
+<noscript><p>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript={{conf.disqus_shortname}}">comments powered by Disqus.</a></p></noscript>
