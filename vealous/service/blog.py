@@ -129,7 +129,7 @@ class S5(webapp.RequestHandler):
 class Search(webapp.RequestHandler):
     def get(self):
         rdic = {}
-        cx = dbs.Vigo.get('gcse')
+        cx = config.gcse
         rdic['q'] = q = self.request.get('q','Vealous')
         rdic['start'] = start = self.request.get('start', '0')
         try:

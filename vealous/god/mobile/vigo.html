@@ -19,39 +19,13 @@
         <input id="id_twitter" class="text" type="text" name="twitter" maxlength="100" value="{{vigo.twitter}}" />
     </div>
     <div class="form-row cell">
-        <label for="id_ga" class="required">Google Analytics</label>
-        <br />
-        <input id="id_ga" class="text" type="text" name="ga" maxlength="15" value="{{vigo.ga}}" />
-    </div>
-    <div class="form-row cell">
-        <label for="id_gcse" class="required">Google CSE</label>
-        <br />
-        <input id="id_gcse" class="text" type="text" name="gcse" maxlength="33" value="{{vigo.gcse}}" />
-    </div>
-    <div class="form-row cell">
-        <label for="id_disqus" class="required">Disqus</label>
-        <br />
-        <input id="id_disqus" class="text" type="text" name="disqus" maxlength="30" value="{{vigo.disqus}}" />
-    </div>
-    <div class="form-row cell">
-        <label for="id_disqus_key" class="required">Disqus Key</label>
-        <br />
-        <input id="id_disqus_key" class="text" type="text" name="disqus_key" maxlength="100" value="{{disqus_key}}" />
-    </div>
-    <div class="form-row cell">
-        <label for="id_forum_key" class="required">Forum Key</label>
-        <br />
-        <input id="id_forum_key" class="text" type="text" name="forum_key" maxlength="100" value="{{forum_key}}" />
-    </div>
-    <div class="form-row cell">
-        <label for="id_disqus_forumid" class="required">Disqus Forumid</label>
-        <br />
-        <input id="id_disqus_forumid" class="text" type="text" name="disqus_forumid" maxlength="15" value="{{disqus_forumid}}" />
-    </div>
-    <div class="form-row cell">
         <label for="id_alterfeed">Aternate Feed</label>
         <br />
         <input id="id_alterfeed" class="text" type="text" name="alterfeed" maxlength="100" value="{{vigo.alterfeed|default:""}}" />
+    </div>
+    <div class="hide">
+        <textarea id="id_meta" name="meta">{{vigo.meta|default:""}}</textarea>
+        <textarea id="id_widget" name="widget">{{vigo.widget|default:""}}</textarea>
     </div>
     <div class="form-row inner">
         <input type="submit" class="button" value="Save Setting" />

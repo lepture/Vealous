@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="description" content="{{vigo.sitetag}}" />
         <title>{%block title%}Home|{{vigo.sitename|default:"Vealous"}}{%endblock%}</title>
-        {{conf.meta}}
+        {{vigo.meta}}
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         {%if vigo.alterfeed%}
         <link rel="alternate" type="application/rss+xml" href="{{vigo.alterfeed}}" />
@@ -25,6 +25,7 @@
                     {%block nav%}
                     <ul class="alignright nav">
                         <li class="nav-0"><a href="/">Home</a></li>
+                        <li class="nav-0"><a href="/archive">Archive</a></li>
                         {%for nav in navs%}
                         <li class="nav-{{forloop.counter}}"><a href="{{nav.url}}">{{nav.title}}</a></li>
                         {%endfor%}

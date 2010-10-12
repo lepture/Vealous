@@ -76,8 +76,8 @@ class Dashboard(WebHandler):
         if comments is not None:
             rdic['comments'] = comments
             return self.response.out.write(render(path,rdic))
-        disqus_key = dbs.Vigo.get('disqus_key')
-        disqus_forumid = dbs.Vigo.get('disqus_forumid')
+        disqus_key = config.disqus_userkey
+        disqus_forumid = config.disqus_forumid
         mydisqus = Disqus(disqus_key)
         mydisqus.get_forum_posts_rpc(disqus_forumid)
         result = mydisqus.get_forum_posts_result()
@@ -376,9 +376,6 @@ class VigoSetting(WebHandler):
     @be_god
     def get(self):
         rdic = {}
-        rdic['disqus_key'] = dbs.Vigo.get('disqus_key')
-        rdic['forum_key'] = dbs.Vigo.get('forum_key')
-        rdic['disqus_forumid'] = dbs.Vigo.get('disqus_forumid')
         path = get_path(self.request, 'vigo.html')
         return self.response.out.write(render(path,rdic))
 
@@ -388,24 +385,16 @@ class VigoSetting(WebHandler):
         sitename = self.request.get('sitename', 'Vealous')
         sitetag = self.request.get('sitetag', 'Pure Vealous')
         twitter = self.request.get('twitter', 'lepture')
-        ga = self.request.get('ga','')
-        gcse = self.request.get('gcse','')
-        disqus = self.request.get('disqus','')
-        disqus_key = self.request.get('disqus_key','')
-        forum_key = self.request.get('forum_key','')
-        disqus_forumid = self.request.get('disqus_forumid','')
         alterfeed = self.request.get('alterfeed','')
+        meta = self.request.get('meta','')
+        widget = self.request.get('widget','')
 
-        rdic['sitename'] = dbs.Vigo.set('sitename', sitename)
-        rdic['sitetag'] = dbs.Vigo.set('sitetag', sitetag)
-        rdic['twitter'] = dbs.Vigo.set('twitter', twitter)
-        rdic['ga'] = dbs.Vigo.set('ga', ga)
-        rdic['gcse'] = dbs.Vigo.set('gcse', gcse)
-        rdic['disqus'] = dbs.Vigo.set('disqus', disqus)
-        rdic['disqus_key'] = dbs.Vigo.set('disqus_key', disqus_key)
-        rdic['forum_key'] = dbs.Vigo.set('forum_key', forum_key)
-        rdic['disqus_forumid'] = dbs.Vigo.set('disqus_forumid', disqus_forumid)
-        rdic['alterfeed'] = dbs.Vigo.set('alterfeed', alterfeed)
+        dbs.Vigo.set('sitename', sitename)
+        dbs.Vigo.set('sitetag', sitetag)
+        dbs.Vigo.set('twitter', twitter)
+        dbs.Vigo.set('alterfeed', alterfeed)
+        dbs.Vigo.set('meta', meta)
+        dbs.Vigo.set('widget', widget)
         memcache.delete('vigo')
         rdic['message'] = 'Your setting has been saved'
         path = get_path(self.request, 'vigo.html')

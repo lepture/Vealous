@@ -11,8 +11,7 @@ import logging
 
 from utils import be_god
 from utils.handler import WebHandler
-from config import DEBUG
-import dbs
+import config
 
 class Disqus(object):
     rpc = None
@@ -109,8 +108,8 @@ class DisqusModerate(WebHandler):
     def get(self):
         action = self.request.get('action',None)
         post_id = self.request.get('post_id',None)
-        forum_key = dbs.Vigo.get('forum_key')
-        disqus_key = dbs.Vigo.get('disqus_key')
+        forum_key = config.disqus_forumkey
+        disqus_key = config.disqus_userkey
         self.response.headers['Content-Type'] = 'application/json'
         if action and post_id and forum_key and disqus_key:
             d = Disqus(disqus_key)
@@ -127,7 +126,7 @@ apps = webapp.WSGIApplication(
     [
         ('/god/disqus/moderate', DisqusModerate),
     ],
-    debug = DEBUG,
+    debug = config.DEBUG,
 )
 
 if '__main__' == __name__:

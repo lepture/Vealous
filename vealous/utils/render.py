@@ -15,10 +15,9 @@ def render(path, value):
         vigo['sitename'] = Vigo.get('sitename')
         vigo['sitetag'] = Vigo.get('sitetag')
         vigo['twitter'] = Vigo.get('twitter')
-        #vigo['ga'] = Vigo.get('ga')
-        #vigo['gcse'] = Vigo.get('gcse')
-        #vigo['disqus'] = Vigo.get('disqus')
         vigo['alterfeed'] = Vigo.get('alterfeed')
+        vigo['meta'] = Vigo.get('meta')
+        vigo['widget'] = Vigo.get('widget')
         memcache.set('vigo', vigo, 604800)
     conf = value.pop('conf',{})
     value['vigo'] = vigo
