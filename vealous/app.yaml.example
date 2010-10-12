@@ -1,9 +1,9 @@
-application: vealous
+application: your_app_name
 version: 1
 runtime: python
 api_version: 1
 
-#default_expiration: "30d"
+default_expiration: "30d"
 
 handlers:
 - url: /favicon.ico

@@ -22,7 +22,7 @@ Setting|Dashboard
         </div>
         <div class="form-row cell">
             <input id="id_alterfeed" class="text" type="text" name="alterfeed" maxlength="100" value="{{vigo.alterfeed|default:""}}" />
-            <label for="id_alterfeed">Aternate Feed</label>
+            <label for="id_alterfeed">Alternate Feed</label>
         </div>
         <div class="form-row cell">
             <label for="id_meta" style="margin: 0;">Meta</label>
@@ -39,28 +39,29 @@ Setting|Dashboard
 </div>
 <div class="sidebar alignright">
     <div class="help">
-        <h4>Google Analytics</h4>
-        <p>Get it from <a href="https://www.google.com/analytics">Google Analytics</a></p>
-        <p>eg: UA-10244214-2</p>
+        <h4>Site Name</h4>
+        <p>Your site's name can be anything</p>
     </div>
     <div class="help">
-        <h4>Google CSE</h4>
-        <p>Get it from <a href="http://www.google.com/cse/">Google Custom Search</a></p>
-        <p>eg: 017842580319746762888:cpwtpvhrc34</p>
+        <h4>Twitter</h4>
+        <p>Your Twitter name. eg: lepture</p>
     </div>
     <div class="help">
-        <h4>Disqus</h4>
-        <p>Get it from <a href="http://disqus.com">Disqus</a></p>
-        <p>Get the shortname from Disqus</p>
+        <h4>Alternate Feed</h4>
+        <p>You can use your feed burned by feedburner or feedsky.</p>
     </div>
     <div class="help">
-        <h4>Disqus Key</h4>
-        <p>Get your disqus key and forum key from <a href="http://disqus.com/api/keys/">Get Keys</a></p>
+        <h4>Meta</h4>
+        <p>HTML in the head.</p>
     </div>
     <div class="help">
-        <h4>Disqus Forumid</h4>
-        <p>Get your forum id at <a href="http://disqus.com/api/get_forum_list?user_api_key=API_KEY_HERE&api_version=1.1">HERE</a></p>
-        <p>Use your Disqus Key replace `API_KEY_HERE`</p>
+        <h4>Widget</h4>
+        <p>HTML in the sidebar. example:</p>
+        <textarea>
+<div class="widget">
+<h3 class="widget-title">Title</h3>
+<div>Content</div>
+</div></textarea>
     </div>
 </div>
 {%endblock%}
