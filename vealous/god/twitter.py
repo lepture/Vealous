@@ -137,6 +137,7 @@ class Auth(WebHandler):
         auth = Twitter()
         auth.set_qs_token(qs)
         url = auth.get_url(twitter.ACCESS_TOKEN_URL)
+        qs = auth.fetch(url)
         dbs.Vigo.set('oauth_twitter', qs)
         self.session['message'] = 'Twitter Auth Success'
         return self.redirect('/god/twitter?from=auth')
