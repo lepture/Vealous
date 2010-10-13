@@ -11,7 +11,7 @@ $(function(){
         message.fadeOut();
     });
     $('.nav-more>a').click(function(){
-        $('.nav-more ul').slideToggle('fast');
+        $(this).next('ul').slideToggle('fast');
         return false;
     });
 });
