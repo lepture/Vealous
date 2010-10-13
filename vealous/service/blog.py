@@ -28,13 +28,22 @@ class Index(webapp.RequestHandler):
         pass
 
     def get(self):
+        if is_mobile(self.request):
+            mkey = 'html-mobile-index'
+        else:
+            mkey = 'html-index'
+        html = memcache.get(mkey)
+        if html is not None:
+            return self.response.out.write(html)
         rdic = {}
         rdic['notes'] = dbs.Note.getten()
         rdic['articles'] = dbs.Article.getten()
         rdic['navs'] = dbs.Melody.get_all('nav')
         rdic['links'] = dbs.Melody.get_all('link')
         path = get_path(self.request, 'index.html')
-        self.response.out.write(render(path,rdic))
+        html = render(path, rdic)
+        memcache.set(mkey, html, 300)
+        self.response.out.write(html)
 
 class Article(webapp.RequestHandler):
     def head(self, url):
@@ -72,25 +81,6 @@ class Archive(webapp.RequestHandler):
         rdic['mvdata'] = Paginator(data, 10, p)
         path = get_path(self.request, 'archive.html')
         self.response.out.write(render(path,rdic))
-
-class Note(webapp.RequestHandler):
-    def head(self, slug):
-        pass
-
-    def get(self, slug):
-        rdic = {}
-        data = dbs.Note.get(slug)
-        if not data:
-            logging.info('404 , visite note ' + str(slug))
-            path = get_path(self.request, '404.html')
-            self.response.set_status(404)
-            html = render(path, rdic)
-            return self.response.out.write(html)
-        rdic['navs'] = dbs.Melody.get_all('nav')
-        rdic['data'] = data
-        path = get_path(self.request, 'note.html')
-        html = render(path, rdic)
-        self.response.out.write(html)
 
 class Keyword(webapp.RequestHandler):
     def head(self, keyword):
@@ -233,7 +223,6 @@ apps = webapp.WSGIApplication(
         ('/archive', Archive),
         ('/a/(.*)', Article),
         ('/k/(.*)', Keyword),
-        ('/t/(.*)', Note),
         ('/s5/(.*)', S5),
         ('/feed', Atom),
         ('/feed.atom', Atom),

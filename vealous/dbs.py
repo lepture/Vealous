@@ -2,7 +2,6 @@
 
 from google.appengine.ext import db
 from google.appengine.api import memcache
-from google.appengine.api import urlfetch
 import time
 import markdown
 import logging
@@ -233,19 +232,6 @@ class Melody(db.Model):
             logging.info('Get S5 from DB by slug : ' + slug)
             memcache.set(key, data, week)
             return data
-        try:
-            result = urlfetch.fetch(data.url)
-            if 200 != result.status_code:
-                logging.error('S5 Status Error: ' + str(result.status_code))
-                return None
-            text = unicode(result.content, 'utf-8')
-            data.text = text
-            data.put()
-            memcache.set(key, data, week)
-            return data
-        except urlfetch.DownloadError, k:
-            logging.error('S5 DownloadError : ' + str(k))
-            return None
         return None
 
     @classmethod
