@@ -2,7 +2,7 @@
 <div class="post">
     <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>
     <div class="post-info">
-        <label>Created at</label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="external">{{vigo.twitter}}</a>
+        <label>Created at</label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a>
     </div>
     <div class="post-content">
         {{data.html|more}}
@@ -10,7 +10,7 @@
     </div>
     <div class="post-meta clearfix">
         <div class="alignleft">
-            {%if data.keyword%}Keyword: <a href="/k/{{data.keyword}}">{{data.keyword}}</a>{%endif%}
+            {%if data.keyword%}Keyword: <a rel="archives" href="/k/{{data.keyword}}">{{data.keyword}}</a>{%endif%}
         </div>
         <div class="alignright">
             <a href="{{conf.site}}{{data.the_url}}#disqus_thread">Comments</a>
