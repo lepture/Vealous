@@ -3,6 +3,7 @@
 import re
 import logging
 from urllib2 import quote
+from google.appengine.api import users
 
 from config import LOGIN_URL
 
@@ -16,7 +17,10 @@ def is_mobile(request):
 def be_god(func):
     def decorator(handler, *args, **kwargs):
         auth = handler.session.get('auth',0)
-        if 1 != auth:
+        gauth = 0
+        if users.is_current_user_admin():
+            gauth = 1
+        if 0 == auth and 0 == gauth:
             return handler.redirect('%s?to=%s' % (LOGIN_URL, quote(handler.request.url)))
         return func(handler, *args, **kwargs)
     return decorator

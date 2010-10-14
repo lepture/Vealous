@@ -13,7 +13,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.ext import db
 from google.appengine.api import memcache
-from google.appengine.api import urlfetch
+from google.appengine.api import urlfetch, users
 from google.appengine.api.labs import taskqueue
 from django.utils.simplejson import dumps, loads
 
@@ -33,10 +33,12 @@ day = 86400
 class Login(WebHandler):
     def get(self):
         auth = self.session.get('auth',0)
-        if 1 == auth:
+        gauth = users.is_current_user_admin()
+        if 1 == auth or gauth:
             self.redirect('/god')
         rdic = {}
         path = get_path(self.request, 'login.html')
+        rdic['gurl'] = users.create_login_url(self.request.url)
         return self.response.out.write(render(path,rdic))
     def post(self):
         password = dbs.Vigo.get('password')
@@ -58,6 +60,9 @@ class Login(WebHandler):
 class Logout(WebHandler):
     def get(self):
         self.session['auth'] = 0
+        if users.is_current_user_admin():
+            url = users.create_logout_url(self.request.url)
+            return self.redirect(url)
         return self.redirect('/god/login')
 
 class Dashboard(WebHandler):
