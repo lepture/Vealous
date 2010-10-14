@@ -5,9 +5,12 @@ $(function(){
     disqusModerate();
     delNote();
     $('#noteform').submit(function(){
-        postNote();
+        var note= $('#noteform input[name="note"]');
         var douban = $('#noteform input[name="douban"]');
         var twitter = $('#noteform input[name="twitter"]');
+        if(note.is(':checked')){
+            postNote();
+        }
         if(douban.is(':checked')){
             postDoubanMiniblog();
         }
