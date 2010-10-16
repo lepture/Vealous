@@ -112,6 +112,52 @@ class UserStatus(WebHandler):
         #rdic['profile'] = profile
         return self.response.out.write(render(path, rdic))
 
+class Mentions(WebHandler):
+    @be_god
+    def get(self):
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'twitter_dashboard.html')
+        rdic = {}
+        qs = dbs.Vigo.get('oauth_twitter')
+        if not qs:
+            return self.redirect('/god/twitter/login')
+        api = Twitter().set_qs_api(qs)
+        statuses = memcache.get('twitter$mentions')
+        if statuses is None:
+            try:
+                statuses = api.GetReplies()
+            except twitter.TwitterError, e:
+                logging.error(str(e))
+                return self.redirect('/god/twitter')
+            for status in statuses:
+                status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
+            memcache.set('twitter$mentions', statuses, 240)
+        rdic['statuses'] = statuses
+        return self.response.out.write(render(path, rdic))
+
+class Directs(WebHandler):
+    @be_god
+    def get(self):
+        ua = self.request.headers.get('User-Agent', 'bot')
+        path = get_path(ua, 'twitter_directs.html')
+        rdic = {}
+        qs = dbs.Vigo.get('oauth_twitter')
+        if not qs:
+            return self.redirect('/god/twitter/login')
+        api = Twitter().set_qs_api(qs)
+        statuses = memcache.get('twitter$directs')
+        if statuses is None:
+            try:
+                statuses = api.GetDirectMessages()
+            except twitter.TwitterError, e:
+                logging.error(str(e))
+                return self.redirect('/god/twitter')
+            for status in statuses:
+                status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
+            memcache.set('twitter$directs', statuses, 240)
+        rdic['statuses'] = statuses
+        return self.response.out.write(render(path, rdic))
+
 
 class Login(WebHandler):
     @be_god
@@ -163,6 +209,8 @@ apps = webapp.WSGIApplication(
         ('/god/twitter', Dashboard),
         ('/god/twitter/login', Login),
         ('/god/twitter/auth', Auth),
+        ('/god/twitter/mentions', Mentions),
+        ('/god/twitter/directs', Directs),
         ('/god/twitter/status', Status),
         ('/god/twitter/user/(.*)', UserStatus),
     ],

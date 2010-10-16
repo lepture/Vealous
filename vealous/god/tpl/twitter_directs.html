@@ -8,7 +8,17 @@ Twitter|Dashboard
 <div class="soga alignleft">
     <p class="message">{{message}}</p>
     <div class="box comment">
-        {%include "include/twitter_statuses.html"%}
+        {%for status in statuses%}
+        <div class="cell clearfix twitter">
+            <div>
+                <p class="tw-info">@<a href="/god/twitter/user/{{status.sender_screen_name}}">{{status.sender_screen_name}}</a>
+                <strong class="snow"><small>{{status.datetime|timesince}} ago</small></strong>
+                </p>
+                <div class="sep"></div>
+                <p class="tw-content">{{status.text|urlize|at}}</p>
+            </div>
+        </div>
+        {%endfor%}
         <div class="inner">
             <a href="/god/twitter/mentions" class="button">Mentions</a>
             <a href="/god/twitter/directs" class="button">Directs</a>
@@ -16,7 +26,7 @@ Twitter|Dashboard
     </div>
 </div>
 <div class="sidebar alignright">
-    <p>Home » <a href="/god/twitter/user/{{vigo.twitter}}">{{vigo.twitter}}</a></p>
+    <p><a href="/god/twitter">Home</a> » {{username}}</p>
     <div class="sep"></div>
     <div class="box">
         <form id="noteform" action="/god/note/add" method="post">
