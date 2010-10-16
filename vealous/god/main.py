@@ -417,6 +417,9 @@ class Chpasswd(WebHandler):
         origpasswd = dbs.Vigo.get('password')
         old = self.request.get('oldpasswd','')
         path = get_path(self.request, 'chpasswd.html')
+        if not origpasswd:
+            rdic['message'] = 'Heavens! There is no God password ..'
+            return self.response.out.write(render(path,rdic))
         if origpasswd != sha1(old + config.SECRET).hexdigest():
             rdic['message'] = 'Heavens! God forgot his password ..'
             return self.response.out.write(render(path,rdic))
