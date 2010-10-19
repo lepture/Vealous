@@ -42,5 +42,9 @@ handlers:
 - url: /.*
   script: service/blog.py
 
+builtins:
+- datastore_admin: on
+- remote_api: on
+
 inbound_services:
 - xmpp_message

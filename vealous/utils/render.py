@@ -18,7 +18,7 @@ def render(path, value):
         vigo['alterfeed'] = Vigo.get('alterfeed')
         vigo['meta'] = Vigo.get('meta')
         vigo['widget'] = Vigo.get('widget')
-        memcache.set('vigo', vigo, 604800)
+        memcache.set('vigo', vigo)
     conf = value.pop('conf',{})
     value['vigo'] = vigo
     if not conf:
