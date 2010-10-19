@@ -4,7 +4,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.api import xmpp, memcache
 
-from utils.mardict import DictCN, GoogleDict
+from libs.mardict import DictCN, GoogleDict
 from libs import pydouban
 from libs import twitter
 import dbs

@@ -104,7 +104,7 @@ class GoogleDict(object):
             key = self._word
         define = source['translatedText']
         pron = 'none'
-        reply = 'from: google\n%s\n%s' % (key, define)
+        reply = 'from: google(%s->%s)\n%s\n%s' % (lan1, lan2, key, define)
         data = {'from':'google','word':key, 'pron':pron,
                 'define': define, 'reply': reply }
         return data

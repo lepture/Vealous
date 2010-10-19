@@ -2,7 +2,6 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="description" content="{{vigo.sitetag}}" />
         <title>{%block title%}Home|{{vigo.sitename|default:"Vealous"}}{%endblock%}</title>
         {{vigo.meta}}
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -29,21 +28,23 @@
                         {%for nav in navs%}
                         <li class="nav-{{forloop.counter}}"><a href="{{nav.url}}">{{nav.title}}</a></li>
                         {%endfor%}
+                        <li class="nav-more"><a href="#">More</a>
+                        <ul class="hide">
+                            <li><a href="/utils/dict">My Dict</a></li>
+                            <li><a href="/utils/twitter">Twitter</a></li>
+                        </ul>
+                        </li>
                         <li class="nav-more"><a href="#">Feed</a>
                         <ul class="hide">
                             {%if vigo.alterfeed%}
                             <li><a rel="external" href="http://fusion.google.com/add?feedurl={{vigo.alterfeed}}">Google</a></li>
                             <li><a rel="external" href="http://9.douban.com/reader/subscribe?url={{vigo.alterfeed}}">Douban</a></li>
+                            <li><a rel="external" href="http://mail.qq.com/cgi-bin/feed?u={{vigo.alterfeed}}">QQMail</a></li>
                             {%else%}
                             <li><a rel="external" href="http://fusion.google.com/add?feedurl={{conf.site}}/feed.atom">Google</a></li>
                             <li><a rel="external" href="http://9.douban.com/reader/subscribe?url={{conf.site}}/feed.atom">Douban</a></li>
+                            <li><a rel="external" href="http://mail.qq.com/cgi-bin/feed?u={{conf.site}}/feed.atom">QQMail</a></li>
                             {%endif%}
-                        </ul>
-                        </li>
-                        <li class="nav-more"><a href="#">More</a>
-                        <ul class="hide">
-                            <li><a href="/utils/dict">My Dict</a></li>
-                            <li><a href="/utils/twitter">Twitter</a></li>
                         </ul>
                         </li>
                     </ul>
