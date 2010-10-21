@@ -17,6 +17,7 @@ Add Melody|Dashboard
     <form class="box" action="" method="post">
         <div class="form-row cell">
             <select id="id_label" name="label">
+                <option value="page">Page</option>
                 <option value="s5">S5</option>
                 <option value="link">Link</option>
                 <option value="nav">Nav</option>
@@ -26,10 +27,6 @@ Add Melody|Dashboard
         <div class="form-row cell">
             <input id="id_title" class="text" type="text" name="title" maxlength="100" />
             <label for="id_title" class="required">Title</label>
-        </div>
-        <div class="form-row cell">
-            <input id="id_url" class="text" type="text" name="url" maxlength="200" />
-            <label for="id_url" class="required">URL</label>
         </div>
         <div class="melodyspace">
         </div>
@@ -44,6 +41,10 @@ Add Melody|Dashboard
     <div class="choices hide">
         <div class="link">
             <div class="form-row cell">
+                <input id="id_url" class="text" type="text" name="url" maxlength="200" />
+                <label for="id_url" class="required">URL</label>
+            </div>
+            <div class="form-row cell">
                 <textarea id="id_text" name="text" style="height:100px;"></textarea>
             </div>
             <div class="form-row cell">
@@ -51,13 +52,28 @@ Add Melody|Dashboard
                 <label for="id_ext">Relation</label>
             </div>
         </div>
-        <div class="s5">
+        <div class="nav">
             <div class="form-row cell">
-                <textarea id="id_text" name="text" style="height:400px;"></textarea>
+                <input id="id_url" class="text" type="text" name="url" maxlength="200" />
+                <label for="id_url" class="required">URL</label>
             </div>
+        </div>
+        <div class="s5">
             <div class="form-row cell">
                 <input id="id_ext" class="text" type="text" name="ext" maxlength="40" />
                 <label for="id_ext" class="required">Slug</label>
+            </div>
+            <div class="form-row cell">
+                <textarea id="id_text" name="text" style="height:400px;"></textarea>
+            </div>
+        </div>
+        <div class="page">
+            <div class="form-row cell">
+                <input id="id_ext" class="text" type="text" name="ext" maxlength="40" />
+                <label for="id_ext" class="required">Slug</label>
+            </div>
+            <div class="form-row cell">
+                <textarea id="id_text" name="text" style="height:400px;"></textarea>
             </div>
         </div>
     </div>

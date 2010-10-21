@@ -286,7 +286,7 @@ class AddMelody(WebHandler):
         prior = self.request.get('prior',0)
         text = self.request.get('text', None)
         ext = self.request.get('ext', None)
-        if title and url and label:
+        if title and label:
             try: prior = int(prior)
             except: prior = 0
             data = dbs.Melody.add(title,url,label,prior,ext,text)

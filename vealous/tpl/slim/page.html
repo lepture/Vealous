@@ -1,0 +1,29 @@
+{% extends "layout.html"%}
+
+{%block title%}
+{{data.title}}|{{vigo.sitename|default:"Vealous"}}
+{%endblock%}
+
+{%block soga%}
+<div class="post">
+    <h2 class="post-title">{{data.title}}</h2>
+    <div class="post-info"></div>
+    <div class="post-content">
+        {{data.text|linebreaks}}
+    </div>
+</div>
+{%include "_disqus.html"%}
+{%endblock%}
+
+{%block sidebar%}
+<div class="widget widget-links">
+    <h3 class="widget-title">Links</h3>
+    <ul>
+        {%for link in links%}
+        <li><a href="{{link.url}}" rel="{{link.ext}}">{{link.title}}</a>
+        {%if link.text%}<p>{{link.text}}</p>{%endif%}
+        </li>
+        {%endfor%}
+    </ul>
+</div>
+{%endblock%}

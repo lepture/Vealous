@@ -211,8 +211,8 @@ class Vigo(db.Model):
 
 class Melody(db.Model):
     title = db.StringProperty(required=True, indexed=True)
-    url = db.StringProperty(required=True, indexed=False) # link, nav, s5 source url
-    label = db.StringProperty(required=True, indexed=True) #link, nav, s5
+    url = db.StringProperty(required=False, indexed=False) # link, nav, s5 source url
+    label = db.StringProperty(required=True, indexed=True) #link, nav, s5, page
     ext = db.StringProperty(required=False, indexed=True) # link rel, s5 slug
     text = db.TextProperty(required=False, indexed=False) # intro, s5 content
     prior = db.IntegerProperty(indexed=True, default=0)
@@ -230,6 +230,23 @@ class Melody(db.Model):
         data = data[0]
         if data.text:
             logging.info('Get S5 from DB by slug : ' + slug)
+            memcache.set(key, data, week)
+            return data
+        return None
+
+    @classmethod
+    def get_page(cls, slug):
+        key = 'melody$page/' + slug
+        data = memcache.get(key)
+        if data is not None:
+            return data
+        q = cls.gql("WHERE ext = :1 and label = :2", slug, 'page')
+        data = q.fetch(1)
+        if not data:
+            return None
+        data = data[0]
+        if data.text:
+            logging.info('Get Page from DB by slug : ' + slug)
             memcache.set(key, data, week)
             return data
         return None

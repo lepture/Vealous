@@ -116,6 +116,24 @@ class S5(webapp.RequestHandler):
             html = data.text
         self.response.out.write(html)
 
+class Page(webapp.RequestHandler):
+    def get(self, slug):
+        data = dbs.Melody.get_page(slug)
+        rdic = {}
+        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['links'] = dbs.Melody.get_all('link')
+        if not data:
+            logging.info('404 , visite page ' + str(slug))
+            path = get_path(self.request, '404.html')
+            self.response.set_status(404)
+            html = render(path, rdic)
+            return self.response.out.write(html)
+        rdic['data'] = data
+        path = get_path(self.request, 'page.html')
+        html = render(path, rdic)
+        self.response.out.write(html)
+
+
 class Search(webapp.RequestHandler):
     def get(self):
         rdic = {}
@@ -223,6 +241,7 @@ apps = webapp.WSGIApplication(
         ('/archive', Archive),
         ('/a/(.*)', Article),
         ('/k/(.*)', Keyword),
+        ('/p/(.*)', Page),
         ('/s5/(.*)', S5),
         ('/feed', Atom),
         ('/feed.atom', Atom),

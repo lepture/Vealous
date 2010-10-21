@@ -1,0 +1,15 @@
+{% extends "layout.html"%}
+
+{%block title%}
+{{data.title}}|{{vigo.sitename|default:"Vealous"}}
+{%endblock%}
+
+{%block soga%}
+<div class="post">
+    <h2 class="post-title">{{data.title}}</h2>
+    <div class="post-info"></div>
+    <div class="post-content">
+        {{data.text|linebreaks}}
+    </div>
+</div>
+{%endblock%}

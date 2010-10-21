@@ -27,10 +27,6 @@ Edit Melody|Dashboard
             <input id="id_title" class="text" type="text" name="title" maxlength="100" value="{{data.title}}" />
             <label for="id_title" class="required">Title</label>
         </div>
-        <div class="form-row cell">
-            <input id="id_url" class="text" type="text" name="url" maxlength="200" value="{{data.url}}" />
-            <label for="id_url" class="required">URL</label>
-        </div>
         <div class="melodyspace">
         </div>
         <div class="form-row cell">
@@ -42,7 +38,17 @@ Edit Melody|Dashboard
         </div>
     </form>
     <div class="choices hide">
+        <div class="nav">
+            <div class="form-row cell">
+                <input id="id_url" class="text" type="text" name="url" maxlength="200" value="{{data.url}}" />
+                <label for="id_url" class="required">URL</label>
+            </div>
+        </div>
         <div class="link">
+            <div class="form-row cell">
+                <input id="id_url" class="text" type="text" name="url" maxlength="200" value="{{data.url}}" />
+                <label for="id_url" class="required">URL</label>
+            </div>
             <div class="form-row cell">
                 <textarea id="id_text" name="text" style="height:100px;">{{data.text|default:""}}</textarea>
             </div>
@@ -53,11 +59,20 @@ Edit Melody|Dashboard
         </div>
         <div class="s5">
             <div class="form-row cell">
+                <input id="id_ext" class="text" type="text" name="ext" maxlength="40" value="{{data.ext|default:""}}" />
+                <label for="id_ext" class="required">Slug</label>
+            </div>
+            <div class="form-row cell">
                 <textarea id="id_text" name="text" style="height:400px;">{{data.text|default:""}}</textarea>
             </div>
+        </div>
+        <div class="page">
             <div class="form-row cell">
                 <input id="id_ext" class="text" type="text" name="ext" maxlength="40" value="{{data.ext|default:""}}" />
                 <label for="id_ext" class="required">Slug</label>
+            </div>
+            <div class="form-row cell">
+                <textarea id="id_text" name="text" style="height:400px;">{{data.text|default:""}}</textarea>
             </div>
         </div>
     </div>
