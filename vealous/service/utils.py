@@ -70,6 +70,38 @@ class UtilsTwitter(webapp.RequestHandler):
         memcache.set('twitter$status$' + username, statuses, 480)
         return statuses
 
+class UtilsUserTwitter(webapp.RequestHandler):
+    def get(self, username):
+        rdic = {}
+        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['links'] = dbs.Melody.get_all('link')
+        rdic['tweets'] = self.tweets(username)
+        path = get_path(self.request, 'utils_twitter.html')
+        self.response.out.write(render(path,rdic))
+
+    def tweets(self, username):
+        data = memcache.get('twitter$status$' + username)
+        if data is not None:
+            return data
+        qs = dbs.Vigo.get('oauth_twitter')
+        if qs:
+            token = twitter.oauth.Token.from_string(qs)
+            api = twitter.Api(
+                config.twitter_key, config.twitter_secret,
+                token.key, token.secret)
+        else:
+            api = twitter.Api()
+        try:
+            statuses = api.GetUserTimeline(screen_name=username, count=30)
+        except:
+            logging.error('Error in utils/twitter/username')
+            return []
+        for status in statuses:
+            status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
+        memcache.set('twitter$status$' + username, statuses, 480)
+        return statuses
+
+
 class Redirect(webapp.RequestHandler):
     def get(self, path):
         logging.info('redirect from path ' + str(path))
@@ -79,6 +111,7 @@ apps = webapp.WSGIApplication(
     [
         ('/utils/dict', UtilsDict),
         ('/utils/twitter', UtilsTwitter),
+        ('/utils/twitter/(.*)', UtilsUserTwitter),
         ('/(.*)/', Redirect),
     ],
     debug = config.DEBUG,
