@@ -48,7 +48,7 @@ class Dashboard(WebHandler):
         qs = dbs.Vigo.get('oauth_douban')
         if not qs:
             return self.redirect('/god/douban/login')
-        api = pydouban.Api()
+        api = pydouban.Api(max_results=30)
         api.set_qs_oauth(config.douban_key, config.douban_secret, qs)
         profile = memcache.get('douban/profile')
         if profile is None:
