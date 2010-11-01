@@ -46,22 +46,27 @@ class CMD(object):
 
         if not self._content:
             return 'You asked nothing'
+
         if '2' in self._cmd:
             return self._trans2()
-        if 'd' == self._cmd or 'dict' == self._cmd:
+        if self._cmd in ('d', 'dict'):
             return self._dict()
-        if 'g' == self._cmd or 'google' == self._cmd:
+        if self._cmd in ('g', 'google'):
             return self._google()
-        if 'ntd' == self._cmd or 'ndt' == self._cmd:
+        if self._cmd in ('ntd', 'ndt', 'dtn', 'dnt', 'tdn', 'tnd'):
             reply = self._note() + '\n'
+            reply += self._twitter() + '\n'
+            reply += self._douban()
+            return reply
+        if self._cmd in ('dt', 'td'):
             reply += self._twitter() + '\n'
             reply += self._douban()
             return reply
         if 'note' == self._cmd:
             return self._note()
-        if 'db' == self._cmd or 'douban' == self._cmd:
+        if self._cmd in ('db', 'douban'):
             return self._douban()
-        if 't' == self._cmd or 'twitter' == self._cmd:
+        if self._cmd in ('t', 'twitter'):
             return self._twitter()
         return 'Unknown Command'
 
@@ -75,12 +80,12 @@ class CMD(object):
     def _dict(self):
         d = DictCN(self._content)
         data = d.reply()
-        if data:
-            if 'ec' == data['lang']:
-                dbs.DictBook.add(data['word'], data['pron'], data['define'])
-                memcache.set('dict$last', data)
-            return data['reply']
-        return 'Not Found'
+        if not data:
+            return 'Not Found'
+        if 'ec' == data['lang']:
+            dbs.DictBook.add(data['word'], data['pron'], data['define'])
+            memcache.set('dict$last', data)
+        return data['reply']
     def _google(self):
         g = GoogleDict(self._content)
         lan = g.detect()
