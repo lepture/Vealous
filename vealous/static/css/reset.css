@@ -101,11 +101,6 @@ body a.button {
     line-height: 16px;
     padding: 10px;
 }
-.box:first-child {
-    border-radius: 6px 6px 0 0;
-    -webkit-border-radius: 6px 6px 0 0;
-    -moz-border-radius: 6px 6px 0 0;
-}
 .box .inner {
     padding: 12px;
     font-size: 12px;

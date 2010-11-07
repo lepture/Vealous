@@ -14,7 +14,7 @@ Search|{{vigo.sitename|default:"Vealous"}}
 <div class="gcse-result">
     <p class="message clearfix">
     <span class="alignleft">Found {{gres.cursor.estimatedResultCount}} results about <strong>{{q}}</strong></span>
-    <span class="pretty alignright">Powered by <a href="http://code.google.com/apis/ajaxsearch/documentation/reference.html">Google Ajax Search API</a></span></p>
+    </p>
     {%for data in gres.results %}
     <div class="post">
         <h2 class="post-title"><a href="{{data.url}}">{{data.titleNoFormatting|gtitle}}</a></h2>
