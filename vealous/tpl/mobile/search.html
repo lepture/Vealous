@@ -17,10 +17,10 @@ Search|{{vigo.sitename|default:"Vealous"}}
     </p>
     {%for data in gres.results %}
     <div class="post">
-        <h2 class="post-title"><a href="{{data.url}}">{{data.titleNoFormatting|gtitle}}</a></h2>
+        <h2 class="post-title"><a href="{{data.unescapedUrl}}">{{data.titleNoFormatting|gtitle}}</a></h2>
         <div class="post-content">
             <p>{{data.content}}</p>
-            <p>» <a class="more" rel="nofollow" href="{{data.url}}">{{data.url}}</a></p>
+            <p>» <a class="more" rel="nofollow" href="{{data.unescapedUrl}}">{{data.unescapedUrl}}</a></p>
         </div>
     </div>
     {%endfor%}

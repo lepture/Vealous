@@ -29,7 +29,7 @@ Search|{{vigo.sitename|default:"Vealous"}}
     <span class="pretty alignright">Powered by <a href="http://code.google.com/apis/ajaxsearch/documentation/reference.html">Google Ajax Search API</a></span></p>
     {%for data in gres.results %}
     <div class="post">
-        <h2 class="post-title"><a href="{{data.url}}">{{data.titleNoFormatting|gtitle}}</a></h2>
+        <h2 class="post-title"><a href="{{data.unescapedUrl}}">{{data.titleNoFormatting|gtitle}}</a></h2>
         <div class="post-content">
             <p>{{data.content}}</p>
             <p>» <a class="more" rel="nofollow" href="{{data.unescapedUrl}}">{{data.unescapedUrl}}</a></p>

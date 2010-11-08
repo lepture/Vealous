@@ -138,7 +138,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .sl:focu
     -webkit-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
     outline: none;
 }
-.wrapper { padding: 10px 20px; }
+.wrapper { padding: 10px; }
 /* reset */
 body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,p,blockquote,table,th,td { margin: 0; padding: 0; }
 fieldset,img,abbr { border: 0; }
