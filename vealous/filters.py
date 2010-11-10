@@ -71,7 +71,7 @@ def embed(value):
 @register.filter
 def embed_feed(value):
     #gist
-    value = re.sub(r'(http://gist.github.com/[\d]+)',r'snippet code at <a rel="nofollow" href="\1">\1</a>', value) 
+    value = re.sub(r'(http://gist.github.com/[\d]+)',r'snippet code at <a rel="nofollow" href="\1">\1</a><script src="\1.js"></script>', value) 
     #youku
     value = re.sub(r'http://v.youku.com/v_show/id_([a-zA-Z0-9\=]+).html', r'Feed subscribers who cannot see the video click at: <small><a rel="nofollow" href="http://v.youku.com/v_show/id_\1.html">Youku Source</a></small><br /><embed src="http://player.youku.com/player.php/sid/\1/v.swf" quality="high" width="480" height="400" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" />', value)
     #tudou
@@ -93,6 +93,6 @@ def star(num):
     return d[num]
 
 @register.filter
-def at(value):
+def attwitter(value):
     value = re.sub(r'@([a-zA-Z0-9\_]+)',r'@<a href="/utils/twitter/\1">\1</a>', value) 
     return value

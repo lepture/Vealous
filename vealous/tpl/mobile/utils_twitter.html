@@ -10,7 +10,7 @@ Twitter|{{vigo.sitename|default:"Vealous"}}
     <p style="margin-bottom: 3px;" class="tw-info"><strong>{{status.user.name}}</strong> @<a href="/utils/twitter/{{status.user.screen_name}}">{{status.user.screen_name}}</a>
     <strong><small>{{status.datetime|timesince|split:","}} ago via {{status.source}}</small></strong>
     </p>
-    <p class="tw-content">{{status.text|urlize|at}}</p>
+    <p class="tw-content">{{status.text|urlize|attwitter}}</p>
 </div>
 {%endfor%}
 {%endblock%}

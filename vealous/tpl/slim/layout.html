@@ -9,8 +9,8 @@
         <link rel="alternate" type="application/rss+xml" href="{{vigo.alterfeed}}" />
         {%endif%}
         <link rel="alternate" type="application/atom+xml" href="{{conf.site}}/feed.atom" />
-        <link rel="stylesheet" href="{{conf.static}}/css/reset.css?theme=slim" />
-        <link rel="stylesheet" href="{{conf.static}}/css/style.css?theme=slim" />
+        <link rel="stylesheet" href="{{conf.static}}/css/reset.css?v=slim{{conf.version}}" />
+        <link rel="stylesheet" href="{{conf.static}}/css/style.css?v=slim{{conf.version}}" />
         {%block extra%}{%endblock%}
     </head>
     <body>
