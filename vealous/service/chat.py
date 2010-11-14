@@ -104,10 +104,13 @@ class CMD(object):
     def _google(self):
         g = GoogleDict(self._content)
         lan = g.detect()
-        if lan in ('zh-CN' or 'zh-TW'):
+        condition = lan == config.LANGUAGE
+        if 'zh' == config.LANGUAGE:
+            condition = lan in ('zh-CN', 'zh-TW')
+        if condition:
             g = GoogleDict(self._content, lan, 'en')
         else:
-            g = GoogleDict(self._content, lan, 'zh')
+            g = GoogleDict(self._content, lan, config.LANGUAGE)
         data = g.reply()
         if data:
             return data['reply']
@@ -190,6 +193,8 @@ class CMD(object):
         note = dbs.Note.add(self._content)
         return 'Note Saved'
     def _douban(self):
+        if not config.enable_douban:
+            return 'not enabled douban'
         qs = dbs.Vigo.get('oauth_douban')
         if not qs:
             return 'Douban Not Authed'

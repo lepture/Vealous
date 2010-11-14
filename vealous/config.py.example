@@ -8,6 +8,7 @@ DEBUG=False
 ROOT = os.path.dirname(__file__)
 
 TIMEZONE = 8
+LANGUAGE = 'zh'
 
 THEME = 'slim'
 EMAIL = ''
@@ -29,6 +30,7 @@ gcse = '' # http://www.google.com/cse/
 
 # douban oauth 
 # http://www.douban.com/service/apikey/apply
+enable_douban = False
 douban_key = ''
 douban_secret = ''
 
@@ -54,4 +56,5 @@ gvars = {
     'jshost': JS_HOST,
     'ga': ga,
     'disqus_shortname': disqus_shortname,
+    'enable_douban': enable_douban,
 }
