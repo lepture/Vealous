@@ -93,7 +93,7 @@ class Article(db.Model):
         )
         data.put()
         memcache.set(key, data)
-        keys = ['a$ten', 'a$archive','xml$atom', 'xml$rss', 'xml$sitemap']
+        keys = ['a$ten', 'a$archive','xml$atom', 'xml$rss', 'xml$sitemap', 'html/mobile', 'html/index']
         for tag in data.keyword.split():
             keys.append('a$keyword/' + tag)
         memcache.delete_multi(keys)
@@ -109,7 +109,7 @@ class Article(db.Model):
         data.html = markdown.markdown(text)
         data.put()
 
-        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'xml$atom', 'xml$rss', 'xml$sitemap']
+        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'xml$atom', 'xml$rss', 'xml$sitemap', 'html/index', 'html/mobile']
         for tag in data.keyword.split():
             keys.append('a$keyword/' + tag)
         memcache.delete_multi(keys)

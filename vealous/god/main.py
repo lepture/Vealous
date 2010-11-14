@@ -175,6 +175,7 @@ class EditArticle(WebHandler):
         else:
             draft = False
         if title and slug:
+            slug = slug.replace(' ','-')
             dbs.Article.update(data, title, slug, text, draft, keyword)
             self.session['message'] = 'Article <a href="/god/article/edit?key=%s">%s</a> has been modified' % (data.key(), data.title)
             if not draft:
@@ -206,6 +207,7 @@ class AddArticle(WebHandler):
         else:
             draft = False
         if title and slug:
+            slug = slug.replace(' ','-')
             data = dbs.Article.add(title,slug,text,draft,keyword)
             self.session['message'] = 'New article <a href="/god/article/edit?key=%s">%s</a> has been created' % (data.key(), data.title)
             if not draft:

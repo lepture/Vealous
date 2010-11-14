@@ -35,9 +35,9 @@ class Index(webapp.RequestHandler):
 
     def get(self):
         if is_mobile(self.request):
-            mkey = 'html-mobile-index'
+            mkey = 'html/mobile'
         else:
-            mkey = 'html-index'
+            mkey = 'html/index'
         html = memcache.get(mkey)
         if html is not None:
             return self.response.out.write(html)
