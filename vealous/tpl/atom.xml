@@ -6,9 +6,13 @@
     <id>{{conf.site}}/</id>
     <link href="{{conf.site}}" />
     <link href="{{conf.site}}/feed.atom" rel="self" />
+    <author>
+        <name>{{vigo.twitter}}</name>
+        <uri>{{conf.site}}</uri>
+    </author>
     {% for data in datas%}
     <entry>
-        <title>{{ data.title|escape }}</title>
+        <title type="html"><![CDATA[{{ data.title|escape }}]]></title>
         <link rel="alternate" type="text/html" href="{{conf.site}}{{data.the_url}}"/>
         <id>{{conf.site}}{{data.the_url}}</id>
         <published>{{data.created|date:"Y-m-d\TH:i:s\Z"}}</published>
@@ -23,6 +27,7 @@
             <small>Permalink: <a href="{{conf.site}}{{data.the_url}}">{{data.title}}</a> ({{conf.site}}{{data.the_url}})</small>
             ]]>
         </content>
+        <category scheme="{{conf.site}}" term="{{data.keyword}}" />
     </entry>
     {% endfor %}
 </feed>

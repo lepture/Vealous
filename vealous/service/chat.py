@@ -23,6 +23,19 @@ def star_rate(num):
     }
     return d[num]
 
+help_text = """
+Command is leading with '-' or ':'
+
+log -- recent dict log.
+rating -- words with exact rating.
+mark -- add rate for exact word.
+del -- delete exact word.
+lan2lan -- eg: zh2en, ja2zh
+twitter -- send tweet.
+douban -- send douban miniblog.
+note -- send note.
+"""
+
 class CMD(object):
     def __init__(self, content):
         self._content = content
@@ -35,6 +48,8 @@ class CMD(object):
         self.has_cmd = True
         self._cmd = cmd[1:]
         self._content = ' '.join(sp[1:])
+        if 'help' == self._cmd:
+            return help_text
         if 'log' == self._cmd:
             return self._log()
         if 'rating' == self._cmd:

@@ -2,7 +2,7 @@
 
 import os
 import logging
-from urllib2 import quote
+from urllib2 import quote, unquote
 from django.utils.simplejson import loads as parse_json
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
@@ -22,6 +22,12 @@ def get_path(request, name):
         return path
     path = os.path.join(config.ROOT, 'tpl', config.THEME, name)
     return path
+
+def getslug(slug):
+    try:
+        return unquote(slug).decode('utf-8')
+    except:
+        return slug
 
 class Index(webapp.RequestHandler):
     def head(self):
@@ -50,10 +56,11 @@ class Article(webapp.RequestHandler):
         pass
 
     def get(self, slug):
+        slug = getslug(slug)
         rdic = {}
         data = dbs.Article.get(slug)
         if not data:
-            logging.info('404 , visite article ' + str(slug))
+            logging.info('404 , visite article ' + slug)
             path = get_path(self.request, '404.html')
             self.response.set_status(404)
             html = render(path, rdic)
@@ -86,10 +93,11 @@ class Keyword(webapp.RequestHandler):
     def head(self, keyword):
         pass
     def get(self, keyword):
+        keyword = getslug(keyword)
         rdic = {}
         data = dbs.Article.get_kw_articles(keyword)
         if not data:
-            logging.info('404 , visite keyword ' + str(keyword))
+            logging.info('404 , visite keyword ' + keyword)
             path = get_path(self.request, '404.html')
             html = render(path, rdic)
             self.response.set_status(404)
@@ -105,10 +113,11 @@ class Keyword(webapp.RequestHandler):
 
 class S5(webapp.RequestHandler):
     def get(self, slug):
+        slug = getslug(slug)
         data = dbs.Melody.get_s5(slug)
         if not data:
             rdic = {}
-            logging.info('404 , visite s5 ' + str(slug))
+            logging.info('404 , visite s5 ' + slug)
             path = get_path(self.request, '404.html')
             self.response.set_status(404)
             html = render(path, rdic)
@@ -118,12 +127,13 @@ class S5(webapp.RequestHandler):
 
 class Page(webapp.RequestHandler):
     def get(self, slug):
+        slug = getslug(slug)
         data = dbs.Melody.get_page(slug)
         rdic = {}
         rdic['navs'] = dbs.Melody.get_all('nav')
         rdic['links'] = dbs.Melody.get_all('link')
         if not data:
-            logging.info('404 , visite page ' + str(slug))
+            logging.info('404 , visite page ' + slug)
             path = get_path(self.request, '404.html')
             self.response.set_status(404)
             html = render(path, rdic)
@@ -198,7 +208,7 @@ class Sitemap (webapp.RequestHandler):
 
 class Redirect(webapp.RequestHandler):
     def get(self, path):
-        logging.info('redirect from path ' + str(path))
+        logging.info('redirect from path ' + path)
         self.redirect('/' + path)
 
 class Error404(webapp.RequestHandler):
