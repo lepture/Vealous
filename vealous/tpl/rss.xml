@@ -14,6 +14,9 @@
             <title>{{data.title}}</title>
             <link>{{conf.site}}{{data.the_url}}</link>
             <author>{{vigo.twitter}}@twitter.com ({{vigo.twitter}})</author>
+            {%for tag in data.keyword|str2list%}
+            <category><![CDATA[{{tag}}]]></category>
+            {%endfor%}
             <description>
                 <![CDATA[
                     {{data.html|embed_feed}}

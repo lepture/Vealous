@@ -19,7 +19,7 @@
     </div>
     <div class="post-meta clearfix">
         <div class="alignleft">
-            {%if data.keyword%}Keyword: <a rel="archives" href="/k/{{data.keyword}}">{{data.keyword}}</a>{%endif%}
+            Keywords: {%for tag in data.keyword|str2list%}<a rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
         </div>
         <div class="alignright">
             <a href="{{data.the_url}}?mode=plaintext" rel="nofollow">Get Source Code</a>

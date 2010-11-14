@@ -27,7 +27,9 @@
             <small>Permalink: <a href="{{conf.site}}{{data.the_url}}">{{data.title}}</a> ({{conf.site}}{{data.the_url}})</small>
             ]]>
         </content>
-        <category scheme="{{conf.site}}" term="{{data.keyword}}" />
+        {%for tag in data.keyword|str2list%}
+        <category scheme="{{conf.site}}" term="{{tag}}" />
+        {%endfor%}
     </entry>
     {% endfor %}
 </feed>

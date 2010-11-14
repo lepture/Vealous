@@ -93,12 +93,14 @@ class Article(db.Model):
         )
         data.put()
         memcache.set(key, data)
-        keys = ['a$ten', 'a$archive', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss', 'xml$sitemap']
+        keys = ['a$ten', 'a$archive','xml$atom', 'xml$rss', 'xml$sitemap']
+        for tag in data.keyword.split():
+            keys.append('a$keyword/' + tag)
         memcache.delete_multi(keys)
         return data
 
     @classmethod
-    def update(cls, data, title, slug, text, draft, keyword='nokeyword'):
+    def update(cls, data, title, slug, text, draft, keyword=''):
         data.title = title
         data.slug = slug
         data.text = text
@@ -107,7 +109,9 @@ class Article(db.Model):
         data.html = markdown.markdown(text)
         data.put()
 
-        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss', 'xml$sitemap']
+        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'xml$atom', 'xml$rss', 'xml$sitemap']
+        for tag in data.keyword.split():
+            keys.append('a$keyword/' + tag)
         memcache.delete_multi(keys)
         return data
 
@@ -115,7 +119,9 @@ class Article(db.Model):
     def sw_status(cls, data, draft=True):
         data.draft = draft
         data.put()
-        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss', 'xml$sitemap']
+        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'xml$atom', 'xml$rss', 'xml$sitemap']
+        for tag in data.keyword.split():
+            keys.append('a$keyword/' + tag)
         memcache.delete_multi(keys)
         return data
 
@@ -135,7 +141,9 @@ class Article(db.Model):
 
     @classmethod
     def delete(cls, data):
-        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'a$keyword/'+data.keyword, 'xml$atom', 'xml$rss', 'xml$sitemap']
+        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'xml$atom', 'xml$rss', 'xml$sitemap']
+        for tag in data.keyword.split():
+            keys.append('a$keyword/' + tag)
         memcache.delete_multi(keys)
         db.delete(data)
         return data
@@ -168,8 +176,9 @@ class Article(db.Model):
         data = memcache.get(key)
         if data is not None:
             return data
-        q = cls.gql("WHERE keyword = :1 and draft = :2 ORDER BY created DESC", keyword, False)
+        q = cls.gql("WHERE draft = :1 ORDER BY created DESC", False)
         data = q.fetch(1000)
+        data = filter(lambda entry: keyword in entry.keyword.split(), data)
         memcache.set(key, data)
         logging.info('Get Articles from DB by keyword : ' + keyword)
         return data

@@ -33,6 +33,12 @@ def split(value,arg,num=0):
     return value.split(arg)[num]
 
 @register.filter
+def str2list(value, arg=None):
+    if not arg:
+        return value.split()
+    return value.split(arg)
+
+@register.filter
 def gravatar(value, arg='normal'):
     if 'large' == arg:
         size = 73
