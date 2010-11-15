@@ -12,6 +12,7 @@ from google.appengine.api import urlfetch
 from utils.render import render
 from utils import Paginator
 from utils import is_mobile
+from markdown import markdown
 import dbs
 
 import config
@@ -138,6 +139,7 @@ class Page(webapp.RequestHandler):
             self.response.set_status(404)
             html = render(path, rdic)
             return self.response.out.write(html)
+        data.text = markdown(data.text)
         rdic['data'] = data
         path = get_path(self.request, 'page.html')
         html = render(path, rdic)
