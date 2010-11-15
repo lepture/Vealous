@@ -109,7 +109,7 @@ class Miniblog(WebHandler):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(simplejson.dumps(data))
 
-if config.enable_douban:
+if 'zh' == config.LANGUAGE:
     apps = webapp.WSGIApplication(
         [
             ('/god/douban', Dashboard),

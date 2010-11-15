@@ -193,8 +193,8 @@ class CMD(object):
         note = dbs.Note.add(self._content)
         return 'Note Saved'
     def _douban(self):
-        if not config.enable_douban:
-            return 'not enabled douban'
+        if config.LANGUAGE != 'zh':
+            return 'You are not a Chinese user.'
         qs = dbs.Vigo.get('oauth_douban')
         if not qs:
             return 'Douban Not Authed'

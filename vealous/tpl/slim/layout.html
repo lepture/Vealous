@@ -38,12 +38,20 @@
                         <ul class="hide">
                             {%if vigo.alterfeed%}
                             <li><a rel="external" href="http://fusion.google.com/add?feedurl={{vigo.alterfeed}}">Google</a></li>
+                            {%ifequal conf.language "zh"%}
                             <li><a rel="external" href="http://9.douban.com/reader/subscribe?url={{vigo.alterfeed}}">Douban</a></li>
                             <li><a rel="external" href="http://mail.qq.com/cgi-bin/feed?u={{vigo.alterfeed}}">QQMail</a></li>
                             {%else%}
+                            <li><a rel="external" href="http://add.my.yahoo.com/rss?url={{vigo.alterfeed}}">Yahoo</a></li>
+                            {%endifequal%}
+                            {%else%}
                             <li><a rel="external" href="http://fusion.google.com/add?feedurl={{conf.site}}/feed.atom">Google</a></li>
+                            {%ifequal conf.language "zh"%}
                             <li><a rel="external" href="http://9.douban.com/reader/subscribe?url={{conf.site}}/feed.atom">Douban</a></li>
                             <li><a rel="external" href="http://mail.qq.com/cgi-bin/feed?u={{conf.site}}/feed.atom">QQMail</a></li>
+                            {%else%}
+                            <li><a rel="external" href="http://add.my.yahoo.com/rss?url={{conf.site}}/feed.atom">Yahoo</a></li>
+                            {%endifequal%}
                             {%endif%}
                         </ul>
                         </li>

@@ -25,9 +25,9 @@
                         {%endblock%}
                         <li class="nav-more"><a href="#">More</a>
                         <ul class="hide">
-                            {%if config.enable_douban%}
+                            {%ifequal conf.language "zh"%}
                             <li><a href="/god/douban">Douban</a></li>
-                            {%endif%}
+                            {%endifequal%}
                             <li><a href="/god/twitter">Twitter</a></li>
                             <li><a href="/god/console/memcache">Console</a></li>
                             <li><a href="/god/setting">Setting</a></li>

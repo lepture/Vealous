@@ -30,7 +30,6 @@ gcse = '' # http://www.google.com/cse/
 
 # douban oauth 
 # http://www.douban.com/service/apikey/apply
-enable_douban = False
 douban_key = ''
 douban_secret = ''
 
@@ -55,5 +54,5 @@ gvars = {
     'static': STATIC_URL,
     'ga': ga,
     'disqus_shortname': disqus_shortname,
-    'enable_douban': enable_douban,
+    'language': LANGUAGE,
 }
