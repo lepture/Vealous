@@ -15,7 +15,7 @@ EMAIL = ''
 
 LOGIN_URL = '/god/login'
 STATIC_URL = '/static'
-JS_HOST = '/static'
+#STATIC_URL = 'http://shiao.googlecode.com/svn/trunk/vealous/static'
 SITE_URL = '' #no slash eg: http://i.shiao.org
 
 # disqus
@@ -53,7 +53,6 @@ gvars = {
     'version': VERSION,
     'site': SITE_URL,
     'static': STATIC_URL,
-    'jshost': JS_HOST,
     'ga': ga,
     'disqus_shortname': disqus_shortname,
     'enable_douban': enable_douban,
