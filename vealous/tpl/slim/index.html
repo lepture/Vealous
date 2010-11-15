@@ -30,7 +30,7 @@
         {%for note in notes%}
         <li class="note"><p>
         {{note.text|escape|urlize}}
-        »<span class="time">Created at {{note.created|timesince|split:","}} ago</span>
+        » <span class="time">Created at {{note.created|timesince|split:","}} ago</span>
         </p></li>
         {%endfor%}
     </ul>
