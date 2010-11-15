@@ -109,15 +109,18 @@ class Miniblog(WebHandler):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(simplejson.dumps(data))
 
-apps = webapp.WSGIApplication(
-    [
-        ('/god/douban', Dashboard),
-        ('/god/douban/login', Login),
-        ('/god/douban/auth', Auth),
-        ('/god/douban/miniblog', Miniblog),
-    ],
-    debug = config.DEBUG,
-)
+if config.enable_douban:
+    apps = webapp.WSGIApplication(
+        [
+            ('/god/douban', Dashboard),
+            ('/god/douban/login', Login),
+            ('/god/douban/auth', Auth),
+            ('/god/douban/miniblog', Miniblog),
+        ],
+        debug = config.DEBUG,
+    )
+else:
+    apps = webapp.WSGIApplication([], debug = config.DEBUG)
 
 if '__main__' == __name__:
     run(apps)
