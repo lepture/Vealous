@@ -5,14 +5,17 @@
 {%endblock%}
 
 {%block soga%}
-<div class="post">
+<div id="post-{{data.key}}" class="post">
     <h2 class="post-title">{{data.title}}</h2>
-    <div class="post-info"></div>
+    <div class="sep"></div>
+    <div class="post-info">
+        <label>Created by </label><a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a>
+        <a id="translate_button_post-{{data.key}}" class="translate" rel="nofollow" href="javascript:;" onclick="show_translate_popup('en','post','{{data.key}}');">Translate</a>
+    </div>
     <div class="post-content">
-        {{data.text|linebreaks}}
+        {{data.text}}
     </div>
 </div>
-{%include "_disqus.html"%}
 {%endblock%}
 
 {%block sidebar%}
@@ -26,4 +29,8 @@
         {%endfor%}
     </ul>
 </div>
+{%endblock%}
+
+{%block footer%}
+{%include "_flags.html"%}
 {%endblock%}
