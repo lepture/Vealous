@@ -9,8 +9,8 @@
         <link rel="alternate" type="application/rss+xml" href="{{vigo.alterfeed}}" />
         {%endif%}
         <link rel="alternate" type="application/atom+xml" href="{{conf.site}}/feed.atom" />
-        <link rel="stylesheet" href="{{conf.static}}/css/reset.css?v=slim{{conf.version}}" />
-        <link rel="stylesheet" href="{{conf.static}}/css/style.css?v=slim{{conf.version}}" />
+        <link rel="stylesheet" href="{{conf.static}}/css/reset.css?ver={{conf.version}}" />
+        <link rel="stylesheet" href="{{conf.static}}/css/style.css?ver={{conf.version}}" />
         {%block extra%}{%endblock%}
     </head>
     <body>
@@ -87,7 +87,7 @@
         </div>
         {%include "_ga.html"%}
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-        <script type="text/javascript" src="{{conf.static}}/js/slim.js"></script>
+        <script type="text/javascript" src="{{conf.static}}/js/slim.js?ver={{conf.version}}"></script>
         {%block footer%}
         {%endblock%}
     </body>

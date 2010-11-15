@@ -5,10 +5,7 @@
         <meta content="True" name="HandheldFriendly" />
         <meta content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=1;" name="viewport" />
         <title>{%block title%}Dashboard{%endblock%}</title>
-        <link rel="stylesheet" href="{{conf.static}}/css/mobile.css" />
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-        <script type="text/javascript" src="{{conf.static}}/js/core.js"></script>
-        <script type="text/javascript" src="{{conf.static}}/js/god.js"></script>
+        <link rel="stylesheet" href="{{conf.static}}/css/mobile.css?ver={{conf.version}}" />
         {%block extra%}{%endblock%}
     </head>
     <body>
@@ -45,5 +42,8 @@
                 <a rel="external" href="http://code.google.com/appengine"><img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Powered by Google App Engine" /></a>
             </div>
         </div>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+        <script type="text/javascript" src="{{conf.static}}/js/core.js?ver={{conf.version}}"></script>
+        <script type="text/javascript" src="{{conf.static}}/js/god.js?ver={{conf.version}}"></script>
     </body>
 </html>
