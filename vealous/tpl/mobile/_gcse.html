@@ -1,6 +1,6 @@
-<form action="/search" id="cse-search-box">
+<form action="/search">
     <div class="clearfix">
-        <input class="text" type="text" name="q" size="31" value="{{q}}" />
+        <input class="text" type="text" name="q" size="31" value="{{q|escape}}" />
         <input class="button" type="submit" value="Search" />
     </div>
 </form>

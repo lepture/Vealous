@@ -25,7 +25,7 @@ Search|{{vigo.sitename|default:"Vealous"}}
 {%if gres.cursor.estimatedResultCount%}
 <div class="gcse-result">
     <p class="message clearfix" style="width:630px;">
-    <span class="alignleft">Found {{gres.cursor.estimatedResultCount}} results about <strong>{{q}}</strong></span>
+    <span class="alignleft">Found {{gres.cursor.estimatedResultCount}} results about <strong>{{q|escape}}</strong></span>
     <span class="pretty alignright">Powered by <a href="http://code.google.com/apis/ajaxsearch/documentation/reference.html">Google Ajax Search API</a></span></p>
     {%for data in gres.results %}
     <div class="post">
@@ -38,11 +38,11 @@ Search|{{vigo.sitename|default:"Vealous"}}
     {%endfor%}
 </div>
 {%else%}
-<p class="message">Oops! No result found about <strong>{{q}}</strong></p>
+<p class="message">Oops! No result found about <strong>{{q|escape}}</strong></p>
 {%endif%}
 <p class="pages">
 {%for page in gres.cursor.pages%}
-<a href="/search?start={{page.start}}&q={{q}}">{{page.label}}</a>
+<a href="/search?start={{page.start}}&q={{q|escape}}">{{page.label}}</a>
 {%endfor%}
 </p>
 {%endblock%}
