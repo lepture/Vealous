@@ -115,6 +115,10 @@ class ViewArticle(WebHandler):
             data = self.get_filter(status)
         elif 'find' == action:
             data = self.get_find(key)
+            if data:
+                return self.redirect('/god/article/edit?key=%s' % data.key())
+            message = "Not find the article"
+            data = dbs.Article.gql('ORDER BY created DESC')
         else:
             data = dbs.Article.gql('ORDER BY created DESC')
         rdic['message'] = message
@@ -133,8 +137,11 @@ class ViewArticle(WebHandler):
         return data
 
     def get_find(self, key):
-        data = dbs.Article.gql('WHERE slug =:1', key)
-        return data
+        q = dbs.Article.gql('WHERE slug =:1', key)
+        data = q.fetch(1)
+        if data:
+            return data[0]
+        return None
 
 class EditArticle(WebHandler):
     @be_god
@@ -250,6 +257,12 @@ class AddArticle(WebHandler):
 class ViewPage(WebHandler):
     @be_god
     def get(self):
+        action = self.request.get('action', 'none').lower()
+        key = self.request.get('key', 'none')
+        if 'find' == action:
+            data = self.get_find(key)
+            if data:
+                return self.redirect('/god/page/edit?key=%s' % data.key())
         source = self.request.get('from', None)
         message = ''
         if source:
@@ -262,6 +275,13 @@ class ViewPage(WebHandler):
         rdic['mvdata'] = Paginator(data, count, p)
         path = get_tpl('page.html')
         return self.response.out.write(render(path,rdic))
+
+    def get_find(self, key):
+        q = dbs.Article.gql('WHERE slug =:1', key)
+        data = q.fetch(1)
+        if data:
+            return data[0]
+        return None
 
 class AddPage(WebHandler):
     @be_god
