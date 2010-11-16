@@ -25,11 +25,18 @@ def get_path(request, name):
     path = os.path.join(config.ROOT, 'tpl', config.THEME, name)
     return path
 
+def get_navs():
+    dic = {}
+    navs = dbs.Melody.get_all('nav')
+    dic['normal'] = filter(lambda nav: 'normal'==nav.ext, navs)
+    dic['more'] = filter(lambda nav: 'more'==nav.ext, navs)
+    return dic
+
 class UtilsDict(webapp.RequestHandler):
     def get(self):
         rdic = {}
         p = self.request.get('p',1)
-        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['navs'] = get_navs()
         rdic['links'] = dbs.Melody.get_all('link')
         data = dbs.DictBook.get_all()
         rdic['mvdata'] = Paginator(data, 30, p)
@@ -39,7 +46,7 @@ class UtilsDict(webapp.RequestHandler):
 class UtilsTwitter(webapp.RequestHandler):
     def get(self):
         rdic = {}
-        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['navs'] = get_navs()
         rdic['links'] = dbs.Melody.get_all('link')
         rdic['tweets'] = self.tweets()
         path = get_path(self.request, 'utils_twitter.html')
@@ -73,7 +80,7 @@ class UtilsTwitter(webapp.RequestHandler):
 class UtilsUserTwitter(webapp.RequestHandler):
     def get(self, username):
         rdic = {}
-        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['navs'] = get_navs()
         rdic['links'] = dbs.Melody.get_all('link')
         rdic['tweets'] = self.tweets(username)
         path = get_path(self.request, 'utils_twitter.html')
