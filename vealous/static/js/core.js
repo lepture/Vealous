@@ -37,25 +37,6 @@ function postNote() {
         $('.message').fadeIn();
         return false
     }
-    $.post('/god/note/add', $('#noteform').serialize(), function(data){
-        $('.message').text(data.text)
-        $('.message').fadeIn();
-        $('.message').fadeOut(2000);
-        if (data.succeeded){
-            $('.notewrap').prepend(data.html);
-        }
-    }, 'json');
-}
-function delNote(){
-    $('.notewrap .action a').click(function(){
-        $(this).parentsUntil('.box').fadeOut();
-        var url = $(this).attr('href');
-        $.getJSON(url, function(data){
-            $('.message').text(data.text);
-            $('.message').fadeIn();
-        });
-        return false;
-    });
 }
 function postDoubanMiniblog(){
     $.post('/god/douban/miniblog', $('#noteform').serialize(),
@@ -77,7 +58,7 @@ function disqusModerate() {
         var action = $(this).text().toLowerCase();
         var label = $(this).parent().siblings('.bitch').find('.status');
         var comment_id = $(this).attr('class');
-        var url = '/god/disqus/moderate?action=' + action + '&post_id=' + comment_id;
+        var url = $(this).atrr('href');
         $.getJSON(url, function(data){
             if(data.succeeded){
                 $('.message').text('Moderate comment succeeded');
