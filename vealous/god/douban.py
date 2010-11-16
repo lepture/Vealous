@@ -95,10 +95,13 @@ class Auth(WebHandler):
 class Miniblog(WebHandler):
     @be_god
     def post(self):
+        qs = dbs.Vigo.get('oauth_douban')
+        self.response.headers['Content-Type'] = 'application/json'
+        if not qs:
+            return self.response.out.write('{"text":"Douban Not Authed"}')
         content = self.request.get('text', None)
         if not content:
             raise
-        qs = dbs.Vigo.get('oauth_douban')
         api = pydouban.Api()
         api.set_qs_oauth(config.douban_key, config.douban_secret, qs)
         try:
@@ -106,7 +109,6 @@ class Miniblog(WebHandler):
             data = {'text':'Post To Douban Success'}
         except:
             data = {'text':'Post To Douban Failed'}
-        self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(simplejson.dumps(data))
 
 if 'zh' == config.LANGUAGE:

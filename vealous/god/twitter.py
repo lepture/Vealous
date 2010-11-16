@@ -185,17 +185,19 @@ class Auth(WebHandler):
 class Status(WebHandler):
     @be_god
     def post(self):
+        qs = dbs.Vigo.get('oauth_twitter')
+        self.response.headers['Content-Type'] = 'application/json'
+        if not qs:
+            return self.response.out.write('{"text":"Twitter Not Authed"}')
         content = self.request.get('text', '')
         if len(content) > 140:
             content = content[:133] + '...'
-        qs = dbs.Vigo.get('oauth_twitter')
         api = Twitter().set_qs_api(qs, 'utf-8')
         try:
             api.PostUpdate(content)
             data = {'text':'Post To Twitter Success'}
         except twitter.TwitterError, e:
             data = {'text':str(e)}
-        self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(simplejson.dumps(data))
 
 apps = webapp.WSGIApplication(

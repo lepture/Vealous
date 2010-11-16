@@ -15,7 +15,7 @@ from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch, users
 from google.appengine.api.labs import taskqueue
-from django.utils.simplejson import dumps, loads
+from django.utils.simplejson import loads
 
 from utils import be_god
 from utils.render import render
