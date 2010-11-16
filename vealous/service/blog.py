@@ -115,7 +115,7 @@ class Page(webapp.RequestHandler):
     def get(self, slug):
         slug = getslug(slug)
         data = None
-        #data = dbs.Melody.get_page(slug)
+        data = dbs.Page.get(slug)
         rdic = {}
         rdic['navs'] = dbs.Melody.get_all('nav')
         rdic['links'] = dbs.Melody.get_all('link')
@@ -125,7 +125,6 @@ class Page(webapp.RequestHandler):
             self.response.set_status(404)
             html = render(path, rdic)
             return self.response.out.write(html)
-        data.text = markdown(data.text)
         rdic['data'] = data
         path = get_path(self.request, 'page.html')
         html = render(path, rdic)

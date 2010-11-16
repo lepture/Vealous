@@ -22,7 +22,7 @@ from utils.render import render
 from utils import Paginator
 from utils.handler import WebHandler
 from god.disqus import Disqus
-from god import get_path
+from god import get_path, get_tpl
 from libs import twitter
 import dbs
 import config
@@ -120,7 +120,7 @@ class ViewArticle(WebHandler):
         rdic['message'] = message
         p = self.request.get('p',1)
         rdic['mvdata'] = Paginator(data, count, p)
-        path = get_path(self.request, 'article.html')
+        path = get_tpl('article.html')
         return self.response.out.write(render(path,rdic))
 
     def get_filter(self, status):
@@ -152,7 +152,7 @@ class EditArticle(WebHandler):
             return self.redirect('/god/article?from=delete')
         rdic = {}
         rdic['data'] = data
-        path = get_path(self.request, 'edit_article.html')
+        path = get_tpl('edit_article.html')
         return self.response.out.write(render(path,rdic))
     
     @be_god
@@ -183,14 +183,14 @@ class EditArticle(WebHandler):
         rdic['data'] = data
         message = 'Please fill the required fields'
         rdic['message'] = message
-        path = get_path(self.request, 'edit_article.html')
+        path = get_tpl('edit_article.html')
         return self.response.out.write(render(path,rdic))
 
 class AddArticle(WebHandler):
     @be_god
     def get(self):
         rdic = {}
-        path = get_path(self.request, 'add_article.html')
+        path = get_tpl('add_article.html')
         return self.response.out.write(render(path,rdic))
     
     @be_god
@@ -215,7 +215,7 @@ class AddArticle(WebHandler):
             return self.redirect('/god/article?from=add')
         message = 'Please fill the required fields'
         rdic['message'] = message
-        path = get_path(self.request, 'add_article.html')
+        path = get_tpl('add_article.html')
         return self.response.out.write(render(path,rdic))
 
     def tweet(self, data):
@@ -260,14 +260,14 @@ class ViewPage(WebHandler):
         rdic['message'] = message
         p = self.request.get('p',1)
         rdic['mvdata'] = Paginator(data, count, p)
-        path = get_path(self.request, 'page.html')
+        path = get_tpl('page.html')
         return self.response.out.write(render(path,rdic))
 
 class AddPage(WebHandler):
     @be_god
     def get(self):
         rdic = {}
-        path = get_path(self.request, 'add_page.html')
+        path = get_tpl('add_page.html')
         return self.response.out.write(render(path,rdic))
     
     @be_god
@@ -283,7 +283,7 @@ class AddPage(WebHandler):
             return self.redirect('/god/page?from=add')
         message = 'Please fill the required fields'
         rdic['message'] = message
-        path = get_path(self.request, 'add_page.html')
+        path = get_tpl('add_page.html')
         return self.response.out.write(render(path,rdic))
 
 class EditPage(WebHandler):
@@ -302,7 +302,7 @@ class EditPage(WebHandler):
             return self.redirect('/god/page?from=delete')
         rdic = {}
         rdic['data'] = data
-        path = get_path(self.request, 'edit_page.html')
+        path = get_tpl('edit_page.html')
         return self.response.out.write(render(path,rdic))
     
     @be_god
@@ -325,7 +325,7 @@ class EditPage(WebHandler):
         rdic['data'] = data
         message = 'Please fill the required fields'
         rdic['message'] = message
-        path = get_path(self.request, 'edit_page.html')
+        path = get_tpl('edit_page.html')
         return self.response.out.write(render(path,rdic))
 
 
@@ -343,7 +343,7 @@ class ViewMelody(WebHandler):
         data = self.get_filter(status)
         p = self.request.get('p',1)
         rdic['mvdata'] = Paginator(data, count, p)
-        path = get_path(self.request, 'melody.html')
+        path = get_tpl('melody.html')
         return self.response.out.write(render(path,rdic))
 
     def get_filter(self, status):
@@ -357,7 +357,7 @@ class AddMelody(WebHandler):
     @be_god
     def get(self):
         rdic = {}
-        path = get_path(self.request, 'add_melody.html')
+        path = get_tpl('add_melody.html')
         return self.response.out.write(render(path,rdic))
 
     @be_god
@@ -377,7 +377,7 @@ class AddMelody(WebHandler):
             return self.redirect('/god/melody?from=add')
         message = 'Please fill the required fields'
         rdic['message'] = message
-        path = get_path(self.request, 'add_melody.html')
+        path = get_tpl('add_melody.html')
         return self.response.out.write(render(path,rdic))
 
 class EditMelody(WebHandler):
@@ -396,7 +396,7 @@ class EditMelody(WebHandler):
             return self.redirect('/god/melody?from=delete')
         rdic = {}
         rdic['data'] = data
-        path = get_path(self.request, 'edit_melody.html')
+        path = get_tpl('edit_melody.html')
         return self.response.out.write(render(path,rdic))
     
     @be_god
@@ -423,7 +423,7 @@ class EditMelody(WebHandler):
         rdic['data'] = data
         message = 'Please fill the required fields'
         rdic['message'] = message
-        path = get_path(self.request, 'edit_melody.html')
+        path = get_tpl('edit_melody.html')
         return self.response.out.write(render(path,rdic))
 
 class ViewNote(WebHandler):
@@ -522,8 +522,7 @@ class ConsoleMemcache(WebHandler):
         rdic['key'] = key
         rdic['memstat'] = memstat
         rdic['result'] = result
-        self.request.headers['User-Agent'] = 'bot'
-        path = get_path(self.request,'memcache.html')
+        path = get_tpl('memcache.html')
         return self.response.out.write(render(path,rdic))
 
 class TaskPing(WebHandler):

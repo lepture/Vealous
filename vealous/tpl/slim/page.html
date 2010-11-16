@@ -9,13 +9,14 @@
     <h2 class="post-title">{{data.title}}</h2>
     <div class="sep"></div>
     <div class="post-info">
-        <label>Created by </label><a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a>
+        <label>Created at </label><span class="time">{{data.created|prettytime}}</span> by
+        <a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a>
         <div class="icons translate">
             <a id="translate_button_post-{{data.key}}" rel="nofollow" href="javascript:;" onclick="show_translate_popup('en','post','{{data.key}}');">Translate</a>
         </div>
     </div>
     <div class="post-content">
-        {{data.text}}
+        {{data.html}}
     </div>
 </div>
 {%endblock%}

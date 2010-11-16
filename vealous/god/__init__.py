@@ -10,3 +10,7 @@ def get_path(request , name):
         return path
     path = os.path.join(ROOT, 'god', 'tpl', name)
     return path
+
+def get_tpl(name):
+    path = os.path.join(ROOT, 'god', 'tpl', name)
+    return path

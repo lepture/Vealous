@@ -14,6 +14,7 @@ from libs import twitter
 from utils import be_god
 from utils.handler import WebHandler
 from utils.render import render
+from god import get_tpl
 import config
 import dbs
 
@@ -54,15 +55,11 @@ class Twitter(object):
                           self.token.key, self.token.secret, input_encoding)
         return api
 
-def get_path(ua, name):
-    path = os.path.join(config.ROOT, 'god', 'tpl', name)
-    return path
 
 class Dashboard(WebHandler):
     @be_god
     def get(self):
-        ua = self.request.headers.get('User-Agent', 'bot')
-        path = get_path(ua, 'twitter_dashboard.html')
+        path = get_tpl('twitter_dashboard.html')
         rdic = {}
         source = self.request.get('from', None)
         message = ''
@@ -86,8 +83,7 @@ class Dashboard(WebHandler):
 class UserStatus(WebHandler):
     @be_god
     def get(self, username):
-        ua = self.request.headers.get('User-Agent', 'bot')
-        path = get_path(ua, 'twitter_user.html')
+        path = get_tpl('twitter_user.html')
         rdic = {}
         rdic['username'] = username
         qs = dbs.Vigo.get('oauth_twitter')
@@ -115,8 +111,7 @@ class UserStatus(WebHandler):
 class Mentions(WebHandler):
     @be_god
     def get(self):
-        ua = self.request.headers.get('User-Agent', 'bot')
-        path = get_path(ua, 'twitter_dashboard.html')
+        path = get_tpl('twitter_dashboard.html')
         rdic = {}
         qs = dbs.Vigo.get('oauth_twitter')
         if not qs:
@@ -138,8 +133,7 @@ class Mentions(WebHandler):
 class Directs(WebHandler):
     @be_god
     def get(self):
-        ua = self.request.headers.get('User-Agent', 'bot')
-        path = get_path(ua, 'twitter_directs.html')
+        path = get_tpl('twitter_directs.html')
         rdic = {}
         qs = dbs.Vigo.get('oauth_twitter')
         if not qs:
