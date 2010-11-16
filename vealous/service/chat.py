@@ -93,6 +93,8 @@ class CMD(object):
             return data['reply']
         return 'Not Found'
     def _dict(self):
+        if 'zh' != config.LANGUAGE:
+            return 'disabled for international user'
         d = DictCN(self._content)
         data = d.reply()
         if not data:
@@ -116,6 +118,8 @@ class CMD(object):
             return data['reply']
         return 'Not Found'
     def _log(self):
+        if 'zh' != config.LANGUAGE:
+            return 'disabled for international user'
         sp = self._content.split()
         if len(sp) == 0:
             start = 0
@@ -137,6 +141,8 @@ class CMD(object):
             return 'Not Found'
         return reply
     def _rating(self):
+        if 'zh' != config.LANGUAGE:
+            return 'disabled for international user'
         sp = self._content.split()
         if len(sp) == 0:
             rating = 1
@@ -162,6 +168,8 @@ class CMD(object):
             return 'Not Found'
         return reply
     def _mark(self):
+        if 'zh' != config.LANGUAGE:
+            return 'disabled for international user'
         if self._content:
             data = dbs.DictBook.mark(self._content)
             reply = u'\n%s [%s]\n%s\n' % (data.word, data.pron, data.define)
@@ -175,6 +183,8 @@ class CMD(object):
         reply += u'Has been marked %s' % star_rate(data.rating)
         return reply
     def _delete(self):
+        if 'zh' != config.LANGUAGE:
+            return 'disabled for international user'
         if self._content:
             word = self._content
         else:
@@ -193,8 +203,8 @@ class CMD(object):
         note = dbs.Note.add(self._content)
         return 'Note Saved'
     def _douban(self):
-        if config.LANGUAGE != 'zh':
-            return 'You are not a Chinese user.'
+        if 'zh' != config.LANGUAGE:
+            return 'disabled for international user'
         qs = dbs.Vigo.get('oauth_douban')
         if not qs:
             return 'Douban Not Authed'
