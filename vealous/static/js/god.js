@@ -3,7 +3,6 @@ $(function(){
     tweetClick();
     autoSaveArticle();
     disqusModerate();
-    delNote();
     $('#noteform').submit(function(){
         var note= $('#noteform input[name="note"]');
         var douban = $('#noteform input[name="douban"]');

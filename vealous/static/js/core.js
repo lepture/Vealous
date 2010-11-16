@@ -58,7 +58,7 @@ function disqusModerate() {
         var action = $(this).text().toLowerCase();
         var label = $(this).parent().siblings('.bitch').find('.status');
         var comment_id = $(this).attr('class');
-        var url = $(this).atrr('href');
+        var url = $(this).attr('href');
         $.getJSON(url, function(data){
             if(data.succeeded){
                 $('.message').text('Moderate comment succeeded');

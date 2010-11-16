@@ -30,11 +30,11 @@
             </div>
             <div class="action alignright">
                 {%ifequal data.status "approved"%}
-                <a class='{{data.comment_id}}' href="/god/third/disqus_moderate?action=spam&post_id={{data.comment_id}}">Spam</a>
+                <a class='{{data.comment_id}}' href="/god/disqus/moderate?action=spam&post_id={{data.comment_id}}">Spam</a>
                 {%else%}
-                <a class='{{data.comment_id}}' href="/god/third/disqus_moderate?action=approve&post_id={{data.comment_id}}">Approve</a>
+                <a class='{{data.comment_id}}' href="/god/disqus/moderate?action=approve&post_id={{data.comment_id}}">Approve</a>
                 {%endifequal%}
-                <a class='{{data.comment_id}}' href="/god/third/disqus_moderate?action=kill&post_id={{data.comment_id}}">Delete</a>
+                <a class='{{data.comment_id}}' href="/god/disqus/moderate?action=kill&post_id={{data.comment_id}}">Delete</a>
             </div>
         </div>
         {% endfor %}
