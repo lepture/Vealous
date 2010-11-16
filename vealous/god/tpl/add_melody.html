@@ -14,83 +14,8 @@ Add Melody|Dashboard
 
 {%block main%}
 <div class="soga alignleft">
-    <p class="message">{{message}}</p>
-    <form class="box" action="" method="post">
-        <div class="form-row cell">
-            <select id="id_label" name="label">
-                <option value="page">Page</option>
-                <option value="s5">S5</option>
-                <option value="link">Link</option>
-                <option value="nav">Nav</option>
-            </select>
-            <label for="id_label" class="required">Label</label>
-        </div>
-        <div class="form-row cell">
-            <input id="id_title" class="text" type="text" name="title" maxlength="100" />
-            <label for="id_title" class="required">Title</label>
-        </div>
-        <div class="melodyspace">
-        </div>
-        <div class="form-row cell">
-            <input id="id_prior" class="text" type="text" name="prior" maxlength="3" />
-            <label for="id_prior" class="required">Priorty</label>
-        </div>
-        <div class="form-row inner">
-            <input type="submit" class="button" value="Save Now" />
-        </div>
-    </form>
-    <div class="choices hide">
-        <div class="link">
-            <div class="form-row cell">
-                <input id="id_url" class="text" type="text" name="url" maxlength="200" />
-                <label for="id_url" class="required">URL</label>
-            </div>
-            <div class="form-row cell">
-                <textarea id="id_text" name="text" style="height:100px;"></textarea>
-            </div>
-            <div class="form-row cell">
-                <input id="id_ext" class="text" type="text" name="ext" maxlength="40" />
-                <label for="id_ext">Relation</label>
-            </div>
-        </div>
-        <div class="nav">
-            <div class="form-row cell">
-                <input id="id_url" class="text" type="text" name="url" maxlength="200" />
-                <label for="id_url" class="required">URL</label>
-            </div>
-        </div>
-        <div class="s5">
-            <div class="form-row cell">
-                <input id="id_ext" class="text" type="text" name="ext" maxlength="40" />
-                <label for="id_ext" class="required">Slug</label>
-            </div>
-            <div class="form-row cell">
-                <textarea id="id_text" name="text" style="height:400px;"></textarea>
-            </div>
-        </div>
-        <div class="page">
-            <div class="form-row cell">
-                <input id="id_ext" class="text" type="text" name="ext" maxlength="40" />
-                <label for="id_ext" class="required">Slug</label>
-            </div>
-            <div class="form-row cell">
-                <textarea id="id_text" name="text" style="height:400px;"></textarea>
-            </div>
-        </div>
-    </div>
+    {%include "_melody_form.html"%}
 </div>
 <div class="sidebar alignright">
-    <div class="help">
-        <h4>S5</h4>
-        <p>A Simple Standards-Based Slide Show System. <a href="http://meyerweb.com/eric/tools/s5/">Get Intro</a> | <a href="http://www.netzgesta.de/S5/demos.php">Get DEMO</a></p> 
-    </div>
-    <div class="help">
-        <h4>S5 Static</h4>
-        <p>/static/s5/slides.css</p>
-        <p>/static/s5/outline.css</p>
-        <p>/static/s5/print.css</p>
-        <p>/static/s5/opera.css</p>
-        <p>/static/s5/slides.js</p>
-    </div>
 </div>
 {%endblock%}

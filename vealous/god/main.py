@@ -347,8 +347,8 @@ class ViewMelody(WebHandler):
         return self.response.out.write(render(path,rdic))
 
     def get_filter(self, status):
-        if 's5' != status and 'link' != status and 'nav' != status:
-            data = dbs.Melody.all().order('-prior')
+        if 'demo' != status and 'link' != status and 'nav' != status:
+            data = dbs.Melody.gql('ORDER BY prior DESC')
             return data
         data = dbs.Melody.gql('WHERE label = :1 ORDER BY prior DESC',status)
         return data

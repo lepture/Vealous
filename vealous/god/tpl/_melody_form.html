@@ -1,0 +1,61 @@
+<p class="message">{{message}}</p>
+<form class="box" action="" method="post">
+    <div class="form-row cell">
+        <select id="id_label" name="label">
+            <option {%ifequal data.label "link"%}selected="selected"{%endifequal%} value="link">Link</option>
+            <option {%ifequal data.label "nav"%}selected="selected"{%endifequal%} value="nav">Nav</option>
+            <option {%ifequal data.label "demo"%}selected="selected"{%endifequal%} value="demo">Demo</option>
+        </select>
+        <label for="id_label" class="required">Label</label>
+    </div>
+    <div class="form-row cell">
+        <input id="id_title" class="text" type="text" name="title" maxlength="100" value="{{data.title}}" />
+        <label for="id_title" class="required">Title</label>
+    </div>
+    <div class="melodyspace">
+    </div>
+    <div class="form-row cell">
+        <input id="id_prior" class="text" type="text" name="prior" maxlength="3" value="{{data.prior|default:"0"}}" />
+        <label for="id_prior" class="required">Priorty</label>
+    </div>
+    <div class="form-row inner">
+        <input type="submit" class="button" value="Save Now" />
+    </div>
+</form>
+<div class="choices hide">
+    <div class="nav">
+        <div class="form-row cell">
+            <input id="id_url" class="text" type="text" name="url" maxlength="200" value="{{data.url}}" />
+            <label for="id_url" class="required">URL</label>
+        </div>
+        <div class="form-row cell">
+            <select id="id_ext" name="ext">
+                <option value="normal">Normal</option>
+                <option value="more">More</option>
+            </select>
+            <label for="id_ext">Where</label>
+        </div>
+    </div>
+    <div class="link">
+        <div class="form-row cell">
+            <input id="id_url" class="text" type="text" name="url" maxlength="200" value="{{data.url}}" />
+            <label for="id_url" class="required">URL</label>
+        </div>
+        <div class="form-row cell">
+            <textarea id="id_text" name="text" style="height:100px;">{{data.text|default:""}}</textarea>
+        </div>
+        <div class="form-row cell">
+            <input id="id_ext" class="text" type="text" name="ext" maxlength="40" value="{{data.ext|default:""}}"/>
+            <label for="id_ext">Relation</label>
+        </div>
+    </div>
+    <div class="demo">
+        <div class="form-row cell">
+            <input id="id_ext" class="text" type="text" name="ext" maxlength="40" value="{{data.ext|default:""}}" />
+            <label for="id_ext" class="required">Slug</label>
+        </div>
+        <div class="form-row cell">
+            <textarea id="id_text" name="text" style="height:400px;">{{data.text|default:""}}</textarea>
+        </div>
+    </div>
+</div>
