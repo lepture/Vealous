@@ -1,0 +1,23 @@
+<p class="message">{{message}}</p>
+<form id="articleform" class="box edit" action="" method="post">
+    <div class="form-row cell">
+        <input id="id_title" class="text" type="text" name="title" maxlength="100" value="{{data.title}}" />
+        <label for="id_title" class="required">Title</label>
+    </div>
+    <div class="form-row cell">
+        <input id="id_slug" class="text" type="text" name="slug" maxlength="100" value="{{data.slug}}" />
+        <label for="id_slug" class="required">Slug</label>
+    </div>
+    <div class="form-row cell">
+        <textarea id="id_text" name="text">{{data.text}}</textarea>
+    </div>
+    <div class="form-row cell">
+        <input id="id_keyword" class="text" type="text" name="keyword" maxlength="300" value="{{data.keyword}}" />
+        <label for="id_keyword">Keywords</label>
+    </div>
+    <div class="form-row inner">
+        <input type="submit" class="button" value="Save as Draft" name="draft" />
+        <input type="submit" class="button" value="Post Now" />
+        <input type="checkbox" class="autosave" style="vertical-align:middle;" /><label style="margin-left:6px;" for="autosave">Auto Save</label>
+    </div>
+</form>

@@ -28,17 +28,6 @@
 {%endblock%}
 
 {%block sidebar%}
-<div class="widget widget-notebook">
-    <h3 class="widget-title">Note</h3>
-    <ul>
-        {%for note in notes%}
-        <li class="note"><p>
-        {{note.text|escape|urlize}}
-        » <span class="time">Created at {{note.created|timesince|split:","}} ago</span>
-        </p></li>
-        {%endfor%}
-    </ul>
-</div>
 <div class="widget widget-links">
     <h3 class="widget-title">Links</h3>
     <ul>

@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{{conf.static}}/css/style.css?ver={{conf.version}}" />
         {%block extra%}{%endblock%}
     </head>
-    <body>
+    <body id="god">
         <div id="container">
             <div id="header">
                 <div class="wrapper clearfix">
@@ -20,6 +20,7 @@
                         {%block nav%}
                         <li class="current"><a href="/god">Dashboard</a></li>
                         <li><a href="/god/article">Articles</a></li>
+                        <li><a href="/god/page">Pages</a></li>
                         <li><a href="/god/melody">Melody</a></li>
                         <li><a href="/god/note">Note</a></li>
                         {%endblock%}

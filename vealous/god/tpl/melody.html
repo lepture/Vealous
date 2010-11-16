@@ -7,6 +7,7 @@ Melody|Dashboard
 {%block nav%}
 <li><a href="/god">Dashboard</a></li>
 <li><a href="/god/article">Articles</a></li>
+<li><a href="/god/page">Pages</a></li>
 <li class="current"><a href="/god/melody">Melody</a></li>
 <li><a href="/god/note">Note</a></li>
 {%endblock%}
@@ -40,12 +41,10 @@ Melody|Dashboard
     </div>
 </div>
 <div class="sidebar alignright">
-    <div class="help">
+    <div class="help access">
         <h4>Filter</h4>
-        <p class="seprate"><a class="button" href="?filter=page">Show Page</a></p>
-        <p class="seprate"><a class="button" href="?filter=s5">Show S5</a></p>
-        <p class="seprate"><a class="button" href="?filter=nav">Show Nav</a></p>
-        <p class="seprate"><a class="button" href="?filter=link">Show Link</a></p>
+        <a class="button" href="?filter=nav">Show Nav</a>
+        <a class="button" href="?filter=link">Show Link</a>
         </div>
     </div>
 </div>

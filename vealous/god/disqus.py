@@ -99,7 +99,7 @@ class Disqus(object):
         result = urlfetch.fetch(url, payload=payload, method='POST').content
         json = parse_json(result)
         if 'ok' != json['code']:
-            logging.info('moderate post failed')
+            logging.info(json['code'])
             return {'succeeded': False}
         return json
 

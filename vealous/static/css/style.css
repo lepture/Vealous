@@ -72,6 +72,8 @@ body {
     font-size: 13px;
     z-index: 0;
 }
+/* god */
+.disqus-comment {margin-top: 1em;}
 .soga {
     width: 690px;
     overflow: hidden;
@@ -107,10 +109,10 @@ body {
 .soga .content {
     width: 500px;
 }
-.soga .action {
+#god .action {
     width: 120px;
 }
-.soga .action a {
+#god .action a {
     display: block;
     background-color: #0a67a3;
     color: #fff;
@@ -123,14 +125,14 @@ body {
     padding: 3px 12px;
     text-align: center;
 }
-.soga .action a:hover {
+#god .action a:hover {
     background-color: #1f8aee;
 }
-.soga .avatar {
+.soga .avatar, #god .avatar {
     width: 48px;
     height: 48px;
 }
-.soga .bitch {
+#god .bitch {
     width: 450px;
     overflow: hidden;
     word-wrap: break-word;
@@ -139,7 +141,7 @@ body {
     width: 600px;
     word-wrap: break-word;
 }
-.soga .bitch p {
+#god .bitch p {
     margin-bottom: 2px;
 }
 .boxnav {
@@ -181,6 +183,13 @@ body {
 }
 .sidebar .help input.text {
     width: 150px;
+}
+.sidebar .access a {
+    display: block;
+    width: 80px;
+    line-height: 19px;
+    text-align: center;
+    margin: 5px 0;
 }
 .sidebar .help .seprate {
     padding: 10px 0;
@@ -255,6 +264,12 @@ body {
 }
 #noteform .form-row input, #noteform .form-row label {
     vertical-align: middle;
+}
+#noteform .form-row label {
+    margin: 0;
+    color: #666;
+    font-size: 11px;
+    font-weight: bold;
 }
 .icons {background:url("../img/icons.png") no-repeat;padding-left:22px; height:16px; line-height:16px;}
 .twitter {background-position: 3px -384px;}

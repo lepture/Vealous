@@ -1,20 +1,20 @@
 {%extends "layout.html"%}
 
 {%block title%}
-Edit Article|Dashboard
+Edit Page|Dashboard
 {%endblock%}
 
 {%block nav%}
 <li><a href="/god">Dashboard</a></li>
-<li class="current"><a href="/god/article">Articles</a></li>
-<li><a href="/god/page">Pages</a></li>
+<li><a href="/god/article">Articles</a></li>
+<li class="current"><a href="/god/page">Pages</a></li>
 <li><a href="/god/melody">Melody</a></li>
 <li><a href="/god/note">Note</a></li>
 {%endblock%}
 
 {%block main%}
 <div class="soga alignleft">
-    {%include "_article_form.html"%}
+    {%include "_page_form.html"%}
 </div>
 <div class="sidebar alignright">
     {%include "_markdown.html"%}

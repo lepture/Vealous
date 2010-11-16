@@ -1,13 +1,13 @@
 {%extends "layout.html"%}
 
 {%block title%}
-Article|Dashboard
+Page|Dashboard
 {%endblock%}
 
 {%block nav%}
 <li><a href="/god">Dashboard</a></li>
-<li class="current"><a href="/god/article">Articles</a></li>
-<li><a href="/god/page">Pages</a></li>
+<li><a href="/god/article">Articles</a></li>
+<li class="current"><a href="/god/page">Pages</a></li>
 <li><a href="/god/melody">Melody</a></li>
 <li><a href="/god/note">Note</a></li>
 {%endblock%}
@@ -15,7 +15,7 @@ Article|Dashboard
 {%block main%}
 <div class="soga alignleft">
     <div class="boxnav clearfix">
-        <a href="/god/article/add" class="button">Add Article</a>
+        <a href="/god/page/add" class="button">Add Page</a>
         <div class="page-nav alignright">
             {%include "_p.html"%}
         </div>
@@ -26,17 +26,17 @@ Article|Dashboard
         <div class="cell article clearfix">
             <div class="content alignleft">
                 <h3 class="title"><a href="{{data.the_url}}">{{data.title}}</a></h3>
-                <p><label>Created at</label> <span class="time">{{data.created|prettytime}}</span> {%if data.draft%}<a href="?action=post&key={{data.key}}">Post It</a>{%else%}<a href="?action=draft&key={{data.key}}">Draft It</a>{%endif%}</p>
-                <p><label>Update at</label> <span class="time">{{data.modified|prettytime}}</span>{%if data.draft%}<span class="status">Draft</span>{%endif%}</p>
+                <p><label>Created at</label> <span class="time">{{data.created|prettytime}}</span></p>
+                <p><label>Update at</label> <span class="time">{{data.modified|prettytime}}</span></p>
             </div>
             <div class="action alignright">
-                <a href="/god/article/edit?key={{data.key}}" class="edit">Edit</a>
-                <a href="/god/article/edit?key={{data.key}}&action=delete" class="delete">Delete</a>
+                <a href="/god/page/edit?key={{data.key}}" class="edit">Edit</a>
+                <a href="/god/page/edit?key={{data.key}}&action=delete" class="delete">Delete</a>
             </div>
         </div>
         {%endfor%}
-        <div class="inner article">
-            <p>There are {{mvdata.item_num}} articles</p>
+        <div class="inner page">
+            <p>There are {{mvdata.item_num}} pages</p>
         </div>
     </div>
 </div>
@@ -46,11 +46,6 @@ Article|Dashboard
             <input type="text" name="key" class="text" />
             <input type="submit" class="button" value="Find" name="action" />
         </form>
-    </div>
-    <div class="help access">
-        <h4>Filter</h4>
-        <a class="button" href="?action=filter&draft=1">Show Drafts</a>
-        <a class="button" href="?action=filter&draft=0">Show Posts</a>
     </div>
 </div>
 {%endblock%}

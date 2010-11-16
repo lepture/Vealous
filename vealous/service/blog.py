@@ -43,7 +43,6 @@ class Index(webapp.RequestHandler):
         if html is not None:
             return self.response.out.write(html)
         rdic = {}
-        rdic['notes'] = dbs.Note.getten()
         rdic['articles'] = dbs.Article.getten()
         rdic['navs'] = dbs.Melody.get_all('nav')
         rdic['links'] = dbs.Melody.get_all('link')
@@ -112,24 +111,11 @@ class Keyword(webapp.RequestHandler):
             html = render(path, rdic)
         self.response.out.write(html)
 
-class S5(webapp.RequestHandler):
-    def get(self, slug):
-        slug = getslug(slug)
-        data = dbs.Melody.get_s5(slug)
-        if not data:
-            rdic = {}
-            logging.info('404 , visite s5 ' + slug)
-            path = get_path(self.request, '404.html')
-            self.response.set_status(404)
-            html = render(path, rdic)
-        else:
-            html = data.text
-        self.response.out.write(html)
-
 class Page(webapp.RequestHandler):
     def get(self, slug):
         slug = getslug(slug)
-        data = dbs.Melody.get_page(slug)
+        data = None
+        #data = dbs.Melody.get_page(slug)
         rdic = {}
         rdic['navs'] = dbs.Melody.get_all('nav')
         rdic['links'] = dbs.Melody.get_all('link')
@@ -254,7 +240,6 @@ apps = webapp.WSGIApplication(
         ('/a/(.*)', Article),
         ('/k/(.*)', Keyword),
         ('/p/(.*)', Page),
-        ('/s5/(.*)', S5),
         ('/feed', Atom),
         ('/feed.atom', Atom),
         ('/feed.rss', Rss),

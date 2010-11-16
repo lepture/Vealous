@@ -2,12 +2,24 @@
 
 {%block main%}
 <div class="soga alignleft">
-    <div class="boxnav">
-        <a href="/god/article/add" class="button">Add Article</a>
-        <a href="/god/melody/add" class="button">Add Page</a>
-    </div>
     <p class="message">{{message}}</p>
-    <div class="box comment">
+    <div class="box">
+        <form id="noteform" action="" method="post">
+            <div class="form-row cell">
+                <textarea id="note" name="text" style="width:98%;height:5em;"></textarea>
+            </div>
+            <div class="form-row inner clearfix">
+                {%ifequal conf.language "zh"%}
+                <input type="checkbox" checked="checked" name="douban" /><label for="douban">Douban</label> |
+                {%else%}
+                <input type="hidden" name="douban" />
+                {%endifequal%}
+                <input type="checkbox" checked="checked" name="twitter" /><label for="twitter">Twitter</label>
+                <input type="submit" class="button alignright" value="Tweet" />
+            </div>
+        </form>
+    </div>
+    <div class="box disqus-comment">
         {% for data in comments %}
         <div class="cell clearfix disqus">
             <img src="{{data.avatar}}" alt="avatar" class="avatar alignleft" />
@@ -27,39 +39,27 @@
         </div>
         {% endfor %}
         <div class="inner">
-            <p>For more comments Visit <a class="button" href="http://disqus.com/comments/moderate/{{vigo.disqus}}/">Disqus</a></p>
+            <p>For more comments Visit <a class="button" href="http://disqus.com/comments/moderate/{{conf.disqus_shortname}}/">Disqus</a></p>
         </div>
     </div>
 </div>
 <div class="sidebar alignright">
-    <div class="box">
-        <form id="noteform" action="/god/note/add" method="post">
-            <div class="form-row cell">
-                <textarea id="note" name="text" rows="4" cols="20" ></textarea>
-            </div>
-            <div class="form-row cell">
-                {%ifequal conf.language "zh"%}
-                <input type="checkbox" checked="checked" name="douban" /><label for="douban">Douban</label> |
-                {%else%}
-                <input type="hidden" name="douban" />
-                {%endifequal%}
-                <input type="checkbox" checked="checked" name="twitter" /><label for="twitter">Twitter</label>
-            </div>
-            <div class="hide">
-                <input type="checkbox" checked="checked" name="note" />
-            </div>
-            <div class="form-row inner">
-                <input type="submit" class="button" value="Save Note" />
-            </div>
+    <div class="help">
+        <form action="/god/article">
+            <input type="text" class="text" name="key" />
+            <input type="submit" class="submit" name="action" value="Find" />
         </form>
     </div>
-    <div style="margin-top:10px; min-height:30px;" class="box notewrap">
-        {% for data in notes %}
-        <div class="cell">
-            <p>{{data.text|escape}}</p>
-            <p>Created at <span class="time">{{data.created|timesince|split:","}} ago</span> <span class="action"><a href="/god/note/delete?key={{data.key}}">Delete</a></span></p>
-        </div>
-        {% endfor %}
+    <div class="help access">
+        <h4>Access</h4>
+        <a href="/god/article/add" class="button">Add Article</a>
+        <a href="/god/page/add" class="button">Add Page</a>
+        <a href="/god/twitter" class="button">Twitter</a>
+        {%ifequal conf.language "zh"%}
+        <a href="/god/douban" class="button">Douban</a>
+        {%endifequal%}
+        <a href="/god/note/add" class="button">Add Note</a>
+        <a href="/god/setting" class="button">Setting</a>
     </div>
 </div>
 {%endblock%}

@@ -77,7 +77,6 @@ class Dashboard(WebHandler):
         rdic['message'] = message
         comments = memcache.get('disqus$comments')
         path = get_path(self.request, 'dashboard.html')
-        rdic['notes'] = dbs.Note.getten()
         if comments is not None:
             rdic['comments'] = comments
             return self.response.out.write(render(path,rdic))
@@ -248,6 +247,88 @@ class AddArticle(WebHandler):
             return str(e)
         return 'Post to Twitter Success'
 
+class ViewPage(WebHandler):
+    @be_god
+    def get(self):
+        source = self.request.get('from', None)
+        message = ''
+        if source:
+            message = self.session.get('message','')
+            self.session.delete('message')
+        rdic = {}
+        data = dbs.Page.get_all()
+        rdic['message'] = message
+        p = self.request.get('p',1)
+        rdic['mvdata'] = Paginator(data, count, p)
+        path = get_path(self.request, 'page.html')
+        return self.response.out.write(render(path,rdic))
+
+class AddPage(WebHandler):
+    @be_god
+    def get(self):
+        rdic = {}
+        path = get_path(self.request, 'add_page.html')
+        return self.response.out.write(render(path,rdic))
+    
+    @be_god
+    def post(self):
+        rdic = {}
+        title = self.request.get('title', None)
+        slug = self.request.get('slug', None)
+        text = self.request.get('text', None)
+        if title and slug:
+            slug = slug.replace(' ','-')
+            data = dbs.Page.add(title,slug,text)
+            self.session['message'] = 'New page <a href="/god/page/edit?key=%s">%s</a> has been created' % (data.key(), data.title)
+            return self.redirect('/god/page?from=add')
+        message = 'Please fill the required fields'
+        rdic['message'] = message
+        path = get_path(self.request, 'add_page.html')
+        return self.response.out.write(render(path,rdic))
+
+class EditPage(WebHandler):
+    @be_god
+    def get(self):
+        key = self.request.get('key', None)
+        if not key:
+            return self.redirect('/god/page')
+        data = db.get(key)
+        if not data:
+            return self.redirect('/god/page')
+        action = self.request.get('action', None)
+        if 'delete' == action:
+            dbs.Page.delete(data)
+            self.session['message'] = 'Page <strong>%s</strong> has been deleted' % data.title
+            return self.redirect('/god/page?from=delete')
+        rdic = {}
+        rdic['data'] = data
+        path = get_path(self.request, 'edit_page.html')
+        return self.response.out.write(render(path,rdic))
+    
+    @be_god
+    def post(self):
+        rdic = {}
+        key = self.request.get('key', None)
+        if not key:
+            return self.redirect('/god/page')
+        data = db.get(key)
+        if not data:
+            return self.redirect('/god/page')
+        title = self.request.get('title', None)
+        slug = self.request.get('slug', None)
+        text = self.request.get('text', None)
+        if title and slug:
+            slug = slug.replace(' ','-')
+            dbs.Page.update(data, title, slug, text)
+            self.session['message'] = 'Page <a href="/god/article/edit?key=%s">%s</a> has been modified' % (data.key(), data.title)
+            return self.redirect('/god/page?from=edit')
+        rdic['data'] = data
+        message = 'Please fill the required fields'
+        rdic['message'] = message
+        path = get_path(self.request, 'edit_page.html')
+        return self.response.out.write(render(path,rdic))
+
+
 class ViewMelody(WebHandler):
     @be_god
     def get(self):
@@ -353,31 +434,12 @@ class ViewNote(WebHandler):
 class AddNote(WebHandler):
     @be_god
     def post(self):
-        self.response.headers['Content-Type'] = 'application/json'
-        content = self.request.get('text', None)
-        if not content:
-            data = {'succeeded': False, 'text':'You Said Nothing'}
-            return self.response.out.write(dumps(data))
-        note = dbs.Note.add(content)
-        html = '<div class="cell"><p>%s</p><p>Created at <span class="time">Just now</span></p></div>' % content
-        data = {'succeeded': True, 'text':'Note Saved', 'html':html}
-        return self.response.out.write(dumps(data))
+        self.redirect('/god')
 
 class DeleteNote(WebHandler):
     @be_god
     def get(self):
-        self.response.headers['Content-Type'] = 'application/json'
-        key = self.request.get('key', None)
-        if not key:
-            data = {'succeeded': False, 'text':'No key found'}
-            return self.response.out.write(dumps(data))
-        data = db.get(key)
-        if not data:
-            data = {'succeeded': False, 'text':'No such note'}
-            return self.response.out.write(dumps(data))
-        dbs.Note.delete(data)
-        data = {'succeeded': True, 'text':'Delete Note'}
-        return self.response.out.write(dumps(data))
+        self.redirect('/god')
 
 class VigoSetting(WebHandler):
     @be_god
@@ -488,6 +550,9 @@ apps = webapp.WSGIApplication(
         ('/god/article', ViewArticle),
         ('/god/article/add', AddArticle),
         ('/god/article/edit', EditArticle),
+        ('/god/page', ViewPage),
+        ('/god/page/add', AddPage),
+        ('/god/page/edit', EditPage),
         ('/god/melody', ViewMelody),
         ('/god/melody/add', AddMelody),
         ('/god/melody/edit', EditMelody),

@@ -9,63 +9,6 @@ import logging
 week = 604800
 day = 86400
 
-class Note(db.Model):
-    slug = db.StringProperty(required=False)
-    text = db.TextProperty(indexed=False)
-    created = db.DateTimeProperty(auto_now_add=True)
-
-    @property
-    def title(self):
-        return 'Note-%s' % self.slug
-    
-    @property
-    def the_url(self):
-        return '/t/%s' % self.slug
-
-    @classmethod
-    def getten(cls):
-        data = memcache.get('t$ten')
-        if data is not None:
-            return data
-        q = cls.gql("ORDER BY created DESC")
-        data = q.fetch(10)
-        memcache.set('t$ten', data, day)
-        return data
-
-    @classmethod
-    def get(cls, slug):
-        key = 't/' + slug
-        data = memcache.get(key)
-        if data is not None:
-            return data
-        q = cls.gql("WHERE slug= :1", slug)
-        data = q.fetch(1)
-        if data:
-            memcache.set(key, data[0])
-            logging.info('Get Note from DB by slug :' + slug)
-            return data[0]
-        return None
-
-    @classmethod
-    def add(cls, text):
-        slug = str(int(time.time()))
-        key = 't/' + slug
-        data = memcache.get(key)
-        if data is not None:
-            return data
-        data = Note(slug=slug, text=text)
-        data.put()
-        memcache.set(key, data)
-        memcache.delete('t$ten')
-        return data
-
-    @classmethod
-    def delete(cls, data):
-        keys = ['t/' + data.slug, 't$ten']
-        memcache.delete_multi(keys)
-        db.delete(data)
-        return data
-
 class Article(db.Model):
     title = db.StringProperty(required=True)
     slug = db.StringProperty(required=True)
@@ -183,6 +126,76 @@ class Article(db.Model):
         logging.info('Get Articles from DB by keyword : ' + keyword)
         return data
 
+class Page(db.Model):
+    title = db.StringProperty(required=True)
+    slug = db.StringProperty(required=True)
+    text = db.TextProperty(indexed=False)
+    created = db.DateTimeProperty(auto_now_add=True)
+    modified = db.DateTimeProperty(auto_now=True)
+    # formated text
+    html = db.TextProperty(indexed=False)
+
+    @property
+    def the_url(self):
+        return '/p/%s' % self.slug
+    
+    @classmethod
+    def add(cls, title, slug, text):
+        key = 'p/' + slug
+        data = memcache.get(key)
+        if data is not None:
+            return data
+        data = cls(title=title, slug=slug, text=text, html=markdown.markdown(text))
+        data.put()
+        memcache.set(key, data)
+        keys = ['p$all']
+        memcache.delete_multi(keys)
+        return data
+
+    @classmethod
+    def update(cls, data, title, slug, text):
+        data.title = title
+        data.slug = slug
+        data.text = text
+        data.html = markdown.markdown(text)
+        data.put()
+        keys = ['p/'+data.slug, 'p$all', 'html$page/'+data.slug]
+        memcache.delete_multi(keys)
+        return data
+
+    @classmethod
+    def get(cls, slug):
+        key = 'p/' + slug
+        data = memcache.get(key)
+        if data is not None:
+            return data
+        q = cls.gql("WHERE slug= :1", slug)
+        data = q.fetch(1)
+        if data:
+            memcache.set(key, data[0])
+            logging.info('Get Page from DB by slug :' + slug)
+            return data[0]
+        return None
+
+    @classmethod
+    def delete(cls, data):
+        keys = ['p/'+data.slug, 'p$all', 'html$page/'+data.slug]
+        memcache.delete_multi(keys)
+        db.delete(data)
+        return data
+
+    @classmethod
+    def get_all(cls):
+        data = memcache.get('p$all')
+        if data is not None:
+            return data
+        q = cls.gql("ORDER BY created DESC")
+        data = q.fetch(1000)
+        memcache.set('p$all', data)
+        logging.info('Get All Page from DB')
+        return data
+
+
 class Vigo(db.Model):
     # settings: key - value
     name = db.StringProperty(required=False, indexed=True)
@@ -220,45 +233,11 @@ class Vigo(db.Model):
 
 class Melody(db.Model):
     title = db.StringProperty(required=True, indexed=True)
-    url = db.StringProperty(required=False, indexed=False) # link, nav, s5 source url
-    label = db.StringProperty(required=True, indexed=True) #link, nav, s5, page
-    ext = db.StringProperty(required=False, indexed=True) # link rel, s5 slug
-    text = db.TextProperty(required=False, indexed=False) # intro, s5 content
+    url = db.StringProperty(required=False, indexed=False) # link, nav
+    label = db.StringProperty(required=True, indexed=True) #link, nav, html
+    ext = db.StringProperty(required=False, indexed=True) # link rel
+    text = db.TextProperty(required=False, indexed=False) # intro 
     prior = db.IntegerProperty(indexed=True, default=0)
-
-    @classmethod
-    def get_s5(cls, slug):
-        key = 'melody$s5/' + slug
-        data = memcache.get(key)
-        if data is not None:
-            return data
-        q = cls.gql("WHERE ext = :1 and label = :2", slug, 's5')
-        data = q.fetch(1)
-        if not data:
-            return None
-        data = data[0]
-        if data.text:
-            logging.info('Get S5 from DB by slug : ' + slug)
-            memcache.set(key, data, week)
-            return data
-        return None
-
-    @classmethod
-    def get_page(cls, slug):
-        key = 'melody$page/' + slug
-        data = memcache.get(key)
-        if data is not None:
-            return data
-        q = cls.gql("WHERE ext = :1 and label = :2", slug, 'page')
-        data = q.fetch(1)
-        if not data:
-            return None
-        data = data[0]
-        if data.text:
-            logging.info('Get Page from DB by slug : ' + slug)
-            memcache.set(key, data, week)
-            return data
-        return None
 
     @classmethod
     def add(cls, title, url, label, prior, ext=None, text=None):
@@ -298,7 +277,6 @@ class Melody(db.Model):
         memcache.delete(key)
         db.delete(data)
         return data
-
 
 class DictBook(db.Model):
     word = db.StringProperty(required=True, indexed=True)
