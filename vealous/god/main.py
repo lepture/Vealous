@@ -446,21 +446,6 @@ class EditMelody(WebHandler):
         path = get_tpl('edit_melody.html')
         return self.response.out.write(render(path,rdic))
 
-class ViewNote(WebHandler):
-    @be_god
-    def get(self):
-        self.redirect('/god')
-
-class AddNote(WebHandler):
-    @be_god
-    def post(self):
-        self.redirect('/god')
-
-class DeleteNote(WebHandler):
-    @be_god
-    def get(self):
-        self.redirect('/god')
-
 class VigoSetting(WebHandler):
     @be_god
     def get(self):
@@ -575,9 +560,6 @@ apps = webapp.WSGIApplication(
         ('/god/melody', ViewMelody),
         ('/god/melody/add', AddMelody),
         ('/god/melody/edit', EditMelody),
-        ('/god/note', ViewNote),
-        ('/god/note/add', AddNote),
-        ('/god/note/delete', DeleteNote),
         ('/god/console/memcache', ConsoleMemcache),
         ('/god/task/ping', TaskPing),
     ],
