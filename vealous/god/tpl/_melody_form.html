@@ -2,9 +2,9 @@
 <form class="box" action="" method="post">
     <div class="form-row cell">
         <select id="id_label" name="label">
+            <option {%ifequal data.label "demo"%}selected="selected"{%endifequal%} value="demo">Demo</option>
             <option {%ifequal data.label "link"%}selected="selected"{%endifequal%} value="link">Link</option>
             <option {%ifequal data.label "nav"%}selected="selected"{%endifequal%} value="nav">Nav</option>
-            <option {%ifequal data.label "demo"%}selected="selected"{%endifequal%} value="demo">Demo</option>
         </select>
         <label for="id_label" class="required">Label</label>
     </div>
@@ -30,10 +30,10 @@
         </div>
         <div class="form-row cell">
             <select id="id_ext" name="ext">
-                <option value="normal">Normal</option>
-                <option value="more">More</option>
+                <option {%ifequal data.ext "normal"%}selected="selected"{%endifequal%} value="normal">Normal</option>
+                <option {%ifequal data.ext "more"%}selected="selected"{%endifequal%} value="more">More</option>
             </select>
-            <label for="id_ext">Where</label>
+            <label for="id_ext" class="required">Where</label>
         </div>
     </div>
     <div class="link">

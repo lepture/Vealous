@@ -30,6 +30,13 @@ def getslug(slug):
     except:
         return slug
 
+def get_navs():
+    dic = {}
+    navs = dbs.Melody.get_all('nav')
+    dic['normal'] = filter(lambda nav: 'normal'==nav.ext, navs)
+    dic['more'] = filter(lambda nav: 'more'==nav.ext, navs)
+    return dic
+
 class Index(webapp.RequestHandler):
     def head(self):
         pass
@@ -44,8 +51,8 @@ class Index(webapp.RequestHandler):
             return self.response.out.write(html)
         rdic = {}
         rdic['articles'] = dbs.Article.getten()
-        rdic['navs'] = dbs.Melody.get_all('nav')
         rdic['links'] = dbs.Melody.get_all('link')
+        rdic['navs'] = get_navs()
         path = get_path(self.request, 'index.html')
         html = render(path, rdic)
         memcache.set(mkey, html, 300)
@@ -70,7 +77,7 @@ class Article(webapp.RequestHandler):
             self.response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
             html = data.text
             return self.response.out.write(html)
-        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['navs'] = get_navs()
         rdic['data'] = data
         path = get_path(self.request, 'article.html')
         html = render(path, rdic)
@@ -82,7 +89,7 @@ class Archive(webapp.RequestHandler):
 
     def get(self):
         rdic = {}
-        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['navs'] = get_navs()
         p = self.request.get('p',1)
         data = dbs.Article.get_archive()
         rdic['mvdata'] = Paginator(data, 10, p)
@@ -104,7 +111,7 @@ class Keyword(webapp.RequestHandler):
         else:
             p = self.request.get('p',1)
             rdic['mvdata'] = Paginator(data, 10, p)
-            rdic['navs'] = dbs.Melody.get_all('nav')
+            rdic['navs'] = get_navs()
             rdic['links'] = dbs.Melody.get_all('link')
             rdic['keyword'] = keyword
             path = get_path(self.request, 'keyword.html')
@@ -117,7 +124,7 @@ class Page(webapp.RequestHandler):
         data = None
         data = dbs.Page.get(slug)
         rdic = {}
-        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['navs'] = get_navs()
         rdic['links'] = dbs.Melody.get_all('link')
         if not data:
             logging.info('404 , visite page ' + slug)
@@ -141,7 +148,7 @@ class Search(webapp.RequestHandler):
             rdic['gres'] = gsearch(q, start, cx)
         except:
             rdic['error'] = 'Oops! An Error occured!'
-        rdic['navs'] = dbs.Melody.get_all('nav')
+        rdic['navs'] = get_navs()
         path = get_path(self.request, 'search.html')
         self.response.out.write(render(path,rdic))
 

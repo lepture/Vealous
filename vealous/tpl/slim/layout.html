@@ -25,13 +25,16 @@
                     <ul class="alignright nav">
                         <li class="nav-0"><a href="/">Home</a></li>
                         <li class="nav-0"><a href="/archive">Archive</a></li>
-                        {%for nav in navs%}
+                        {%for nav in navs.normal%}
                         <li class="nav-{{forloop.counter}}"><a href="{{nav.url}}">{{nav.title}}</a></li>
                         {%endfor%}
                         <li class="nav-more"><a href="#">More</a>
                         <ul class="hide">
                             <li><a href="/utils/dict">My Dict</a></li>
                             <li><a href="/utils/twitter">Twitter</a></li>
+                            {%for nav in navs.more%}
+                            <li><a href="{{nav.url}}">{{nav.title}}</a></li>
+                            {%endfor%}
                         </ul>
                         </li>
                         <li class="nav-more"><a href="#">Feed</a>

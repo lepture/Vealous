@@ -195,7 +195,6 @@ class Page(db.Model):
         logging.info('Get All Page from DB')
         return data
 
-
 class Vigo(db.Model):
     # settings: key - value
     name = db.StringProperty(required=False, indexed=True)
@@ -246,7 +245,7 @@ class Melody(db.Model):
             ext=ext, text=text, prior=prior,
         )
         data.put()
-        memcache.delete('melody/%s' % label)
+        memcache.delete('melody$%s' % label)
         return data
 
     @classmethod
@@ -258,22 +257,25 @@ class Melody(db.Model):
         data.ext = ext
         data.text = text
         data.put()
-        memcache.delete('melody/%s' % label)
+        memcache.delete('melody$'+label)
+        if 'demo' == label:
+            memcache.delete('melody$demo/'+ext)
         return data
 
     @classmethod
     def get_all(cls, label):
-        data = memcache.get('melody/%s' % label)
+        data = memcache.get('melody$%s' % label)
         if data is not None:
             return data
         q = cls.gql('WHERE label = :1 ORDER BY prior DESC', label)
         data = q.fetch(100)
-        memcache.set('melody/%s' % label, data, week)
+        memcache.set('melody$%s' % label, data)
+        logging.info('Get Melody from DB by label: ' + label)
         return data
 
     @classmethod
     def delete(cls, data):
-        key = 'melody/' + data.label
+        key = 'melody$' + data.label
         memcache.delete(key)
         db.delete(data)
         return data
