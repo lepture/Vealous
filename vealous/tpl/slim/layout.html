@@ -6,9 +6,9 @@
         {{vigo.meta}}
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         {%if vigo.alterfeed%}
-        <link rel="alternate" type="application/rss+xml" href="{{vigo.alterfeed}}" />
+        <link rel="alternate" type="application/rss+xml" href="{{vigo.alterfeed}}" title="Alternate Feed" />
         {%endif%}
-        <link rel="alternate" type="application/atom+xml" href="{{conf.site}}/feed.atom" />
+        <link rel="alternate" type="application/atom+xml" href="{{conf.site}}/feed.atom" title="Original Feed" />
         <link rel="stylesheet" href="{{conf.static}}/css/reset.css?ver={{conf.version}}" />
         <link rel="stylesheet" href="{{conf.static}}/css/style.css?ver={{conf.version}}" />
         {%block extra%}{%endblock%}
@@ -43,6 +43,7 @@
                             <li><a rel="external" href="http://mail.qq.com/cgi-bin/feed?u={{vigo.alterfeed}}">QQMail</a></li>
                             {%else%}
                             <li><a rel="external" href="http://add.my.yahoo.com/rss?url={{vigo.alterfeed}}">Yahoo</a></li>
+                            <li><a rel="external" href="http://www.bloglines.com/sub/{{vigo.alterfeed}}">Bloglines</a></li>
                             {%endifequal%}
                             {%else%}
                             <li><a rel="external" href="http://fusion.google.com/add?feedurl={{conf.site}}/feed.atom">Google</a></li>
@@ -51,6 +52,7 @@
                             <li><a rel="external" href="http://mail.qq.com/cgi-bin/feed?u={{conf.site}}/feed.atom">QQMail</a></li>
                             {%else%}
                             <li><a rel="external" href="http://add.my.yahoo.com/rss?url={{conf.site}}/feed.atom">Yahoo</a></li>
+                            <li><a rel="external" href="http://www.bloglines.com/sub/{{conf.site}}/feed.atom">Bloglines</a></li>
                             {%endifequal%}
                             {%endif%}
                         </ul>

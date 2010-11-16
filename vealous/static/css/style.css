@@ -1,6 +1,6 @@
 /* common */
 body {
-    background: #fff;
+    background: #efefef;
     color: #555;
     font-family: "Luxi Sans", "DejaVu Sans", Tahoma, "WenQuanYi Micro Hei",sans-serif;
     line-height: 150%;
@@ -66,7 +66,8 @@ body {
     margin: 0;
 }
 #mainbody {
-    margin: 12px 0;
+    background: #fff;
+    padding: 12px 0;
     min-height: 450px;
     font-size: 13px;
     z-index: 0;
@@ -206,6 +207,7 @@ body {
 .post { border-bottom: 1px solid #dadada; margin-bottom: 30px; padding-bottom: 1px;}
 .post .post-title a { font-size: 18px; font-weight: bold; margin-bottom: 8px; font-family: "WenQuanYi Micro Hei", "Microsoft YaHei", SimHei, sans-serif;}
 .post-info { color: #777; font-size: 11px; margin-bottom: 10px;}
+.post-info div {display: inline-block;}
 .post-info a, .post-meta a { border-bottom: 1px solid #dfdfdf; color: #777; }
 .post-info a:hover, .post-meta a:hover { border-bottom: 1px solid #d54e21; color: #d54e21; }
 .post-content { font-size: 13px; }
@@ -254,8 +256,13 @@ body {
 #noteform .form-row input, #noteform .form-row label {
     vertical-align: middle;
 }
+.icons {background:url("../img/icons.png") no-repeat;padding-left:22px; height:16px; line-height:16px;}
+.twitter {background-position: 3px -384px;}
+.comments {background-position: 0 -96px;}
+.feed {background-position: 11px -312px;}
+.calendar {background-position: 3px -48px;}
 /* ajax-translate BEGIN */
-.translate { margin-left: 1em; }
+.translate { margin-left: 1em; background-position:0 -208px; }
 .translate_translate{font-weight:normal !important;margin-bottom:0.5em;text-decoration:none !important}
 /*.translate_loading{background:url("../img/ajax-loader.gif") no-repeat;border:0;display:inline;margin:0;padding:0;vertical-align:middle}*/
 #translate_popup{background-color:#FFF;border:2px solid #CCC;font-size:12px;padding:0.5em;position:absolute;z-index:50; text-align: left;}
