@@ -239,6 +239,21 @@ class Melody(db.Model):
     prior = db.IntegerProperty(indexed=True, default=0)
 
     @classmethod
+    def get_demo(cls, ext):
+        key = 'melody$demo/' + ext
+        data = memcache.get(key)
+        if data is not None:
+            return data
+        q = cls.gql('WHERE label = :1 AND ext = :2', 'demo', ext)
+        data = q.fetch(1)
+        if data:
+            memcache.set(key, data[0])
+            logging.info('Get DEMO from DB by ext :' + ext)
+            return data[0]
+        return None
+
+
+    @classmethod
     def add(cls, title, url, label, prior, ext=None, text=None):
         data = Melody(
             title=title, url=url, label=label,

@@ -414,7 +414,7 @@ class EditMelody(WebHandler):
         prior = self.request.get('prior',0)
         text = self.request.get('text', None)
         ext = self.request.get('ext', None)
-        if title and url and label:
+        if title and label:
             try: prior = int(prior)
             except: prior = 0
             dbs.Melody.update(data, title,url,label,prior,ext,text)

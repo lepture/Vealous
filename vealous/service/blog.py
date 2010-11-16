@@ -137,6 +137,22 @@ class Page(webapp.RequestHandler):
         html = render(path, rdic)
         self.response.out.write(html)
 
+class DEMO(webapp.RequestHandler):
+    def get(self, slug):
+        slug = getslug(slug)
+        data = None
+        data = dbs.Melody.get_demo(slug)
+        rdic = {}
+        rdic['navs'] = get_navs()
+        rdic['links'] = dbs.Melody.get_all('link')
+        if not data:
+            logging.info('404 , visite page ' + slug)
+            path = get_path(self.request, '404.html')
+            self.response.set_status(404)
+            html = render(path, rdic)
+            return self.response.out.write(html)
+        self.response.out.write(data.text)
+
 
 class Search(webapp.RequestHandler):
     def get(self):
@@ -246,6 +262,7 @@ apps = webapp.WSGIApplication(
         ('/a/(.*)', Article),
         ('/k/(.*)', Keyword),
         ('/p/(.*)', Page),
+        ('/d/(.*)', DEMO),
         ('/feed', Atom),
         ('/feed.atom', Atom),
         ('/feed.rss', Rss),
