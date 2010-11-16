@@ -33,7 +33,6 @@ del -- delete exact word.
 lan2lan -- eg: zh2en, ja2zh
 twitter -- send tweet.
 douban -- send douban miniblog.
-note -- send note.
 """
 
 class CMD(object):
@@ -68,17 +67,10 @@ class CMD(object):
             return self._dict()
         if self._cmd in ('g', 'google'):
             return self._google()
-        if self._cmd in ('ntd', 'ndt', 'dtn', 'dnt', 'tdn', 'tnd'):
-            reply = self._note() + '\n'
-            reply += self._twitter() + '\n'
-            reply += self._douban()
-            return reply
         if self._cmd in ('dt', 'td'):
             reply += self._twitter() + '\n'
             reply += self._douban()
             return reply
-        if 'note' == self._cmd:
-            return self._note()
         if self._cmd in ('db', 'douban'):
             return self._douban()
         if self._cmd in ('t', 'twitter'):
@@ -199,9 +191,6 @@ class CMD(object):
             return '[%s] has been deleted' % word
         return '[%s] not in Dict book' %  word
 
-    def _note(self):
-        note = dbs.Note.add(self._content)
-        return 'Note Saved'
     def _douban(self):
         if 'zh' != config.LANGUAGE:
             return 'disabled for international user'
