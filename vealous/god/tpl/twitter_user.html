@@ -1,7 +1,7 @@
 {%extends "layout.html"%}
 
 {%block title%}
-Twitter {{username}}|Dashboard
+Twitter|Dashboard
 {%endblock%}
 
 {%block main%}
@@ -20,7 +20,7 @@ Twitter {{username}}|Dashboard
             </div>
         </form>
     </div>
-    <div class="box comment">
+    <div class="box">
         {%include "_twitter.html"%}
         <div class="inner">
             <a href="/god/twitter/mentions" class="button">Mentions</a>
@@ -34,6 +34,7 @@ Twitter {{username}}|Dashboard
             <img src="{{profile.profile_image_url}}" class="avatar alignleft" alt="{{profile.name}}" />
             <div class="alignleft">
                 <strong>{{profile.name}}</strong>
+                <p>{%if profile.url%}<a href="{{profile.url}}">{{profile.url}}</a>{%endif%}</p>
                 <div class="sep"></div>
                 <p><strong>{{profile.statuses_count}}</strong> tweets.</p>
             </div>

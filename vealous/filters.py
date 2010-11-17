@@ -106,3 +106,8 @@ def star(num):
 def attwitter(value):
     value = re.sub(r'@([a-zA-Z0-9\_]+)',r'@<a href="/utils/twitter/\1">\1</a>', value) 
     return value
+
+@register.filter
+def atgod(value):
+    value = re.sub(r'@([a-zA-Z0-9\_]+)',r'@<a href="/god/twitter/user/\1">\1</a>', value) 
+    return value

@@ -7,7 +7,6 @@ import datetime
 from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.ext import webapp
 from google.appengine.api import memcache, urlfetch
-from google.appengine.ext.webapp import template
 from django.utils import simplejson
 
 from libs import twitter
@@ -19,13 +18,6 @@ import config
 import dbs
 
 week = 604800
-
-register = template.create_template_register()
-template.register_template_library('god.twitter')
-@register.filter
-def at(value):
-    value = re.sub(r'@([a-zA-Z0-9\_]+)',r'@<a href="/god/twitter/user/\1">\1</a>', value) 
-    return value
 
 class Twitter(object):
     def __init__(self, token=None):
@@ -59,7 +51,7 @@ class Twitter(object):
 class Dashboard(WebHandler):
     @be_god
     def get(self):
-        path = get_tpl('twitter_dashboard.html')
+        path = get_tpl('twitter_user.html')
         rdic = {}
         source = self.request.get('from', None)
         message = ''
@@ -84,6 +76,7 @@ class Dashboard(WebHandler):
             profile = api.GetUser(username)
             memcache.set('twitter$profile$'+username, profile, 86400)
         rdic['profile'] = profile
+        rdic['username'] = username
         return self.response.out.write(render(path, rdic))
 
 class UserStatus(WebHandler):
@@ -117,7 +110,7 @@ class UserStatus(WebHandler):
 class Mentions(WebHandler):
     @be_god
     def get(self):
-        path = get_tpl('twitter_dashboard.html')
+        path = get_tpl('twitter_user.html')
         rdic = {}
         qs = dbs.Vigo.get('oauth_twitter')
         if not qs:
@@ -140,6 +133,7 @@ class Mentions(WebHandler):
             profile = api.GetUser(username)
             memcache.set('twitter$profile$'+username, profile, 86400)
         rdic['profile'] = profile
+        rdic['username'] = username
         return self.response.out.write(render(path, rdic))
 
 class Directs(WebHandler):
