@@ -7,6 +7,19 @@ Twitter|Dashboard
 {%block main%}
 <div class="soga alignleft">
     <p class="message">{{message}}</p>
+    <div class="box box-form">
+        <form id="noteform" action="" method="post">
+            <div class="form-row cell">
+                <textarea id="note" name="text" style="width:98%;height:5em;"></textarea>
+            </div>
+            <div class="hide">
+                <input type="checkbox" checked="checked" name="twitter" />
+            </div>
+            <div class="form-row inner clearfix">
+                <input type="submit" class="button alignright" value="Tweet" />
+            </div>
+        </form>
+    </div>
     <div class="box comment">
         {%for status in statuses%}
         <div class="cell clearfix twitter">
@@ -26,20 +39,12 @@ Twitter|Dashboard
     </div>
 </div>
 <div class="sidebar alignright">
-    <p><a href="/god/twitter">Home</a> » {{username}}</p>
-    <div class="sep"></div>
-    <div class="box">
-        <form id="noteform" action="/god/note/add" method="post">
-            <div class="form-row cell">
-                <textarea id="note" name="text" rows="4" cols="20" ></textarea>
-            </div>
-            <div class="hide">
-                <input type="checkbox" checked="checked" name="twitter" />
-            </div>
-            <div class="form-row inner">
-                <input type="submit" class="button" value="Tweet" />
-            </div>
-        </form>
+    <div class="help access">
+        <h4>Access</h4>
+        <a href="/god/twitter" class="button">Home</a>
+        <a href="/god/twitter/mentions" class="button">Mentions</a>
+        <a href="/god/twitter/directs" class="button">Directs</a>
+        <a href="/god/twitter/user/{{vigo.twitter}}" class="button">{{vigo.twitter}}</a>
     </div>
 </div>
 {%endblock%}

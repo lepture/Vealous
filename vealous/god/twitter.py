@@ -78,6 +78,12 @@ class Dashboard(WebHandler):
                 status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
             memcache.set('twitter$home', statuses, 240)
         rdic['statuses'] = statuses
+        username = dbs.Vigo.get('twitter')
+        profile = memcache.get('twitter$profile$' + username)
+        if profile is None:
+            profile = api.GetUser(username)
+            memcache.set('twitter$profile$'+username, profile, 86400)
+        rdic['profile'] = profile
         return self.response.out.write(render(path, rdic))
 
 class UserStatus(WebHandler):
@@ -101,11 +107,11 @@ class UserStatus(WebHandler):
                 status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
             memcache.set('twitter$status$' + username, statuses, 240)
         rdic['statuses'] = statuses
-        #profile = memcache.get('twitter$profile$' + username)
-        #if profile is None:
-        #    profile = api.GetUser(username)
-        #    memcache.set('twitter$profile$'+username, profile, 86400)
-        #rdic['profile'] = profile
+        profile = memcache.get('twitter$profile$' + username)
+        if profile is None:
+            profile = api.GetUser(username)
+            memcache.set('twitter$profile$'+username, profile, 86400)
+        rdic['profile'] = profile
         return self.response.out.write(render(path, rdic))
 
 class Mentions(WebHandler):
@@ -128,6 +134,12 @@ class Mentions(WebHandler):
                 status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
             memcache.set('twitter$mentions', statuses, 240)
         rdic['statuses'] = statuses
+        username = dbs.Vigo.get('twitter')
+        profile = memcache.get('twitter$profile$' + username)
+        if profile is None:
+            profile = api.GetUser(username)
+            memcache.set('twitter$profile$'+username, profile, 86400)
+        rdic['profile'] = profile
         return self.response.out.write(render(path, rdic))
 
 class Directs(WebHandler):

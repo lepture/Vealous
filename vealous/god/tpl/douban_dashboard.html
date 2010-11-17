@@ -7,6 +7,19 @@ Douban|Dashboard
 {%block main%}
 <div class="soga alignleft">
     <p class="message">{{message}}</p>
+    <div class="box box-form">
+        <form id="noteform" action="" method="post">
+            <div class="form-row cell">
+                <textarea id="note" name="text" style="width:98%;height:5em;"></textarea>
+            </div>
+            <div class="hide">
+                <input type="checkbox" checked="checked" name="twitter" />
+            </div>
+            <div class="form-row inner clearfix">
+                <input type="submit" class="button alignright" value="Post" />
+            </div>
+        </form>
+    </div>
     <div class="box">
         {%include "_douban.html"%}
         <div class="inner"></div>
