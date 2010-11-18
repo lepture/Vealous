@@ -9,13 +9,13 @@
 {%endblock%}
 
 {%block soga%}
-<div id="post-{{data.key}}" class="post">
+<div id="post-{{data.key.id}}" class="post">
     <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>
     <div class="post-info">
         <label>Created at </label><span class="time">{{data.created|prettytime}}</span> by
         <a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a>
         <div class="icons translate">
-            <a id="translate_button_post-{{data.key}}" rel="nofollow" href="javascript:;" onclick="show_translate_popup('en','post','{{data.key}}');">Translate</a>
+            <a id="translate_button_post-{{data.key.id}}" rel="nofollow" href="javascript:;" onclick="show_translate_popup('en','post','{{data.key.id}}');">Translate</a>
         </div>
     </div>
     <div class="post-content">
