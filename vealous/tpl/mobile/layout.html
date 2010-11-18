@@ -36,7 +36,7 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/archive">Archive</a></li>
-                {%for nav in navs%}
+                {%for nav in navs.normal%}
                 <li><a href="{{nav.url}}">{{nav.title}}</a></li>
                 {%endfor%}
                 <li><a href="/utils/dict">MyDict</a></li>
