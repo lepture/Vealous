@@ -39,7 +39,7 @@ class CMD(object):
     def __init__(self, content):
         self._content = content
         self.has_cmd = False
-    def parse_cmd(self):
+    def reply(self):
         sp = self._content.split()
         cmd = sp[0]
         if cmd[0] not in (':' , '-'):
@@ -57,10 +57,6 @@ class CMD(object):
             return self._mark()
         if 'del' == self._cmd:
             return self._delete()
-
-        if not self._content:
-            return 'You asked nothing'
-
         if '2' in self._cmd:
             return self._trans2()
         if self._cmd in ('d', 'dict'):
@@ -171,6 +167,8 @@ class CMD(object):
         if data is None:
             return 'Mark word Failed'
         data = dbs.DictBook.mark(data['word'])
+        if not data:
+            return "You haven't add this word"
         reply = '%s [%s]\n%s\n' % (data.word, data.pron, data.define)
         reply += u'Has been marked %s' % star_rate(data.rating)
         return reply
@@ -183,7 +181,7 @@ class CMD(object):
             data = memcache.get('dict$last')
             if not data:
                 return 'Word Not Found'
-            word = data.word
+            word = data['word']
         if not word:
             return 'Word Not Found'
         data = dbs.DictBook.delete(word)
@@ -226,7 +224,7 @@ class Chat(webapp.RequestHandler):
         sender = message.sender.split('/')[0].lower()
         if sender != config.EMAIL.lower():
             return message.reply('If only you are a god!')
-        reply = CMD(message.body).parse_cmd()
+        reply = CMD(message.body).reply()
         return message.reply(reply)
 
 apps = webapp.WSGIApplication(

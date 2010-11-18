@@ -2,7 +2,6 @@
 
 from google.appengine.ext import db
 from google.appengine.api import memcache
-import time
 import markdown
 import logging
 
@@ -296,9 +295,10 @@ class Melody(db.Model):
         return data
 
 class DictBook(db.Model):
-    word = db.StringProperty(required=True, indexed=True)
-    pron = db.StringProperty(required=False)
-    define = db.TextProperty(required=False, indexed=False)
+    word = db.StringProperty(indexed=True)
+    pron = db.StringProperty()
+    define = db.TextProperty()
+
     rating = db.IntegerProperty(default=0, indexed=True)
     created = db.DateTimeProperty(auto_now_add=True)
     modified = db.DateTimeProperty(auto_now=True)
@@ -308,9 +308,10 @@ class DictBook(db.Model):
         data = cls.get(word)
         if data is not None:
             return data
-        data = cls(word=word, pron=pron, define=define)
+        key = 'dict/' + word
+        data = cls(key_name=key, word=word, pron=pron, define=define)
         data.put()
-        memcache.set('dict/' + word, data)
+        memcache.set(key, data)
         keys = ['dict$rating/0', 'dict$all']
         memcache.delete_multi(keys)
         return data
@@ -320,42 +321,37 @@ class DictBook(db.Model):
         data = memcache.get(key)
         if data is not None:
             return data
-        q = cls.gql('WHERE word = :1', word)
-        data = q.fetch(1)
+        data = cls.get_by_key_name(key)
         if data:
-            memcache.set(key, data[0])
-            return data[0]
+            memcache.set(key, data)
+            return data
         return None
     @classmethod
     def delete(cls, word):
         data = cls.get(word)
-        if data:
-            db.delete(data)
-            keys = ['dict/'+data.word, 'dict$all', 'dict$rating/'+str(data.rating)]
-            memcache.delete_multi(keys)
-            return data
-        return None
-    @classmethod
-    def get_log(cls, start=0, end=10):
-        data = cls.get_rating(0, start, end)
-        return data[start:end]
+        if not data:
+            return None
+        db.delete(data)
+        key = 'dict/' + word
+        keys = [key, 'dict$all', 'dict$rating/'+str(data.rating)]
+        memcache.delete_multi(keys)
+        return data
     @classmethod
     def mark(cls, word):
         data = cls.get(word)
-        if data.rating < 5:
-            data.rating += 1
+        if not data:
+            return None
+        if data.rating >= 5:
+            return data
+        data.rating += 1
         data.put()
         keys = ['dict$rating/'+str(data.rating), 'dict$rating/'+str(data.rating-1), 'dict/'+data.word, 'dict$all']
         memcache.delete_multi(keys)
         return data
     @classmethod
-    def get_rating(cls, rating=1, start=0, end=10):
+    def rating_data(cls, rating=1):
         try: rating = int(rating)
         except: rating = 1
-        try: start = int(start)
-        except: start = 0
-        try: end = int(end)
-        except: end = 10
         if rating > 5:
             rating = 5
         elif rating < 0:
@@ -365,7 +361,19 @@ class DictBook(db.Model):
             return data
         q = cls.gql('WHERE rating=:1 ORDER BY created DESC', rating)
         data = q.fetch(1000)
+        return data
+    @classmethod
+    def get_rating(cls, rating=1, start=0, end=10):
+        try: start = int(start)
+        except: start = 0
+        try: end = int(end)
+        except: end = 10
+        data = cls.rating_data(rating)
         return data[start:end]
+    @classmethod
+    def get_log(cls, start=0, end=10):
+        data = cls.get_rating(0, start, end)
+        return data
     @classmethod
     def get_all(cls):
         data = memcache.get('dict$all')
