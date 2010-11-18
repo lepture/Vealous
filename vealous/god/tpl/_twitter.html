@@ -15,7 +15,7 @@
             »
             <a class="rt" href="#{{status.user.screen_name}}">RT</a>
             »
-            <a class="retweet" href="#{{status.id}}">ReTweet</a>
+            <a class="{%if status.favorited%}unfav{%else%}fav{%endif%}" href="#{{status.id}}">{%if status.favorited%}UnFav{%else%}Fav{%endif%}</a>
         </small></p>
     </div>
 </div>

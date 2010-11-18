@@ -158,6 +158,62 @@ class Directs(WebHandler):
         rdic['statuses'] = statuses
         return self.response.out.write(render(path, rdic))
 
+class Favorites(WebHandler):
+    @be_god
+    def get(self):
+        path = get_tpl('twitter_user.html')
+        rdic = {}
+        qs = dbs.Vigo.get('oauth_twitter')
+        if not qs:
+            return self.redirect('/god/twitter/login')
+        api = Twitter().set_qs_api(qs)
+        username = dbs.Vigo.get('twitter')
+        rdic['username'] = username
+        statuses = memcache.get('twitter$favorites$' + username)
+        if statuses is None:
+            try:
+                statuses = api.GetFavorites()
+            except twitter.TwitterError, e:
+                logging.error(str(e))
+                return self.redirect('/god/twitter')
+            for status in statuses:
+                status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
+            memcache.set('twitter$favorites$' + username, statuses, 240)
+        rdic['statuses'] = statuses
+        profile = memcache.get('twitter$profile$' + username)
+        if profile is None:
+            profile = api.GetUser(username)
+            memcache.set('twitter$profile$'+username, profile, 86400)
+        rdic['profile'] = profile
+        return self.response.out.write(render(path, rdic))
+
+class UserFavorites(WebHandler):
+    @be_god
+    def get(self, username):
+        path = get_tpl('twitter_user.html')
+        rdic = {}
+        rdic['username'] = username
+        qs = dbs.Vigo.get('oauth_twitter')
+        if not qs:
+            return self.redirect('/god/twitter/login')
+        api = Twitter().set_qs_api(qs)
+        statuses = memcache.get('twitter$favorites$' + username)
+        if statuses is None:
+            try:
+                statuses = api.GetFavorites(user=username)
+            except twitter.TwitterError, e:
+                logging.error(str(e))
+                return self.redirect('/god/twitter')
+            for status in statuses:
+                status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
+            memcache.set('twitter$favorites$' + username, statuses, 240)
+        rdic['statuses'] = statuses
+        profile = memcache.get('twitter$profile$' + username)
+        if profile is None:
+            profile = api.GetUser(username)
+            memcache.set('twitter$profile$'+username, profile, 86400)
+        rdic['profile'] = profile
+        return self.response.out.write(render(path, rdic))
 
 class Login(WebHandler):
     @be_god
@@ -188,7 +244,7 @@ class Auth(WebHandler):
         self.session['message'] = 'Twitter Auth Success'
         return self.redirect('/god/twitter?from=auth')
 
-class Status(WebHandler):
+class PostStatus(WebHandler):
     @be_god
     def post(self):
         qs = dbs.Vigo.get('oauth_twitter')
@@ -206,6 +262,39 @@ class Status(WebHandler):
             data = {'text':str(e)}
         self.response.out.write(simplejson.dumps(data))
 
+class AddFav(WebHandler):
+    @be_god
+    def get(self, status_id):
+        self.response.headers['Content-Type'] = 'application/json'
+        qs = dbs.Vigo.get('oauth_twitter')
+        if not qs:
+            return self.response.out.write('{"text":"Twitter Not Authed"}')
+        api = Twitter().set_qs_api(qs)
+        status = twitter.Status(id=status_id)
+        try:
+            api.CreateFavorite(status)
+        except twitter.TwitterError, e:
+            data = {'text':str(e)}
+            return self.response.out.write(simplejson.dumps(data))
+        return self.response.out.write('{"text":"Twitter Add Favorite Success"}')
+
+class DelFav(WebHandler):
+    @be_god
+    def get(self, status_id):
+        self.response.headers['Content-Type'] = 'application/json'
+        qs = dbs.Vigo.get('oauth_twitter')
+        if not qs:
+            return self.response.out.write('{"text":"Twitter Not Authed"}')
+        api = Twitter().set_qs_api(qs)
+        status = twitter.Status(id=status_id)
+        try:
+            api.DestroyFavorite(status)
+        except twitter.TwitterError, e:
+            data = {'text':str(e)}
+            return self.response.out.write(simplejson.dumps(data))
+        return self.response.out.write('{"text":"Twitter Delete Favorite Success"}')
+
+
 apps = webapp.WSGIApplication(
     [
         ('/god/twitter', Dashboard),
@@ -213,8 +302,12 @@ apps = webapp.WSGIApplication(
         ('/god/twitter/auth', Auth),
         ('/god/twitter/mentions', Mentions),
         ('/god/twitter/directs', Directs),
-        ('/god/twitter/status', Status),
+        ('/god/twitter/status', PostStatus),
         ('/god/twitter/user/(.*)', UserStatus),
+        ('/god/twitter/favorites', Favorites),
+        ('/god/twitter/favorites/(.*)', UserFavorites),
+        ('/god/twitter/addfav/(\d{10,20})', AddFav),
+        ('/god/twitter/delfav/(\d{10,20})', DelFav),
     ],
     debug = config.DEBUG,
 )

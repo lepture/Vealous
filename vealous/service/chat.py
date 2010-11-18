@@ -68,7 +68,7 @@ class CMD(object):
         if self._cmd in ('g', 'google'):
             return self._google()
         if self._cmd in ('dt', 'td'):
-            reply += self._twitter() + '\n'
+            reply = self._twitter() + '\n'
             reply += self._douban()
             return reply
         if self._cmd in ('db', 'douban'):

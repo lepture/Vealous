@@ -28,6 +28,22 @@ function tweetClick() {
         $('#noteform #note').focus();
         return false;
     });
+    $('a.fav').live('click', function(){
+        var status_id = $(this).attr('href').replace('#','');
+        addTwitterFav(status_id);
+        $(this).text('UnFav');
+        $(this).removeClass('fav');
+        $(this).addClass('unfav');
+        return false;
+    });
+    $('a.unfav').live('click', function(){
+        var status_id = $(this).attr('href').replace('#','');
+        delTwitterFav(status_id);
+        $(this).text('Fav');
+        $(this).removeClass('unfav');
+        $(this).addClass('fav');
+        return false;
+    });
 }
 // ajax
 function postNote() {
@@ -51,6 +67,20 @@ function postTwitterStatus() {
         $('.message').html(data.text);
         $('.message').fadeIn();
     },'json');
+}
+function addTwitterFav(status_id) {
+    $.getJSON('/god/twitter/addfav/' + status_id,
+    function(data){
+        $('.message').html(data.text);
+        $('.message').fadeIn();
+    });
+}
+function delTwitterFav(status_id) {
+    $.getJSON('/god/twitter/delfav/' + status_id,
+    function(data){
+        $('.message').html(data.text);
+        $('.message').fadeIn();
+    });
 }
 
 function disqusModerate() {
