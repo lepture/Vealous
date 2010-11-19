@@ -144,6 +144,12 @@ body {
 #god .bitch p {
     margin-bottom: 2px;
 }
+.soga textarea {
+    width: 98%;
+}
+#articleform textarea {
+    height: 400px;
+}
 .boxnav {
     margin: 0 0 20px;
     padding: 6px 0 5px;
@@ -193,10 +199,6 @@ body {
 }
 .sidebar .help .seprate {
     padding: 10px 0;
-}
-.soga textarea {
-    width: 98%;
-    height: 250px;
 }
 .sidebar textarea {
     width: 98%;

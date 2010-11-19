@@ -160,6 +160,8 @@ class CMD(object):
             return 'disabled for international user'
         if self._content:
             data = dbs.DictBook.mark(self._content)
+            if not data:
+                return "You haven't add this word"
             reply = u'\n%s [%s]\n%s\n' % (data.word, data.pron, data.define)
             reply += u'Has been marked %s' % star_rate(data.rating)
             return reply
