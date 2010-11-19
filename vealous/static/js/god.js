@@ -27,4 +27,20 @@ $(function(){
         $(this).next('ul').slideToggle('fast');
         return false;
     });
+    $('#preview').live('click', function(){
+        var converter = new Showdown.converter();
+        $(this).attr('id', 'write');
+        $(this).val('Write');
+        var txt = $('#id_text').val();
+        var html = converter.makeHtml(txt);
+        $("#text-preview").html(html);
+        $('#id_text').hide();
+        $('#text-preview').show();
+    });
+    $('#write').live('click', function(){
+        $(this).attr('id', 'preview');
+        $(this).val('Preview');
+        $('#text-preview').hide();
+        $('#id_text').show();
+    });
 });

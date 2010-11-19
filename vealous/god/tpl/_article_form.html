@@ -10,6 +10,7 @@
     </div>
     <div class="form-row cell">
         <textarea id="id_text" name="text">{{data.text}}</textarea>
+        <div id="text-preview" class="post" style="display:none;"></div>
     </div>
     <div class="form-row cell">
         <input id="id_keyword" class="text" type="text" name="keyword" maxlength="300" value="{{data.keyword}}" />
@@ -18,6 +19,7 @@
     <div class="form-row inner">
         <input type="submit" class="button" value="Save as Draft" name="draft" />
         <input type="submit" class="button" value="Post Now" />
+        <input type="button" class="button" id="preview" value="Preview" />
         <input type="checkbox" class="autosave" style="vertical-align:middle;" /><label style="margin-left:6px;" for="autosave">Auto Save</label>
     </div>
 </form>
