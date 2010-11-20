@@ -12,7 +12,6 @@ from google.appengine.api import urlfetch
 from utils.render import render
 from utils import Paginator
 from utils import is_mobile
-from markdown import markdown
 import dbs
 
 import config
