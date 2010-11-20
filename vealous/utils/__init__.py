@@ -2,7 +2,7 @@
 
 import re
 import logging
-from urllib2 import quote
+from urllib2 import quote, unquote
 from google.appengine.api import users
 
 from config import LOGIN_URL
@@ -24,6 +24,16 @@ def be_god(func):
             return handler.redirect('%s?to=%s' % (LOGIN_URL, quote(handler.request.url)))
         return func(handler, *args, **kwargs)
     return decorator
+
+def safeunquote(slug):
+    try:
+        slug = unquote(slug)
+        if isinstance(slug, str):
+            return slug.decode('utf-8')
+        assert isinstance(slug, unicode)
+        return slug
+    except:
+        return slug
 
 class Paginator(object):
     def __init__(self, data, count=10, page=1):

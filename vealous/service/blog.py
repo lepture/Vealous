@@ -11,7 +11,7 @@ from google.appengine.api import urlfetch
 
 from utils.render import render
 from utils import Paginator
-from utils import is_mobile
+from utils import is_mobile, safeunquote
 import dbs
 
 import config
@@ -22,12 +22,6 @@ def get_path(request, name):
         return path
     path = os.path.join(config.ROOT, 'tpl', config.THEME, name)
     return path
-
-def getslug(slug):
-    try:
-        return unquote(slug).decode('utf-8')
-    except:
-        return slug
 
 def get_navs():
     dic = {}
@@ -62,7 +56,7 @@ class Article(webapp.RequestHandler):
         pass
 
     def get(self, slug):
-        slug = getslug(slug)
+        slug = safeunquote(slug)
         rdic = {}
         data = dbs.Article.get(slug)
         if not data:
@@ -99,7 +93,7 @@ class Keyword(webapp.RequestHandler):
     def head(self, keyword):
         pass
     def get(self, keyword):
-        keyword = getslug(keyword)
+        keyword = safeunquote(keyword)
         rdic = {}
         data = dbs.Article.get_kw_articles(keyword)
         if not data:
@@ -119,7 +113,7 @@ class Keyword(webapp.RequestHandler):
 
 class Page(webapp.RequestHandler):
     def get(self, slug):
-        slug = getslug(slug)
+        slug = safeunquote(slug)
         data = None
         data = dbs.Page.get(slug)
         rdic = {}
@@ -138,7 +132,7 @@ class Page(webapp.RequestHandler):
 
 class DEMO(webapp.RequestHandler):
     def get(self, slug):
-        slug = getslug(slug)
+        slug = safeunquote(slug)
         data = None
         data = dbs.Melody.get_demo(slug)
         rdic = {}

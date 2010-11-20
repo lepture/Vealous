@@ -30,6 +30,7 @@
 .textright { text-align: right;}
 .textcenter { text-align: center; }
 .sep { margin-bottom: 5px;}
+.clearwrap { overflow: hidden; word-wrap: break-word;}
 .pretty {
     font-family: "DejaVu Serif", "Times New Roman", serif;
     font-size: 12px;
@@ -127,7 +128,7 @@ body a.button {
     background-color: #ff6600;
 }
 .required { font-weight: bold;}
-.status {
+html body .status {
     margin-left: 12px;
     background-color: #666;
     border-radius: 3px;
@@ -139,7 +140,7 @@ body a.button {
     font-weight: bold;
     text-decoration: none;
 }
-a.status:hover {
+html body .status:hover {
     background-color: #999;
     text-decoration: none;
     color: #fff;

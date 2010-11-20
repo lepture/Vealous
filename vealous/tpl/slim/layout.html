@@ -23,10 +23,10 @@
                     </div>
                     {%block nav%}
                     <ul class="alignright nav">
-                        <li class="nav-0"><a href="/">Home</a></li>
-                        <li class="nav-0"><a href="/archive">Archive</a></li>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/archive">Archive</a></li>
                         {%for nav in navs.normal%}
-                        <li class="nav-{{forloop.counter}}"><a href="{{nav.url}}">{{nav.title}}</a></li>
+                        <li><a href="{{nav.url}}">{{nav.title}}</a></li>
                         {%endfor%}
                         <li class="nav-more"><a href="#">More</a>
                         <ul class="hide">

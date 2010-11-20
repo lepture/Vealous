@@ -1,11 +1,9 @@
 {% extends "layout.html"%}
 
-{%block title%}
-{{keyword}}|{{vigo.sitename|default:"Vealous"}}
-{%endblock%}
+{%block title%}{{keyword}}|{{vigo.sitename|default:"Vealous"}}{%endblock%}
 
 {%block extra%}
-<meta name="keywords" content="{{conf.sitename|default:"Vealous"}},{{keyword}}" />
+<meta name="keywords" content="{{keyword}}" />
 {%endblock%}
 
 {%block soga%}
