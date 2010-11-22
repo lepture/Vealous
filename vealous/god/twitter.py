@@ -215,6 +215,31 @@ class UserFavorites(WebHandler):
         rdic['profile'] = profile
         return self.response.out.write(render(path, rdic))
 
+class Public(WebHandler):
+    @be_god
+    def get(self):
+        path = get_tpl('twitter_user.html')
+        rdic = {}
+        qs = dbs.Vigo.get('oauth_twitter')
+        if not qs:
+            return self.redirect('/god/twitter/login')
+        api = Twitter().set_qs_api(qs)
+        statuses = memcache.get('twitter$public')
+        if statuses is None:
+            statuses = api.GetPublicTimeline()
+            for status in statuses:
+                status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
+            memcache.set('twitter$public', statuses, 120)
+        rdic['statuses'] = statuses
+        username = dbs.Vigo.get('twitter')
+        profile = memcache.get('twitter$profile$' + username)
+        if profile is None:
+            profile = api.GetUser(username)
+            memcache.set('twitter$profile$'+username, profile, 86400)
+        rdic['profile'] = profile
+        rdic['username'] = username
+        return self.response.out.write(render(path, rdic))
+
 class Login(WebHandler):
     @be_god
     def get(self):
@@ -302,6 +327,7 @@ apps = webapp.WSGIApplication(
         ('/god/twitter/auth', Auth),
         ('/god/twitter/mentions', Mentions),
         ('/god/twitter/directs', Directs),
+        ('/god/twitter/public', Public),
         ('/god/twitter/status', PostStatus),
         ('/god/twitter/user/(.*)', UserStatus),
         ('/god/twitter/favorites', Favorites),
