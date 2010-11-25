@@ -1,5 +1,9 @@
 {% extends "layout.html"%}
 
+{%block extra%}
+<link rel="canonical" href="{{conf.site}}" />
+{%endblock%}
+
 {%block soga%}
 {%for data in articles%}
 <div id="post-{{data.key.id}}" class="post">
@@ -20,7 +24,7 @@
             Keywords: {%for tag in data.keyword|str2list%}<a rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
         </div>
         <div class="alignright icons comments">
-            <a href="{{conf.site}}{{data.the_url}}#disqus_thread">Comments</a>
+            <a rel="nofollow" href="{{conf.site}}{{data.the_url}}#disqus_thread">Comments</a>
         </div>
     </div>
 </div>

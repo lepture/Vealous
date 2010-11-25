@@ -17,7 +17,7 @@
             Keywords: {%for tag in data.keyword|str2list%}<a rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
         </div>
         <div class="alignright icons comments">
-            <a href="{{conf.site}}{{data.the_url}}#disqus_thread">Comments</a>
+            <a rel="nofollow" href="{{conf.site}}{{data.the_url}}#disqus_thread">Comments</a>
         </div>
     </div>
 </div>

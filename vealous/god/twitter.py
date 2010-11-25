@@ -38,8 +38,7 @@ class Twitter(object):
         try:
             res = urlfetch.fetch(url)
         except urlfetch.DownloadError, e:
-            logging.error('Twitter: ' + str(e))
-            raise Exception('Twitter: ' + str(e))
+            logging.warn('Twitter: ' + str(e))
         return res.content
     def set_qs_api(self, qs, input_encoding=None):
         self.token = twitter.oauth.Token.from_string(qs)
@@ -94,7 +93,7 @@ class UserStatus(WebHandler):
             try:
                 statuses = api.GetUserTimeline(count=30, screen_name=username)
             except twitter.TwitterError, e:
-                logging.error(str(e))
+                logging.warn(str(e))
                 return self.redirect('/god/twitter')
             for status in statuses:
                 status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
@@ -121,7 +120,7 @@ class Mentions(WebHandler):
             try:
                 statuses = api.GetReplies()
             except twitter.TwitterError, e:
-                logging.error(str(e))
+                logging.warn(str(e))
                 return self.redirect('/god/twitter')
             for status in statuses:
                 status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
@@ -150,7 +149,7 @@ class Directs(WebHandler):
             try:
                 statuses = api.GetDirectMessages()
             except twitter.TwitterError, e:
-                logging.error(str(e))
+                logging.warn(str(e))
                 return self.redirect('/god/twitter')
             for status in statuses:
                 status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
@@ -174,7 +173,7 @@ class Favorites(WebHandler):
             try:
                 statuses = api.GetFavorites()
             except twitter.TwitterError, e:
-                logging.error(str(e))
+                logging.warn(str(e))
                 return self.redirect('/god/twitter')
             for status in statuses:
                 status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
@@ -202,7 +201,7 @@ class UserFavorites(WebHandler):
             try:
                 statuses = api.GetFavorites(user=username)
             except twitter.TwitterError, e:
-                logging.error(str(e))
+                logging.warn(str(e))
                 return self.redirect('/god/twitter')
             for status in statuses:
                 status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')

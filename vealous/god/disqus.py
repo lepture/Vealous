@@ -35,12 +35,12 @@ class Disqus(object):
         try:
             result = self.rpc.get_result()
             if 200 != result.status_code:
-                logging.error('get forum posts result failed, status code: ' + str(result.status_code))
+                logging.warn('get forum posts result failed, status code: ' + str(result.status_code))
                 return None
             data = result.content
             return data
         except urlfetch.DownloadError:
-            logging.error('get forum posts result failed, urlfetch download error')
+            logging.warn('get forum posts result failed, urlfetch download error')
             return None
         return None
     
