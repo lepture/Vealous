@@ -230,24 +230,27 @@ class Vigo(db.Model):
         return value
 
 class Melody(db.Model):
+    """
+    Nav, Link, DEMO
+    """
     title = db.StringProperty(required=True, indexed=True)
-    url = db.StringProperty(required=False, indexed=False) # link, nav
-    label = db.StringProperty(required=True, indexed=True) #link, nav, html
-    ext = db.StringProperty(required=False, indexed=True) # link rel
-    text = db.TextProperty(required=False, indexed=False) # intro 
+    url = db.StringProperty(required=False, indexed=True)
+    label = db.StringProperty(required=True, indexed=True)
+    ext = db.StringProperty(required=False, indexed=True)
+    text = db.TextProperty(required=False, indexed=False)
     prior = db.IntegerProperty(indexed=True, default=0)
 
     @classmethod
-    def get_demo(cls, ext):
-        key = 'melody$demo/' + ext
+    def get_demo(cls, url):
+        key = 'melody$demo/' + url
         data = memcache.get(key)
         if data is not None:
             return data
-        q = cls.gql('WHERE label = :1 AND ext = :2', 'demo', ext)
+        q = cls.gql('WHERE label = :1 AND url = :2', 'demo', url)
         data = q.fetch(1)
         if data:
             memcache.set(key, data[0])
-            logging.info('Get DEMO from DB by ext :' + ext)
+            logging.info('Get DEMO from DB by url:' + url)
             return data[0]
         return None
 

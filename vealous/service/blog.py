@@ -133,17 +133,17 @@ class Page(webapp.RequestHandler):
 class DEMO(webapp.RequestHandler):
     def get(self, slug):
         slug = safeunquote(slug)
-        data = None
         data = dbs.Melody.get_demo(slug)
         rdic = {}
         rdic['navs'] = get_navs()
         rdic['links'] = dbs.Melody.get_all('link')
         if not data:
-            logging.info('404 , visite page ' + slug)
+            logging.info('404 , visite demo ' + slug)
             path = get_path(self.request, '404.html')
             self.response.set_status(404)
             html = render(path, rdic)
             return self.response.out.write(html)
+        self.response.headers['Content-Type'] = data.ext or 'text/html'
         self.response.out.write(data.text)
 
 

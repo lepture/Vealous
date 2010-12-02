@@ -51,8 +51,12 @@
     </div>
     <div class="demo">
         <div class="form-row cell">
-            <input id="id_ext" class="text" type="text" name="ext" maxlength="40" value="{{data.ext|default:""}}" />
-            <label for="id_ext" class="required">Slug</label>
+            <input id="id_url" class="text" type="text" name="url" maxlength="200" value="{{data.url}}" />
+            <label for="id_url" class="required">Slug</label>
+        </div>
+        <div class="form-row cell">
+            <input id="id_ext" class="text" type="text" name="ext" maxlength="40" value="{{data.ext|default:"text/html"}}" />
+            <label for="id_ext" class="required">Content Type</label>
         </div>
         <div class="form-row cell">
             <textarea id="id_text" name="text" style="height:400px;">{{data.text|default:""}}</textarea>
