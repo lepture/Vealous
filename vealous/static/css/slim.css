@@ -18,6 +18,7 @@ ul { list-style-type: none;}
 h3 { font-weight: bold; }
 h3 a { font-size: 16px;}
 hr { border-color: #bbb; }
+code { border-left: 4px solid #dadada; padding: 4px; }
 /* end reset */
 .pretty {
     font-family: "DejaVu Serif", "Times New Roman", serif;
@@ -234,6 +235,7 @@ body {
 /* blog */
 .post, #disqus_thread { width: 650px;}
 .post p { margin: 5px 0 15px 0;}
+.post-content:first-child ::first-letter { font-size: 24px; }
 .post ul { list-style-type: disc; margin: 0 0 22px 16px;}
 .post ol { list-style-type: decimal; margin: 0 0 22px 20px; }
 .post h3 { font-size: 16px; font-weight: bold; line-height: 16px; margin: 15px 0;}
@@ -246,6 +248,8 @@ body {
 .post-content { font-size: 13px; }
 .post-content a { border-bottom: none 0; text-decoration: underline; }
 .post-content a:hover { border-bottom: none 0; }
+.post-content .more:link, .post-content .more:visited { text-decoration: none; color: #21759b; font-size: 12px; font-weight: bolder; }
+.post-content .more:hover {text-decoration: none; color: #d54e21; }
 .post-meta { font-size: 11px; margin-top: 10px; }
 .post img {
     max-width: 630px;
@@ -286,13 +290,7 @@ body {
 .page-nav .current, .page-nav .page-numbers:hover {
     background-color: #fff;
 }
-.icons {background:url("../img/icons.png") no-repeat;padding-left:22px; height:16px; line-height:16px;}
-.twitter {background-position: 3px -384px;}
-.comments {background-position: 0 -96px;}
-.feed {background-position: 11px -312px;}
-.calendar {background-position: 3px -48px;}
 /* ajax-translate BEGIN */
-.translate { margin-left: 1em; background-position:0 -208px; }
 .translate_translate{font-weight:normal !important;margin-bottom:0.5em;text-decoration:none !important}
 /*.translate_loading{background:url("../img/ajax-loader.gif") no-repeat;border:0;display:inline;margin:0;padding:0;vertical-align:middle}*/
 #translate_popup{background-color:#FFF;border:2px solid #CCC;font-size:12px;padding:0.5em;position:absolute;z-index:50; text-align: left;}
@@ -346,3 +344,5 @@ body {
 .translate_links .google_branding{font-size:11px;}
 .translate_links .google_branding img{border:0;display:block;margin:0;padding:0;}
 /* ajax-translate END */
+.pages a { background: #666; color:#efefef; padding: 0px 4px; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; }
+.pages a:hover { background: #333; color: #fff; border-bottom: 0 none; }

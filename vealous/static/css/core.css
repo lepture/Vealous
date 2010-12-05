@@ -21,9 +21,11 @@
 .hide { display: none; }
 .alignleft { float: left;}
 .alignright{ float: right;}
+.bold { font-weight: bold; }
 .textleft { text-align: left;}
 .textright { text-align: right;}
 .textcenter { text-align: center; }
+.snow { color: rgba(0,0,0,0.15); }
 .sep { margin-bottom: 5px;}
 
 body { text-align: center; letter-spacing: 0; min-height: 100%; }
@@ -35,3 +37,4 @@ address,caption,cite,code,dfn,h4,h5,h6,th,var { font-style: normal; font-weight:
 caption,th { text-align: left; }
 code, pre { font-family: Consolas, Monaco, "Courier New", Courier, monospace; }
 textarea { width: 98%; max-width: 98%; margin: 0 auto; }
+a { text-decoration: none; outline: 0 none; }

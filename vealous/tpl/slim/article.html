@@ -15,7 +15,7 @@
         <label>Created at </label><span class="time">{{data.created|prettytime}}</span> by
         <a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a>
         <div class="icons translate">
-            <a id="translate_button_post-{{data.key.id}}" rel="nofollow" href="javascript:;" onclick="show_translate_popup('en','post','{{data.key.id}}');">Translate</a>
+           • <a class="bold" id="translate_button_post-{{data.key.id}}" rel="nofollow" href="javascript:;" onclick="show_translate_popup('en','post','{{data.key.id}}');">Translate</a>
         </div>
     </div>
     <div class="post-content">
@@ -23,7 +23,7 @@
     </div>
     <div class="post-meta clearfix">
         <div class="alignleft">
-            Keywords: {%for tag in data.keyword|str2list%}<a rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
+            <label>Modified at</label> <span class="time">{{data.modified|prettytime}}</span> • {%for tag in data.keyword|str2list%}<a class="bold" rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
         </div>
         <div class="alignright">
             <a href="{{data.the_url}}?mode=plaintext" rel="nofollow">Get Source Code</a>

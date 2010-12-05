@@ -35,20 +35,12 @@ class Index(webapp.RequestHandler):
         pass
 
     def get(self):
-        if is_mobile(self.request):
-            mkey = 'html/mobile'
-        else:
-            mkey = 'html/index'
-        html = memcache.get(mkey)
-        if html is not None:
-            return self.response.out.write(html)
         rdic = {}
         rdic['articles'] = dbs.Article.getten()
         rdic['links'] = dbs.Melody.get_all('link')
         rdic['navs'] = get_navs()
         path = get_path(self.request, 'index.html')
         html = render(path, rdic)
-        memcache.set(mkey, html, 300)
         self.response.out.write(html)
 
 class Article(webapp.RequestHandler):
