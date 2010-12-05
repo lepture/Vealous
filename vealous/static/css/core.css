@@ -1,0 +1,37 @@
+/* ---------- clearfix hack ---------- */
+/* http://perishablepress.com/press/2008/02/05/lessons-learned-concerning-the-clearfix-css-hack */
+.clearfix:after { content: " "; display: block; clear: both; height: 0; visibility: hidden; font-size: 0; }
+.clearfix { display: inline-block; }
+/* exlude MacIE5 \*/
+* html .clearfix { height: 1% }
+.clearfix {display:block;}
+/* end clearfix */
+
+/* http://sonspring.com/journal/clearing-floats */
+.clear {
+    clear: both;
+    display: block;
+    overflow: hidden;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+.clearwrap { overflow: hidden; word-wrap: break-word;}
+
+.hide { display: none; }
+.alignleft { float: left;}
+.alignright{ float: right;}
+.textleft { text-align: left;}
+.textright { text-align: right;}
+.textcenter { text-align: center; }
+.sep { margin-bottom: 5px;}
+
+body { text-align: center; letter-spacing: 0; min-height: 100%; }
+#container {margin: auto; min-width: 980px; text-align: left; }
+.wrapper {width: 960px; height: 100%; margin: 0 auto;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,p,blockquote,table,th,td { margin: 0; padding: 0; }
+fieldset,img,abbr { border: 0; }
+address,caption,cite,code,dfn,h4,h5,h6,th,var { font-style: normal; font-weight: normal; }
+caption,th { text-align: left; }
+code, pre { font-family: Consolas, Monaco, "Courier New", Courier, monospace; }
+textarea { width: 98%; max-width: 98%; margin: 0 auto; }
