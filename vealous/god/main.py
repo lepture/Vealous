@@ -75,6 +75,8 @@ class Dashboard(WebHandler):
             message = self.session.get('message','')
             self.session.delete('message')
         rdic['message'] = message
+        rdic['article_count'] = dbs.Counter.get('articles')
+        rdic['page_count'] = dbs.Counter.get('pages')
         comments = memcache.get('disqus$comments')
         path = get_path(self.request, 'dashboard.html')
         if comments is not None:
@@ -105,9 +107,9 @@ class ViewArticle(WebHandler):
         if 'draft' == action or 'post' == action:
             data = db.get(key)
             if data and 'draft' == action:
-                data.sw_status(data)
+                data.sw_status(True)
             elif data and 'post' == action:
-                data.sw_status(data, False)
+                data.sw_status(False)
             else:
                 self.session['message'] = "Can't find the article"
             return self.redirect('/god/article?from='+action)
@@ -123,7 +125,7 @@ class ViewArticle(WebHandler):
             data = dbs.Article.gql('ORDER BY created DESC')
         rdic['message'] = message
         p = self.request.get('p',1)
-        rdic['mvdata'] = Paginator(data, count, p)
+        rdic['mvdata'] = Paginator(data, p)
         path = get_tpl('article.html')
         return self.response.out.write(render(path,rdic))
 
@@ -154,7 +156,7 @@ class EditArticle(WebHandler):
             return self.redirect('/god/article')
         action = self.request.get('action', None)
         if 'delete' == action:
-            dbs.Article.delete(data)
+            data.delete()
             self.session['message'] = 'Article <strong>%s</strong> has been deleted' % data.title
             return self.redirect('/god/article?from=delete')
         rdic = {}
@@ -182,7 +184,7 @@ class EditArticle(WebHandler):
             draft = False
         if title and slug:
             slug = slug.replace(' ','-')
-            dbs.Article.update(data, title, slug, text, draft, keyword)
+            data.update(title, slug, text, draft, keyword)
             self.session['message'] = 'Article <a href="/god/article/edit?key=%s">%s</a> has been modified' % (data.key(), data.title)
             if not draft:
                 taskqueue.add(url='/god/task/ping', method="GET")
@@ -272,7 +274,7 @@ class ViewPage(WebHandler):
         data = dbs.Page.get_all()
         rdic['message'] = message
         p = self.request.get('p',1)
-        rdic['mvdata'] = Paginator(data, count, p)
+        rdic['mvdata'] = Paginator(data, p)
         path = get_tpl('page.html')
         return self.response.out.write(render(path,rdic))
 
@@ -339,7 +341,7 @@ class EditPage(WebHandler):
         text = self.request.get('text', None)
         if title and slug:
             slug = slug.replace(' ','-')
-            dbs.Page.update(data, title, slug, text)
+            data.update(title, slug, text)
             self.session['message'] = 'Page <a href="/god/article/edit?key=%s">%s</a> has been modified' % (data.key(), data.title)
             return self.redirect('/god/page?from=edit')
         rdic['data'] = data
@@ -362,7 +364,7 @@ class ViewMelody(WebHandler):
         rdic['message'] = message
         data = self.get_filter(status)
         p = self.request.get('p',1)
-        rdic['mvdata'] = Paginator(data, count, p)
+        rdic['mvdata'] = Paginator(data, p)
         path = get_tpl('melody.html')
         return self.response.out.write(render(path,rdic))
 
@@ -437,7 +439,7 @@ class EditMelody(WebHandler):
         if title and label:
             try: prior = int(prior)
             except: prior = 0
-            dbs.Melody.update(data, title,url,label,prior,ext,text)
+            data.update(title,url,label,prior,ext,text)
             self.session['message'] = '%s <a href="/god/melody/edit?key=%s">%s</a> has been modified' % (data.label.upper(), data.key(), data.title)
             return self.redirect('/god/melody?from=edit')
         rdic['data'] = data
@@ -544,6 +546,20 @@ class TaskPing(WebHandler):
         except:
             return self.response.out.write('Google Blog Ping Failed')
 
+class ResetCounter(WebHandler):
+    @be_god
+    def get(self):
+        a = dbs.Article.all().count()
+        b = dbs.Article.gql('WHERE draft=:1', False).count()
+        c = dbs.Page.all().count()
+        dbs.Counter.set('articles', a)
+        dbs.Counter.set('showarticles', b)
+        dbs.Counter.set('pages', c)
+        message = 'articles: %s | posts: %s | pages: %s' % (a,b,c)
+        self.session['message'] = message
+        to = '/god?from=resetcount'
+        return self.redirect(to)
+
 apps = webapp.WSGIApplication(
     [
         ('/god/?', Dashboard),
@@ -561,6 +577,7 @@ apps = webapp.WSGIApplication(
         ('/god/melody/add', AddMelody),
         ('/god/melody/edit', EditMelody),
         ('/god/console/memcache', ConsoleMemcache),
+        ('/god/console/resetcount', ResetCounter),
         ('/god/task/ping', TaskPing),
     ],
     debug = config.DEBUG,

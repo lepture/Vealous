@@ -5,6 +5,31 @@
 {%endblock%}
 
 {%block soga%}
+
+{%if hi%}
+<div id="post-{{hi.key.id}}" class="post">
+    <h2 class="post-title"><a href="{{hi.the_url}}">{{hi.title}}</a></h2>
+    <div class="post-info">
+        <label>Created at </label><span class="time">{{hi.created|prettytime}}</span> by
+        <a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a>
+        <div class="icons translate">
+           • <a class="bold" id="translate_button_post-{{hi.key.id}}" rel="nofollow" href="javascript:;" onclick="show_translate_popup('en','post','{{hi.key.id}}');">Translate</a>
+        </div>
+    </div>
+    <div class="post-content">
+        {{hi.html}}
+    </div>
+    <div class="post-meta clearfix">
+        <div class="alignleft">
+            <label>Modified at</label> <span class="time">{{hi.modified|prettytime}}</span> • {%for tag in hi.keyword|str2list%}<a class="bold" rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
+        </div>
+        <div class="alignright">
+            <a class="bold" href="{{hi.the_url}}" rel="nofollow">Leave a Comment</a>
+        </div>
+    </div>
+</div>
+{%endif%}
+
 {%for data in articles%}
 <div id="post-{{data.key.id}}" class="post">
     <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>

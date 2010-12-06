@@ -6,7 +6,12 @@ from libs import markdown
 import logging
 
 week = 604800
-day = 86400
+
+def make_int(num):
+    try:
+        return int(num)
+    except:
+        return 0
 
 class Article(db.Model):
     title = db.StringProperty(required=True)
@@ -25,7 +30,7 @@ class Article(db.Model):
     
     @classmethod
     def add(cls, title, slug, text, draft, keyword='nokeyword'):
-        key = 'a/' + slug
+        key = 'a_slug_' + slug
         data = memcache.get(key)
         if data is not None:
             return data
@@ -35,41 +40,59 @@ class Article(db.Model):
         )
         data.put()
         memcache.set(key, data)
-        keys = ['a$ten', 'a$archive','xml$atom', 'xml$rss', 'xml$sitemap']
-        for tag in data.keyword.split():
-            keys.append('a$keyword/' + tag)
+
+        keys = ['a_atom', 'a_rss', 'a_sitemap']
+        keys += ['a_keyword_%s' % tag for tag in data.keyword.split()]
+        keys += ['a_showten_%s' % p for p in range(Counter.get('showarticles')+1)]
         memcache.delete_multi(keys)
+        Counter.increase('articles')
+        if not draft:
+            Counter.increase('showarticles')
         return data
 
-    @classmethod
-    def update(cls, data, title, slug, text, draft, keyword=''):
-        data.title = title
-        data.slug = slug
-        data.text = text
-        data.draft = draft
-        data.keyword = keyword
-        data.html = markdown.markdown(text)
-        data.put()
+    def update(self, title, slug, text, draft, keyword=''):
+        keys = ['a_atom', 'a_rss', 'a_sitemap']
+        if self.draft and not draft:
+            self.draft = draft
+            Counter.increase('showarticles')
+        elif not self.draft and draft:
+            self.draft = draft
+            Counter.decrease('showarticles')
+        self.title = title
+        self.slug = slug
+        self.text = text
+        self.html = markdown.markdown(text)
+        if self.keyword != keyword:
+            self.keyword = keyword
+            keys += ['a_keyword_%s' % tag for tag in self.keyword.split()]
+        self.put()
 
-        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'xml$atom', 'xml$rss', 'xml$sitemap']
-        for tag in data.keyword.split():
-            keys.append('a$keyword/' + tag)
+        keys += ['a_showten_%s' % p for p in range(Counter.get('showarticles')+1)]
         memcache.delete_multi(keys)
-        return data
 
-    @classmethod
-    def sw_status(cls, data, draft=True):
-        data.draft = draft
-        data.put()
-        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'xml$atom', 'xml$rss', 'xml$sitemap']
-        for tag in data.keyword.split():
-            keys.append('a$keyword/' + tag)
+        key = 'a_slug_' + slug
+        memcache.set(key, self)
+        return self
+
+    def sw_status(self, draft=True):
+        keys = ['a_atom', 'a_rss', 'a_sitemap']
+        if self.draft and not draft:
+            self.draft = draft
+            Counter.increase('showarticles')
+            self.put()
+        elif not self.draft and draft:
+            self.draft = draft
+            Counter.decrease('showarticles')
+            self.put()
+        keys += ['a_showten_%s' % p for p in range(Counter.get('showarticles')+1)]
         memcache.delete_multi(keys)
-        return data
+        key = 'a_slug_' + self.slug
+        memcache.set(key, self)
+        return self 
 
     @classmethod
     def get(cls, slug):
-        key = 'a/' + slug
+        key = 'a_' + slug
         data = memcache.get(key)
         if data is not None:
             return data
@@ -81,40 +104,34 @@ class Article(db.Model):
             return data[0]
         return None
 
-    @classmethod
-    def delete(cls, data):
-        keys = ['a/'+data.slug, 'a$ten', 'a$archive', 'xml$atom', 'xml$rss', 'xml$sitemap']
-        for tag in data.keyword.split():
-            keys.append('a$keyword/' + tag)
+    def delete(self):
+        keys = ['a_slug_'+self.slug, 'a_atom', 'a_rss', 'a_sitemap']
+        keys += ['a_keyword_%s' % tag for tag in self.keyword.split()]
+        keys += ['a_showten_%s' % p for p in range(Counter.get('showarticles')+1)]
         memcache.delete_multi(keys)
-        db.delete(data)
-        return data
+        db.delete(self)
+        Counter.decrease('articles')
+        if not self.draft:
+            Counter.decrease('showarticles')
+        return self
 
     @classmethod
-    def getten(cls):
-        data = memcache.get('a$ten')
+    def getten(cls, p=0):
+        p = make_int(p)
+        key = 'a_showten_%s' % p
+        data = memcache.get(key)
         if data is not None:
             return data
         q = cls.gql("WHERE draft = :1 ORDER BY created DESC", False)
-        data = q.fetch(10)
-        logging.info('Get Ten Article from DB')
-        memcache.set('a$ten', data)
-        return data
-
-    @classmethod
-    def get_archive(cls):
-        data = memcache.get('a$archive')
-        if data is not None:
-            return data
-        q = cls.gql("WHERE draft = :1 ORDER BY created DESC", False)
-        data = q.fetch(1000)
-        memcache.set('a$archive', data)
-        logging.info('Get Archive from DB')
+        offset = 10*p
+        data = q.fetch(10, offset)
+        logging.info('Get Ten Article from DB, p=%s' % p)
+        memcache.set(key, data)
         return data
 
     @classmethod
     def get_kw_articles(cls, keyword):
-        key = 'a$keyword/' + keyword
+        key = 'a_keyword_' + keyword
         data = memcache.get(key)
         if data is not None:
             return data
@@ -149,18 +166,18 @@ class Page(db.Model):
         memcache.set(key, data)
         keys = ['p$all']
         memcache.delete_multi(keys)
+        Counter.increase('pages')
         return data
 
-    @classmethod
-    def update(cls, data, title, slug, text):
-        data.title = title
-        data.slug = slug
-        data.text = text
-        data.html = markdown.markdown(text)
-        data.put()
-        keys = ['p/'+data.slug, 'p$all', 'html$page/'+data.slug]
+    def update(self, title, slug, text):
+        self.title = title
+        self.slug = slug
+        self.text = text
+        self.html = markdown.markdown(text)
+        self.put()
+        keys = ['p/'+self.slug, 'p$all', 'html$page/'+self.slug]
         memcache.delete_multi(keys)
-        return data
+        return self
 
     @classmethod
     def get(cls, slug):
@@ -201,7 +218,7 @@ class Vigo(db.Model):
     
     @classmethod
     def get(cls, name):
-        key = 'vigo/' + name
+        key = 'vigo_' + name
         value = memcache.get(key)
         if value is not None:
             return value
@@ -216,7 +233,7 @@ class Vigo(db.Model):
 
     @classmethod
     def set(cls, name, value):
-        key = 'vigo/' + name
+        key = 'vigo_' + name
         q = cls.gql("WHERE name = :1", name)
         data = q.fetch(1)
         if data:
@@ -265,19 +282,18 @@ class Melody(db.Model):
         memcache.delete('melody$%s' % label)
         return data
 
-    @classmethod
-    def update(cls, data, title, url, label, prior, ext=None, text=None):
-        data.title = title
-        data.url = url
-        data.label = label
-        data.prior = prior
-        data.ext = ext
-        data.text = text
-        data.put()
+    def update(self, title, url, label, prior, ext=None, text=None):
+        self.title = title
+        self.url = url
+        self.label = label
+        self.prior = prior
+        self.ext = ext
+        self.text = text
+        self.put()
         memcache.delete('melody$'+label)
         if 'demo' == label:
             memcache.delete('melody$demo/'+ext)
-        return data
+        return self
 
     @classmethod
     def get_all(cls, label):
@@ -386,3 +402,58 @@ class DictBook(db.Model):
         data = q.fetch(1000)
         memcache.set('dict$all', data)
         return data
+
+class Counter(db.Model):
+    name = db.StringProperty()
+    number = db.IntegerProperty(default=0)
+    created = db.DateTimeProperty(auto_now_add=True)
+    modified = db.DateTimeProperty(auto_now=True)
+    @classmethod
+    def add(cls, name):
+        key = 'counter_' + str(name)
+        data = cls(key_name=key, name=str(name))
+        data.put()
+        return data
+    @classmethod
+    def increase(cls, name):
+        key = 'counter_' + str(name)
+        data = cls.get_by_key_name(key)
+        if not data:
+            data = cls.add(name)
+        data.number += 1
+        data.put()
+        memcache.set(key, data)
+        return data
+    @classmethod
+    def decrease(cls, name):
+        key = 'counter_' + str(name)
+        data = cls.get_by_key_name(key)
+        if not data:
+            data = cls.add(name)
+        if data.number > 0:
+            data.number -= 1
+            data.put()
+            memcache.set(key, data)
+        return data
+    @classmethod
+    def get(cls, name):
+        key = 'counter_' + str(name)
+        data = memcache.get(key)
+        if data is not None:
+            return data.number
+        data = cls.get_by_key_name(key)
+        if data:
+            memcache.set(key, data)
+            return data.number
+        return 0
+    @classmethod
+    def set(cls, name, value=1):
+        key = 'counter_' + str(name)
+        data = cls.get_by_key_name(key)
+        if not data:
+            data = cls.add(name)
+        data.number = value
+        data.put()
+        memcache.set(key, data)
+        return data
+

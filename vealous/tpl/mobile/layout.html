@@ -16,12 +16,7 @@
     </head>
     <body>
         <div id="header">
-            <div class="wrapper clearfix">
-                <div class="brand alignleft">
-                    <h2><a href="/">{{vigo.sitename|default:"Vealous"}}</a></h2>
-                    <p class="pretty">{{vigo.sitetag|default:"Love its people, but never trust its government"}}</p>
-                </div>
-            </div>
+            <h2 class="brand wrapper"><a href="/">{{vigo.sitename|default:"Vealous"}}</a></h2>
         </div>
         <div id="mainbody">
             <div class="wrapper">
@@ -46,10 +41,7 @@
         </div>
         <div id="footer">
             <div class="wrapper">
-                <p class="pretty">Copyright by <a href="{{conf.site}}">@{{vigo.twitter|default:"lepture"}}</a> &copy; {%now "Y"%} Powered by <a href="http://i.shiao.org/a/vealous"><strong>Vealous</strong></a></p>
-                <div style="margin-top: 10px;">
-                    <a rel="external" href="http://code.google.com/appengine"><img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Powered by Google App Engine" /></a>
-                </div>
+                <p>Copyright by <a style="font-weight:bold;" href="{{conf.site}}">@{{vigo.twitter|default:"lepture"}}</a> &copy; {%now "Y"%} Powered by <a class="bold" href="http://i.shiao.org/a/vealous"><strong>Vealous</strong></a> + <strong>GAE</strong></p>
             </div>
         </div>
         {%include "_ga.html"%}

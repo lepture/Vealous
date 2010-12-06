@@ -36,24 +36,14 @@ def safeunquote(slug):
         return slug
 
 class Paginator(object):
-    def __init__(self, data, count=10, page=1):
+    count = 10
+    def __init__(self, data, page=1, item_num=None):
         self.data = data
-
-        if count <= 1:
-            self.count = 1
+        self.page = self._make_int(page)
+        if item_num:
+            self.item_num = item_num
         else:
-            self.count = int(count)
-
-        try:
-            page = int(page)
-        except:
-            page = 1
-        if page <=1:
-            self.page = 1
-        else:
-            self.page = page
-
-        self.item_num = self.item_num()
+            self.item_num = self.item_num()
         self.page_num = self.page_num()
 
     def item_num(self):
@@ -131,11 +121,22 @@ class Paginator(object):
         return False
 
     def get_items(self):
+        if self.item_num:
+            return self.data
         limit = self.count
         offset = (self.page - 1)*limit
         try:
-            mvdata = self.data.fetch(limit, offset)
+            objects = self.data.fetch(limit, offset)
         except (AttributeError, TypeError), e:
-            mvdata = self.data[offset:limit*self.page]
-        return mvdata
+            objects = self.data[offset:limit*self.page]
+        return objects
     object_list = property(get_items)
+
+    def _make_int(self, num):
+        try:
+            num = int(num)
+        except:
+            return 1
+        if num <= 1:
+            return 1
+        return num

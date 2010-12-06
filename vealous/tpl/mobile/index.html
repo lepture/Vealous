@@ -1,28 +1,31 @@
 {% extends "layout.html"%}
 
 {%block soga%}
+
+{%if hi%}
+<div id="post-{{hi.key.id}}" class="post">
+    <h2 class="post-title"><a href="{{hi.the_url}}">{{hi.title}}</a></h2>
+    <div class="post-info">
+        <label>Created at </label><span class="time">{{hi.created|prettytime}}</span> by
+        <a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a>
+    </div>
+    <div class="post-content">
+        {{hi.html}}
+    </div>
+    <div class="post-meta clearfix">
+        <div class="alignleft">
+            <label>Modified at</label> <span class="time">{{hi.modified|prettytime}}</span> • {%for tag in hi.keyword|str2list%}<a class="bold" rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
+        </div>
+    </div>
+</div>
+{%endif%}
+
 {%for data in articles%}
 <div class="post">
     <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>
     <div class="post-info">
-        <label>Created at </label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a>
-    </div>
-    <div class="post-content">
-        {{data.html|more}}
-        <p><a class="more" rel="nofollow" href="{{data.the_url}}">Get More »</a></p>
-    </div>
-    <div class="post-meta clearfix">
-        <div class="alignleft">
-            Keywords: {%for tag in data.keyword|str2list%}<a rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
-        </div>
-        <div class="alignright">
-            <a href="{{conf.site}}{{data.the_url}}#disqus_thread">Comments</a>
-        </div>
+        <label>Created at </label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a> • {%for tag in data.keyword|str2list%}<a rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
     </div>
 </div>
 {%endfor%}
-{%endblock%}
-
-{%block footer%}
-{%include "_dc.html"%}
 {%endblock%}

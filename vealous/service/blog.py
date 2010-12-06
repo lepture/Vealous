@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-import os
+import os.path
 import logging
 from urllib2 import quote, unquote
 from django.utils.simplejson import loads as parse_json
@@ -15,6 +15,13 @@ from utils import is_mobile, safeunquote
 import dbs
 
 import config
+
+def decrease(num):
+    try:
+        num = int(num)
+    except:
+        num = 1
+    return num - 1
 
 def get_path(request, name):
     if is_mobile(request):
@@ -36,7 +43,12 @@ class Index(webapp.RequestHandler):
 
     def get(self):
         rdic = {}
-        rdic['articles'] = dbs.Article.getten()
+        articles = dbs.Article.getten()
+        if articles:
+            rdic['hi'] = articles[0]
+            rdic['articles'] = articles[1:6]
+        else:
+            rdic['articles'] = articles
         rdic['links'] = dbs.Melody.get_all('link')
         rdic['navs'] = get_navs()
         path = get_path(self.request, 'index.html')
@@ -76,8 +88,9 @@ class Archive(webapp.RequestHandler):
         rdic = {}
         rdic['navs'] = get_navs()
         p = self.request.get('p',1)
-        data = dbs.Article.get_archive()
-        rdic['mvdata'] = Paginator(data, 10, p)
+        data = dbs.Article.getten(decrease(p))
+        item_num = dbs.Counter.get('showarticles')
+        rdic['mvdata'] = Paginator(data, p, item_num)
         path = get_path(self.request, 'archive.html')
         self.response.out.write(render(path,rdic))
 
@@ -95,7 +108,7 @@ class Keyword(webapp.RequestHandler):
             self.response.set_status(404)
         else:
             p = self.request.get('p',1)
-            rdic['mvdata'] = Paginator(data, 10, p)
+            rdic['mvdata'] = Paginator(data, p)
             rdic['navs'] = get_navs()
             rdic['links'] = dbs.Melody.get_all('link')
             rdic['keyword'] = keyword
@@ -156,31 +169,31 @@ class Search(webapp.RequestHandler):
 class Atom(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
-        html = memcache.get('xml$atom')
+        html = memcache.get('a_atom')
         if html is None:
             rdic = {}
             rdic['datas'] = dbs.Article.getten()
             path = os.path.join(config.ROOT, 'tpl', 'atom.xml')
             html = render(path, rdic)
-            memcache.set('xml$atom', html)
+            memcache.set('a_atom', html)
         self.response.out.write(html)
 
 class Rss(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
-        html = memcache.get('xml$rss')
+        html = memcache.get('a_rss')
         if html is None:
             rdic = {}
             rdic['datas'] = dbs.Article.getten()
             path = os.path.join(config.ROOT, 'tpl', 'rss.xml')
             html = render(path, rdic)
-            memcache.set('xml$rss', html)
+            memcache.set('a_rss', html)
         self.response.out.write(html)
 
 class Sitemap (webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
-        html = memcache.get('xml$sitemap')
+        html = memcache.get('a_sitemap')
         if html is None:
             rdic = {}
             urlset = []
@@ -198,7 +211,7 @@ class Sitemap (webapp.RequestHandler):
             rdic['urlset'] = urlset
             path = os.path.join(config.ROOT, 'tpl', 'sitemap.xml')
             html = render(path, rdic)
-            memcache.set('xml$sitemap', html)
+            memcache.set('a_sitemap', html)
         self.response.out.write(html)
 
 class Redirect(webapp.RequestHandler):
