@@ -7,11 +7,50 @@ import logging
 
 week = 604800
 
-def make_int(num):
+def make_page(keys, p=1):
     try:
-        return int(num)
+        p = int(p)
     except:
-        return 0
+        p = 1
+    item_num = len(keys)
+    if item_num % 10:
+        page_num = item_num / 10 + 1
+    else:
+        page_num = item_num / 10 
+    has_previous = p > 1
+    previous_num = p - 1
+    has_next = p < page_num
+    next_num = p + 1
+    show_first = p > 5
+    show_first_dash = show_first and p != 6
+    show_last = (page_num - p) > 5
+    show_last_dash = show_last and (page_num - p) != 6
+    page_range = [i for i in range(p-4, p+5) if i in range(1, page_num+1)]
+    rdic = {
+        'p':p, 'item_num':item_num,
+        'page_num':page_num,
+        'has_previous':has_previous,
+        'previous_num':previous_num,
+        'has_next':has_next,
+        'next_num':next_num,
+        'show_first':show_first,
+        'show_first_dash':show_first_dash,
+        'show_last':show_last,
+        'show_last_dash':show_last_dash,
+        'page_range':page_range,
+    }
+    return rdic
+
+def get_by_key(key):
+    data = memcache.get(key)
+    if data is not None:
+        return data
+    data = db.get(key)
+    if not data:
+        return None
+    memcache.set(key, data)
+    return data
+
 
 class Article(db.Model):
     title = db.StringProperty(required=True)
@@ -104,17 +143,6 @@ class Article(db.Model):
         return None
 
     @classmethod
-    def get_by_key(cls, key):
-        data = memcache.get(key)
-        if data is not None:
-            return data
-        data = db.get(key)
-        if not data:
-            return None
-        memcache.set(key, data)
-        return data
-
-    @classmethod
     def show_keys(cls):
         data = memcache.get('a_show')
         if data is not None:
@@ -146,47 +174,24 @@ class Article(db.Model):
         return data
 
     @classmethod
-    def get_articles_by_keys(cls, keys):
+    def get_data_by_keys(cls, keys):
         data = memcache.get_multi(keys)
         miss = list(set(keys) - set(data.keys()))
         if miss:
             logging.info('Missing keys: ' + str(miss))
         for key in miss:
-            data.update({key: cls.get_by_key(key)})
+            data.update({key: get_by_key(key)})
         articles = sorted(data.itervalues(), key = lambda x:x.created, reverse=True)
         return articles
 
     @classmethod
     def get_page(cls, keys, p=1):
-        try:
-            p = int(p)
-        except:
-            p = 1
-        item_num = len(keys)
-        if item_num % 10:
-            page_num = item_num / 10 + 1
-        else:
-            page_num = item_num / 10 
-        has_previous = p > 1
-        previous_num = p - 1
-        has_next = p < page_num
-        next_num = p + 1
-        show_first = p > 5
-        show_first_dash = show_first and p != 6
-        show_last = (page_num - p) > 5
-        show_last_dash = show_last and (page_num - p) != 6
-        page_range = [i for i in range(p-4, p+5) if i in range(1, page_num+1)]
+        rdic = make_page(keys, p)
+        try: p = int(p)
+        except: p = 1
         _start = (p-1)*10
         _end = p*10
-        object_list = cls.get_articles_by_keys(keys[_start:_end])
-        rdic = {
-            'p':p, 'item_num':item_num, 'page_num':page_num,
-            'has_previous':has_previous, 'previous_num':previous_num,
-            'has_next':has_next,'next_num':next_num,
-            'show_first':show_first, 'show_first_dash':show_first_dash,
-            'show_last':show_last, 'show_last_dash':show_last_dash,
-            'page_range':page_range, 'object_list':object_list
-        }
+        rdic['object_list'] = cls.get_data_by_keys(keys[_start:_end])
         return rdic
 
 class Page(db.Model):
@@ -204,14 +209,14 @@ class Page(db.Model):
     
     @classmethod
     def add(cls, title, slug, text):
-        key = 'p/' + slug
+        key = 'p_slug_%s' % slug
         data = memcache.get(key)
         if data is not None:
             return data
         data = cls(title=title, slug=slug, text=text, html=markdown.markdown(text))
         data.put()
         memcache.set(key, data)
-        keys = ['p$all']
+        keys = ['p_all']
         memcache.delete_multi(keys)
         return data
 
@@ -221,12 +226,12 @@ class Page(db.Model):
         self.text = text
         self.html = markdown.markdown(text)
         self.put()
-        keys = ['p/'+self.slug, 'p$all']
+        keys = ['p_slug_%s' % self.slug, 'p_all']
         memcache.delete_multi(keys)
         return self
 
     def delete(self):
-        keys = ['p_slug_%s' % self.slug, 'p$all']
+        keys = ['p_slug_%s' % self.slug, 'p_all']
         memcache.delete_multi(keys)
         db.delete(self)
         return self
@@ -246,15 +251,34 @@ class Page(db.Model):
         return None
 
     @classmethod
-    def get_all(cls):
-        data = memcache.get('p$all')
+    def all_keys(cls):
+        data = memcache.get('p_all')
         if data is not None:
             return data
-        q = cls.gql("ORDER BY created DESC")
-        data = q.fetch(1000)
-        memcache.set('p$all', data)
-        logging.info('Get All Page from DB')
+        q = db.GqlQuery('SELECT __key__ from Page ORDER BY created DESC')
+        data = [str(key) for key in q]
+        memcache.set('p_all', data)
         return data
+
+    @classmethod
+    def get_data_by_keys(cls, keys):
+        data = memcache.get_multi(keys)
+        miss = list(set(keys) - set(data.keys()))
+        if miss:
+            logging.info('Missing keys: ' + str(miss))
+        for key in miss:
+            data.update({key: get_by_key(key)})
+        return sorted(data.itervalues(), key = lambda x:x.created, reverse=True)
+
+    @classmethod
+    def get_page(cls, keys, p=1):
+        rdic = make_page(keys, p)
+        try: p = int(p)
+        except: p = 1
+        _start = (p-1)*10
+        _end = p*10
+        rdic['object_list'] = cls.get_data_by_keys(keys[_start:_end])
+        return rdic
 
 class Vigo(db.Model):
     # settings: key - value
@@ -340,23 +364,42 @@ class Melody(db.Model):
             memcache.delete('melody$demo/'+ext)
         return self
 
+    def delete(self):
+        key = 'melody$' + self.label
+        memcache.delete(key)
+        db.delete(self)
+        return self
+
     @classmethod
-    def get_all(cls, label):
-        data = memcache.get('melody$%s' % label)
-        if data is not None:
-            return data
-        q = cls.gql('WHERE label = :1 ORDER BY prior DESC', label)
-        data = q.fetch(100)
-        memcache.set('melody$%s' % label, data)
-        logging.info('Get Melody from DB by label: ' + label)
+    def get_data_by_keys(cls, keys):
+        data = memcache.get_multi(keys)
+        miss = list(set(keys) - set(data.keys()))
+        if miss:
+            logging.info('Missing keys: ' + str(miss))
+        for key in miss:
+            data.update({key: get_by_key(key)})
+        return sorted(data.itervalues(), key = lambda x:x.prior , reverse=True)
+
+    @classmethod
+    def label_keys(cls, label=None):
+        if label:
+            q = db.GqlQuery('SELECT __key__ FROM Melody WHERE label = :1 ORDER BY prior DESC', label)
+        else:
+            q = db.GqlQuery('SELECT __key__ FROM Melody ORDER BY prior DESC')
+        data = [str(key) for key in q]
         return data
 
     @classmethod
-    def delete(cls, data):
-        key = 'melody$' + data.label
-        memcache.delete(key)
-        db.delete(data)
-        return data
+    def get_page(cls, keys, p=1):
+        rdic = make_page(keys, p)
+        try: p = int(p)
+        except: p = 1
+        _start = (p-1)*10
+        _end = p*10
+        rdic['object_list'] = cls.get_data_by_keys(keys[_start:_end])
+        return rdic
+
+
 
 class DictBook(db.Model):
     word = db.StringProperty(indexed=True)

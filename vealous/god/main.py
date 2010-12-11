@@ -19,7 +19,6 @@ from django.utils.simplejson import loads
 
 from utils import be_god
 from utils.render import render
-from utils import Paginator
 from utils.handler import WebHandler
 from god.disqus import Disqus
 from god import get_path, get_tpl
@@ -278,10 +277,10 @@ class ViewPage(WebHandler):
             message = self.session.get('message','')
             self.session.delete('message')
         rdic = {}
-        data = dbs.Page.get_all()
         rdic['message'] = message
         p = self.request.get('p',1)
-        rdic['mvdata'] = Paginator(data, p)
+        keys = dbs.Page.all_keys()
+        rdic['mvdata'] = dbs.Page.get_page(keys, p)
         path = get_tpl('page.html')
         return self.response.out.write(render(path,rdic))
 
@@ -369,18 +368,16 @@ class ViewMelody(WebHandler):
         status = self.request.get('filter', 'none')
         rdic = {}
         rdic['message'] = message
-        data = self.get_filter(status)
+        keys = self.get_filter(status)
         p = self.request.get('p',1)
-        rdic['mvdata'] = Paginator(data, p)
+        rdic['mvdata'] = dbs.Melody.get_page(keys, p)
         path = get_tpl('melody.html')
         return self.response.out.write(render(path,rdic))
 
     def get_filter(self, status):
         if 'demo' != status and 'link' != status and 'nav' != status:
-            data = dbs.Melody.gql('ORDER BY prior DESC')
-            return data
-        data = dbs.Melody.gql('WHERE label = :1 ORDER BY prior DESC',status)
-        return data
+            return dbs.Melody.label_keys()
+        return dbs.Melody.label_keys(status)
 
 class AddMelody(WebHandler):
     @be_god
@@ -420,7 +417,7 @@ class EditMelody(WebHandler):
             return self.redirect('/god/melody')
         action = self.request.get('action', None)
         if 'delete' == action:
-            dbs.Melody.delete(data)
+            data.delete()
             self.session['message'] = '%s <strong>%s</strong> has been deleted' % (data.label.upper(), data.title)
             return self.redirect('/god/melody?from=delete')
         rdic = {}

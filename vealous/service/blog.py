@@ -10,7 +10,6 @@ from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 
 from utils.render import render
-from utils import Paginator
 from utils import is_mobile, safeunquote
 import dbs
 
@@ -37,7 +36,7 @@ class Index(webapp.RequestHandler):
     def get(self):
         rdic = {}
         keys = dbs.Article.show_keys()[:10]
-        articles = dbs.Article.get_articles_by_keys(keys)
+        articles = dbs.Article.get_data_by_keys(keys)
         if articles:
             rdic['hi'] = articles[0]
             rdic['articles'] = articles[1:6]
@@ -166,7 +165,7 @@ class Atom(webapp.RequestHandler):
             return self.response.out.write(html)
         rdic = {}
         keys = dbs.Article.show_keys()[:10]
-        rdic['datas'] = dbs.Article.get_articles_by_keys(keys)
+        rdic['datas'] = dbs.Article.get_data_by_keys(keys)
         path = os.path.join(config.ROOT, 'tpl', 'atom.xml')
         html = render(path, rdic)
         memcache.set('a_atom', html)
@@ -180,7 +179,7 @@ class Rss(webapp.RequestHandler):
             return self.response.out.write(html)
         rdic = {}
         keys = dbs.Article.show_keys()[:10]
-        rdic['datas'] = dbs.Article.get_articles_by_keys(keys)
+        rdic['datas'] = dbs.Article.get_data_by_keys(keys)
         path = os.path.join(config.ROOT, 'tpl', 'rss.xml')
         html = render(path, rdic)
         memcache.set('a_rss', html)
@@ -203,7 +202,7 @@ class Sitemap (webapp.RequestHandler):
             }
             urlset.append(url)
         keys = dbs.Article.show_keys()
-        articles = dbs.Article.get_articles_by_keys(keys)
+        articles = dbs.Article.get_data_by_keys(keys)
         for art in articles:
             addurl(art.the_url, art.modified,'weekly',0.5)
         rdic['urlset'] = urlset
