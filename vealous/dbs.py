@@ -397,6 +397,11 @@ class Melody(db.Model):
         return data
 
     @classmethod
+    def get_all(cls, label):
+        keys = cls.label_keys(label)
+        return cls.get_data_by_keys(keys)
+
+    @classmethod
     def get_page(cls, keys, p=1):
         rdic = make_page(keys, p)
         try: p = int(p)
