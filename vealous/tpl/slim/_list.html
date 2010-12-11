@@ -14,7 +14,7 @@
     </div>
     <div class="post-meta clearfix">
         <div class="alignleft">
-            <label>Modified at</label> <span class="time">{{data.modified|prettytime}}</span> • {%for tag in data.keyword|str2list%}<a class="bold" rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
+            <label>Modified at</label> <span class="time">{{data.modified|prettytime}}</span> • <a class="bold" rel="archives" href="/k/{{data.keyword}}">{{data.keyword}}</a>
         </div>
         <div class="alignright">
             <a href="{{data.the_url}}?mode=plaintext" rel="nofollow">Get Source Code</a>

@@ -10,7 +10,7 @@
     </div>
     <div class="post-meta clearfix">
         <div class="alignleft">
-            Keywords: {%for tag in data.keyword|str2list%}<a rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
+            Keyword: <a rel="archives" href="/k/{{data.keyword}}">{{data.keyword}}</a>
         </div>
         <div class="alignright">
             <a href="{{conf.site}}{{data.the_url}}#disqus_thread">Comments</a>

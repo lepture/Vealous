@@ -14,7 +14,7 @@
     </div>
     <div class="post-meta clearfix">
         <div class="alignleft">
-            <label>Modified at</label> <span class="time">{{hi.modified|prettytime}}</span> • {%for tag in hi.keyword|str2list%}<a class="bold" rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
+            <label>Modified at</label> <span class="time">{{hi.modified|prettytime}}</span> • <a class="bold" rel="archives" href="/k/{{data.keyword}}">{{data.keyword}}</a>
         </div>
     </div>
 </div>
@@ -24,7 +24,7 @@
 <div class="post">
     <h2 class="post-title"><a href="{{data.the_url}}">{{data.title}}</a></h2>
     <div class="post-info">
-        <label>Created at </label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a> • {%for tag in data.keyword|str2list%}<a rel="archives" href="/k/{{tag}}">{{tag}}</a> {%endfor%}
+        <label>Created at </label><span class="time">{{data.created|prettytime}}</span> by <a href="https://twitter.com/{{vigo.twitter}}" rel="author">{{vigo.twitter}}</a> • <a rel="archives" href="/k/{{data.keyword}}">{{data.keyword}}</a>
     </div>
 </div>
 {%endfor%}
