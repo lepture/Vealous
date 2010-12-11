@@ -240,7 +240,8 @@ body {
 .post ol { list-style-type: decimal; margin: 0 0 22px 20px; }
 .post h3 { font-size: 16px; font-weight: bold; line-height: 16px; margin: 15px 0;}
 .post { border-bottom: 1px solid #dadada; margin-bottom: 30px; padding-bottom: 1px;}
-.post .post-title a { font-size: 18px; font-weight: bold; margin-bottom: 8px; font-family: "WenQuanYi Micro Hei", "Microsoft YaHei", SimHei, sans-serif;}
+.post .post-title { margin-bottom: 5px; }
+.post .post-title a { font-size: 18px; font-weight: bold; font-family: "WenQuanYi Micro Hei", "Microsoft YaHei", SimHei, sans-serif;}
 .post-info { color: #777; font-size: 11px; margin-bottom: 10px;}
 .post-info div {display: inline-block;}
 .post-info a, .post-meta a { border-bottom: 1px solid #dfdfdf; color: #777; }

@@ -221,13 +221,19 @@ class Page(db.Model):
         self.text = text
         self.html = markdown.markdown(text)
         self.put()
-        keys = ['p/'+self.slug, 'p$all', 'html$page/'+self.slug]
+        keys = ['p/'+self.slug, 'p$all']
         memcache.delete_multi(keys)
         return self
 
+    def delete(self):
+        keys = ['p_slug_%s' % self.slug, 'p$all']
+        memcache.delete_multi(keys)
+        db.delete(self)
+        return self
+
     @classmethod
-    def get(cls, slug):
-        key = 'p/' + slug
+    def get_by_slug(cls, slug):
+        key = 'p_slug_%s' % slug
         data = memcache.get(key)
         if data is not None:
             return data
@@ -238,13 +244,6 @@ class Page(db.Model):
             logging.info('Get Page from DB by slug :' + slug)
             return data[0]
         return None
-
-    @classmethod
-    def delete(cls, data):
-        keys = ['p/'+data.slug, 'p$all', 'html$page/'+data.slug]
-        memcache.delete_multi(keys)
-        db.delete(data)
-        return data
 
     @classmethod
     def get_all(cls):

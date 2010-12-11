@@ -112,8 +112,7 @@ class Keyword(webapp.RequestHandler):
 class Page(webapp.RequestHandler):
     def get(self, slug):
         slug = safeunquote(slug)
-        data = None
-        data = dbs.Page.get(slug)
+        data = dbs.Page.get_by_slug(slug)
         rdic = {}
         rdic['navs'] = get_navs()
         rdic['links'] = dbs.Melody.get_all('link')

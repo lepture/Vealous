@@ -326,7 +326,7 @@ class EditPage(WebHandler):
             return self.redirect('/god/page')
         action = self.request.get('action', None)
         if 'delete' == action:
-            dbs.Page.delete(data)
+            data.delete()
             self.session['message'] = 'Page <strong>%s</strong> has been deleted' % data.title
             return self.redirect('/god/page?from=delete')
         rdic = {}
