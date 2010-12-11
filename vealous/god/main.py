@@ -11,7 +11,6 @@ except ImportError:
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
-from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch, users
 from google.appengine.api.labs import taskqueue
@@ -105,7 +104,7 @@ class ViewArticle(WebHandler):
         p = self.request.get('p',1)
         to = '/god/article?from=%s;p=%s' % (action, p)
         if 'draft' == action or 'post' == action:
-            data = db.get(key)
+            data = dbs.get_by_key(key)
             if data and 'draft' == action:
                 data.sw_status(True)
             elif data and 'post' == action:
@@ -154,7 +153,7 @@ class EditArticle(WebHandler):
         key = self.request.get('key', None)
         if not key:
             return self.redirect('/god/article')
-        data = db.get(key)
+        data = dbs.get_by_key(key)
         if not data:
             return self.redirect('/god/article')
         action = self.request.get('action', None)
@@ -175,7 +174,7 @@ class EditArticle(WebHandler):
         to = '/god/article?p=%s' % p
         if not key:
             return self.redirect(to)
-        data = db.get(key)
+        data = dbs.get_by_key(key)
         if not data:
             return self.redirect(to)
         title = self.request.get('title', None)
@@ -320,7 +319,7 @@ class EditPage(WebHandler):
         key = self.request.get('key', None)
         if not key:
             return self.redirect('/god/page')
-        data = db.get(key)
+        data = dbs.get_by_key(key)
         if not data:
             return self.redirect('/god/page')
         action = self.request.get('action', None)
@@ -339,7 +338,7 @@ class EditPage(WebHandler):
         key = self.request.get('key', None)
         if not key:
             return self.redirect('/god/page')
-        data = db.get(key)
+        data = dbs.get_by_key(key)
         if not data:
             return self.redirect('/god/page')
         title = self.request.get('title', None)
@@ -412,7 +411,7 @@ class EditMelody(WebHandler):
         key = self.request.get('key', None)
         if not key:
             return self.redirect('/god/melody')
-        data = db.get(key)
+        data = dbs.get_by_key(key)
         if not data:
             return self.redirect('/god/melody')
         action = self.request.get('action', None)
@@ -431,7 +430,7 @@ class EditMelody(WebHandler):
         key = self.request.get('key', None)
         if not key:
             return self.redirect('/god/melody')
-        data = db.get(key)
+        data = dbs.get_by_key(key)
         if not data:
             return self.redirect('/god/melody')
         label = self.request.get('label', None)

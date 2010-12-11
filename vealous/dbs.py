@@ -124,6 +124,7 @@ class Article(db.Model):
         keys = ['a_atom', 'a_rss', 'a_sitemap', 'a_show']
         keys.append('a_kw_%s' % self.keyword)
         keys.append('a_slug_%s' % self.slug)
+        keys.append(str(self.key()))
         memcache.delete_multi(keys)
         db.delete(self)
         return self
@@ -227,11 +228,13 @@ class Page(db.Model):
         self.html = markdown.markdown(text)
         self.put()
         keys = ['p_slug_%s' % self.slug, 'p_all']
+        keys.append(str(self.key()))
         memcache.delete_multi(keys)
         return self
 
     def delete(self):
         keys = ['p_slug_%s' % self.slug, 'p_all']
+        keys.append(str(self.key()))
         memcache.delete_multi(keys)
         db.delete(self)
         return self
@@ -328,7 +331,7 @@ class Melody(db.Model):
 
     @classmethod
     def get_demo(cls, url):
-        key = 'melody$demo/' + url
+        key = 'melody_demo_%s' % url
         data = memcache.get(key)
         if data is not None:
             return data
@@ -348,7 +351,7 @@ class Melody(db.Model):
             ext=ext, text=text, prior=prior,
         )
         data.put()
-        memcache.delete('melody$%s' % label)
+        memcache.delete('melody_%s' % label)
         return data
 
     def update(self, title, url, label, prior, ext=None, text=None):
@@ -359,14 +362,18 @@ class Melody(db.Model):
         self.ext = ext
         self.text = text
         self.put()
-        memcache.delete('melody$'+label)
+        keys = ['melody_%s' % label]
+        keys.append(str(self.key()))
         if 'demo' == label:
-            memcache.delete('melody$demo/'+ext)
+            keys.append('melody_demo_%s' % url)
+        memcache.delete_multi(keys)
         return self
 
     def delete(self):
-        key = 'melody$' + self.label
-        memcache.delete(key)
+        keys = ['melody_' + self.label, str(self.key())]
+        if 'demo' == self.label:
+            keys.append('melody_demo_%s' % self.url)
+        memcache.delete_multi(keys)
         db.delete(self)
         return self
 

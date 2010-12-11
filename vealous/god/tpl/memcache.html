@@ -38,6 +38,7 @@ Memcache|Dashboard
     <div class="help">
         <h4>Article</h4>
         <ul>
+            <li>{key}</li>
             <li>a_atom</li>
             <li>a_rss</li>
             <li>a_sitemap</li>
@@ -45,7 +46,13 @@ Memcache|Dashboard
             <li>a_show</li>
             <li>a_slug_{slug}</li>
             <li>a_kw_{keyword}</li>
-            <li>{key}</li>
+        </ul>
+    </div>
+    <div class="help">
+        <h4>Page</h4>
+        <ul>
+            <li>p_all</li>
+            <li>p_slug_{slug}</li>
         </ul>
     </div>
     <div class="help">
@@ -58,8 +65,8 @@ Memcache|Dashboard
     <div class="help">
         <h4>Melody</h4>
         <ul>
-            <li>melody${label} 1week</li>
-            <li>melody$demo/{url} 1week</li>
+            <li>melody_{label} 1week</li>
+            <li>melody_demo_{url} 1week</li>
         </ul>
     </div>
     <div class="help">
