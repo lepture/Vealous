@@ -75,8 +75,6 @@ class Dashboard(WebHandler):
             message = self.session.get('message','')
             self.session.delete('message')
         rdic['message'] = message
-        rdic['article_count'] = dbs.Counter.get('articles')
-        rdic['page_count'] = dbs.Counter.get('pages')
         comments = memcache.get('disqus$comments')
         path = get_path(self.request, 'dashboard.html')
         if comments is not None:
@@ -114,29 +112,31 @@ class ViewArticle(WebHandler):
                 self.session['message'] = "Can't find the article"
             return self.redirect('/god/article?from='+action)
         if 'filter' == action:
-            data = self.get_filter(status)
+            keys = self.get_filter(status)
         elif 'find' == action:
             data = self.get_find(key)
             if data:
                 return self.redirect('/god/article/edit?key=%s' % data.key())
             message = "Not find the article"
-            data = dbs.Article.gql('ORDER BY created DESC')
+            keys = dbs.Article.all_keys()
         else:
-            data = dbs.Article.gql('ORDER BY created DESC')
+            keys = dbs.Article.all_keys()
         rdic['message'] = message
         p = self.request.get('p',1)
-        rdic['mvdata'] = Paginator(data, p)
+        rdic['mvdata'] = dbs.Article.get_page(keys, p)
         path = get_tpl('article.html')
         return self.response.out.write(render(path,rdic))
 
     def get_filter(self, status):
         if '0' == status:
-            data = dbs.Article.gql('WHERE draft = :1 ORDER BY created DESC', False)
+            keys = dbs.Article.show_keys()
         elif '1' == status:
-            data = dbs.Article.gql('WHERE draft = :1 ORDER BY created DESC', True)
+            allkeys = dbs.Article.all_keys()
+            showkeys = dbs.Article.show_keys()
+            keys = list(set(allkeys) - set(showkeys))
         else:
-            data = dbs.Article.gql('ORDER BY created DESC')
-        return data
+            keys = dbs.Article.all_keys()
+        return keys 
 
     def get_find(self, key):
         q = dbs.Article.gql('WHERE slug =:1', key)
@@ -546,20 +546,6 @@ class TaskPing(WebHandler):
         except:
             return self.response.out.write('Google Blog Ping Failed')
 
-class ResetCounter(WebHandler):
-    @be_god
-    def get(self):
-        a = dbs.Article.all().count()
-        b = dbs.Article.gql('WHERE draft=:1', False).count()
-        c = dbs.Page.all().count()
-        dbs.Counter.set('articles', a)
-        dbs.Counter.set('showarticles', b)
-        dbs.Counter.set('pages', c)
-        message = 'articles: %s | posts: %s | pages: %s' % (a,b,c)
-        self.session['message'] = message
-        to = '/god?from=resetcount'
-        return self.redirect(to)
-
 apps = webapp.WSGIApplication(
     [
         ('/god/?', Dashboard),
@@ -577,7 +563,6 @@ apps = webapp.WSGIApplication(
         ('/god/melody/add', AddMelody),
         ('/god/melody/edit', EditMelody),
         ('/god/console/memcache', ConsoleMemcache),
-        ('/god/console/resetcount', ResetCounter),
         ('/god/task/ping', TaskPing),
     ],
     debug = config.DEBUG,

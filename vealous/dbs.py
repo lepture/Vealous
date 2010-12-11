@@ -29,7 +29,7 @@ class Article(db.Model):
         return '/a/%s' % self.slug
     
     @classmethod
-    def add(cls, title, slug, text, draft, keyword='nokeyword'):
+    def add(cls, title, slug, text, draft, keyword=''):
         key = 'a_slug_' + slug
         data = memcache.get(key)
         if data is not None:
@@ -41,57 +41,53 @@ class Article(db.Model):
         data.put()
         memcache.set(key, data)
 
-        keys = ['a_atom', 'a_rss', 'a_sitemap']
-        keys += ['a_keyword_%s' % tag for tag in data.keyword.split()]
-        keys += ['a_showten_%s' % p for p in range(Counter.get('showarticles')+1)]
+        keys = ['a_atom', 'a_rss', 'a_sitemap', 'a_all', 'a_show']
+        keys.append('a_kw_%s' % keyword)
         memcache.delete_multi(keys)
-        Counter.increase('articles')
-        if not draft:
-            Counter.increase('showarticles')
         return data
 
     def update(self, title, slug, text, draft, keyword=''):
-        keys = ['a_atom', 'a_rss', 'a_sitemap']
-        if self.draft and not draft:
-            self.draft = draft
-            Counter.increase('showarticles')
-        elif not self.draft and draft:
-            self.draft = draft
-            Counter.decrease('showarticles')
+        keys = ['a_atom', 'a_rss', 'a_sitemap', 'a_all', 'a_show']
+        keys.append('a_kw_%s' % keyword)
+        keys.append(str(self.key()))
+        memcache.delete_multi(keys)
+
         self.title = title
         self.slug = slug
         self.text = text
+        self.draft = draft
         self.html = markdown.markdown(text)
-        if self.keyword != keyword:
-            self.keyword = keyword
-            keys += ['a_keyword_%s' % tag for tag in self.keyword.split()]
         self.put()
-
-        keys += ['a_showten_%s' % p for p in range(Counter.get('showarticles')+1)]
-        memcache.delete_multi(keys)
 
         key = 'a_slug_' + slug
         memcache.set(key, self)
         return self
 
     def sw_status(self, draft=True):
-        keys = ['a_atom', 'a_rss', 'a_sitemap']
+        keys = ['a_atom', 'a_rss', 'a_sitemap', 'a_show']
+        keys.append('a_kw_%s' % self.keyword)
+        keys.append(str(self.key()))
         if self.draft and not draft:
             self.draft = draft
-            Counter.increase('showarticles')
             self.put()
         elif not self.draft and draft:
             self.draft = draft
-            Counter.decrease('showarticles')
             self.put()
-        keys += ['a_showten_%s' % p for p in range(Counter.get('showarticles')+1)]
         memcache.delete_multi(keys)
         key = 'a_slug_' + self.slug
         memcache.set(key, self)
         return self 
 
+    def delete(self):
+        keys = ['a_atom', 'a_rss', 'a_sitemap', 'a_show']
+        keys.append('a_kw_%s' % self.keyword)
+        keys.append('a_slug_%s' % self.slug)
+        memcache.delete_multi(keys)
+        db.delete(self)
+        return self
+
     @classmethod
-    def get(cls, slug):
+    def get_by_slug(cls, slug):
         key = 'a_' + slug
         data = memcache.get(key)
         if data is not None:
@@ -104,43 +100,92 @@ class Article(db.Model):
             return data[0]
         return None
 
-    def delete(self):
-        keys = ['a_slug_'+self.slug, 'a_atom', 'a_rss', 'a_sitemap']
-        keys += ['a_keyword_%s' % tag for tag in self.keyword.split()]
-        keys += ['a_showten_%s' % p for p in range(Counter.get('showarticles')+1)]
-        memcache.delete_multi(keys)
-        db.delete(self)
-        Counter.decrease('articles')
-        if not self.draft:
-            Counter.decrease('showarticles')
-        return self
-
     @classmethod
-    def getten(cls, p=0):
-        p = make_int(p)
-        key = 'a_showten_%s' % p
+    def get_by_key(cls, key):
         data = memcache.get(key)
         if data is not None:
             return data
-        q = cls.gql("WHERE draft = :1 ORDER BY created DESC", False)
-        offset = 10*p
-        data = q.fetch(10, offset)
-        logging.info('Get Ten Article from DB, p=%s' % p)
+        data = db.get(key)
+        if not data:
+            return None
         memcache.set(key, data)
         return data
 
     @classmethod
-    def get_kw_articles(cls, keyword):
-        key = 'a_keyword_' + keyword
+    def show_keys(cls):
+        data = memcache.get('a_show')
+        if data is not None:
+            return data
+        q = db.GqlQuery('SELECT __key__ from Article WHERE draft = :1', False)
+        data = [str(key) for key in q]
+        memcache.set('a_show', data)
+        return data
+
+    @classmethod
+    def all_keys(cls):
+        data = memcache.get('a_all')
+        if data is not None:
+            return data
+        q = db.GqlQuery('SELECT __key__ from Article')
+        data = [str(key) for key in q]
+        memcache.set('a_all', data)
+        return data
+
+    @classmethod
+    def kw_keys(cls, keyword):
+        key = 'a_kw_%s' % keyword
         data = memcache.get(key)
         if data is not None:
             return data
-        q = cls.gql("WHERE draft = :1 ORDER BY created DESC", False)
-        data = q.fetch(1000)
-        data = filter(lambda entry: keyword in entry.keyword.split(), data)
+        q = db.GqlQuery('SELECT __key__ from Article WHERE keyword = :1 AND draft = :2', keyword, False)
+        data = [str(key) for key in q]
         memcache.set(key, data)
-        logging.info('Get Articles from DB by keyword : ' + keyword)
         return data
+
+    @classmethod
+    def get_articles_by_keys(cls, keys):
+        data = memcache.get_multi(keys)
+        miss = list(set(keys) - set(data.keys()))
+        if miss:
+            logging.info('Missing keys: ' + str(miss))
+        for key in miss:
+            data.update({key: cls.get_by_key(key)})
+        keys = sorted(data.keys(), reverse=True)
+        articles = [data[key] for key in keys]
+        return articles
+
+    @classmethod
+    def get_page(cls, keys, p=1):
+        try:
+            p = int(p)
+        except:
+            p = 1
+        item_num = len(keys)
+        if item_num % 10:
+            page_num = item_num / 10 + 1
+        else:
+            page_num = item_num / 10 
+        has_previous = p > 1
+        previous_num = p - 1
+        has_next = p < page_num
+        next_num = p + 1
+        show_first = p > 5
+        show_first_dash = show_first and p != 6
+        show_last = (page_num - p) > 5
+        show_last_dash = show_last and (page_num - p) != 6
+        page_range = [i for i in range(p-4, p+5) if i in range(1, page_num+1)]
+        _start = (p-1)*10
+        _end = p*10
+        object_list = cls.get_articles_by_keys(keys[_start:_end])
+        rdic = {
+            'p':p, 'item_num':item_num, 'page_num':page_num,
+            'has_previous':has_previous, 'previous_num':previous_num,
+            'has_next':has_next,'next_num':next_num,
+            'show_first':show_first, 'show_first_dash':show_first_dash,
+            'show_last':show_last, 'show_last_dash':show_last_dash,
+            'page_range':page_range, 'object_list':object_list
+        }
+        return rdic
 
 class Page(db.Model):
     title = db.StringProperty(required=True)
@@ -166,7 +211,6 @@ class Page(db.Model):
         memcache.set(key, data)
         keys = ['p$all']
         memcache.delete_multi(keys)
-        Counter.increase('pages')
         return data
 
     def update(self, title, slug, text):
@@ -401,59 +445,5 @@ class DictBook(db.Model):
         q = cls.gql('ORDER BY created DESC')
         data = q.fetch(1000)
         memcache.set('dict$all', data)
-        return data
-
-class Counter(db.Model):
-    name = db.StringProperty()
-    number = db.IntegerProperty(default=0)
-    created = db.DateTimeProperty(auto_now_add=True)
-    modified = db.DateTimeProperty(auto_now=True)
-    @classmethod
-    def add(cls, name):
-        key = 'counter_' + str(name)
-        data = cls(key_name=key, name=str(name))
-        data.put()
-        return data
-    @classmethod
-    def increase(cls, name):
-        key = 'counter_' + str(name)
-        data = cls.get_by_key_name(key)
-        if not data:
-            data = cls.add(name)
-        data.number += 1
-        data.put()
-        memcache.set(key, data)
-        return data
-    @classmethod
-    def decrease(cls, name):
-        key = 'counter_' + str(name)
-        data = cls.get_by_key_name(key)
-        if not data:
-            data = cls.add(name)
-        if data.number > 0:
-            data.number -= 1
-            data.put()
-            memcache.set(key, data)
-        return data
-    @classmethod
-    def get(cls, name):
-        key = 'counter_' + str(name)
-        data = memcache.get(key)
-        if data is not None:
-            return data.number
-        data = cls.get_by_key_name(key)
-        if data:
-            memcache.set(key, data)
-            return data.number
-        return 0
-    @classmethod
-    def set(cls, name, value=1):
-        key = 'counter_' + str(name)
-        data = cls.get_by_key_name(key)
-        if not data:
-            data = cls.add(name)
-        data.number = value
-        data.put()
-        memcache.set(key, data)
         return data
 

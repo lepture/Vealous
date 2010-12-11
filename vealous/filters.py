@@ -29,11 +29,15 @@ def feedtime(value):
 
 @register.filter
 def split(value,arg,num=0):
+    if not value:
+        return ''
     num = int(num)
     return value.split(arg)[num]
 
 @register.filter
 def str2list(value, arg=None):
+    if not value:
+        return []
     if not arg:
         return value.split()
     return value.split(arg)
@@ -52,6 +56,8 @@ def gravatar(value, arg='normal'):
 
 @register.filter
 def gtitle(value):
+    if not value:
+        return ''
     value = value.split('|')[0]
     return value
 
