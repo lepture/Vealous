@@ -119,7 +119,7 @@ class Article(db.Model):
         data = memcache.get('a_show')
         if data is not None:
             return data
-        q = db.GqlQuery('SELECT __key__ from Article WHERE draft = :1', False)
+        q = db.GqlQuery('SELECT __key__ from Article WHERE draft = :1 ORDER BY created DESC', False)
         data = [str(key) for key in q]
         memcache.set('a_show', data)
         return data
@@ -129,7 +129,7 @@ class Article(db.Model):
         data = memcache.get('a_all')
         if data is not None:
             return data
-        q = db.GqlQuery('SELECT __key__ from Article')
+        q = db.GqlQuery('SELECT __key__ from Article ORDER BY created DESC')
         data = [str(key) for key in q]
         memcache.set('a_all', data)
         return data
@@ -140,8 +140,8 @@ class Article(db.Model):
         data = memcache.get(key)
         if data is not None:
             return data
-        q = db.GqlQuery('SELECT __key__ from Article WHERE keyword = :1 AND draft = :2', keyword, False)
-        data = [str(key) for key in q]
+        q = db.GqlQuery('SELECT __key__ from Article WHERE keyword = :1 AND draft = :2 ORDER BY created DESC', keyword, False)
+        data = [str(k) for k in q]
         memcache.set(key, data)
         return data
 
@@ -153,8 +153,7 @@ class Article(db.Model):
             logging.info('Missing keys: ' + str(miss))
         for key in miss:
             data.update({key: cls.get_by_key(key)})
-        keys = sorted(data.keys(), reverse=True)
-        articles = [data[key] for key in keys]
+        articles = sorted(data.itervalues(), key = lambda x:x.created, reverse=True)
         return articles
 
     @classmethod

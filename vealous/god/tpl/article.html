@@ -25,12 +25,12 @@ Article|Dashboard
         <div class="cell article clearfix">
             <div class="content alignleft">
                 <h3 class="title"><a href="{{data.the_url}}">{{data.title}}</a></h3>
-                <p><label>Created at</label> <span class="time">{{data.created|prettytime}}</span> {%if data.draft%}<a class="status" href="?action=post&key={{data.key}}">Post It</a>{%else%}<a href="?action=draft&key={{data.key}}">Draft It</a>{%endif%}</p>
+                <p><label>Created at</label> <span class="time">{{data.created|prettytime}}</span> {%if data.draft%}<a class="status" href="?p={{p}};action=post;key={{data.key}}">Post It</a>{%else%}<a class="status" href="?p={{p}};action=draft;key={{data.key}}">Draft It</a>{%endif%}</p>
                 <p><label>Update at</label> <span class="time">{{data.modified|prettytime}}</span></p>
             </div>
             <div class="action alignright">
-                <a href="/god/article/edit?key={{data.key}}" class="edit">Edit</a>
-                <a href="/god/article/edit?key={{data.key}}&action=delete" class="delete">Delete</a>
+                <a href="/god/article/edit?key={{data.key}};p={{p}}" class="edit">Edit</a>
+                <a href="/god/article/edit?key={{data.key}};action=delete;p={{p}}" class="delete">Delete</a>
             </div>
         </div>
         {%endfor%}
@@ -48,8 +48,8 @@ Article|Dashboard
     </div>
     <div class="help access">
         <h4>Filter</h4>
-        <a class="button" href="?action=filter&draft=1">Show Drafts</a>
-        <a class="button" href="?action=filter&draft=0">Show Posts</a>
+        <a class="button" href="?action=filter;draft=1;p={{p}}">Show Drafts</a>
+        <a class="button" href="?action=filter;draft=0;p={{p}}">Show Posts</a>
     </div>
 </div>
 {%endblock%}

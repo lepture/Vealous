@@ -56,7 +56,7 @@ class Article(webapp.RequestHandler):
     def get(self, slug):
         slug = safeunquote(slug)
         rdic = {}
-        data = dbs.Article.get(slug)
+        data = dbs.Article.get_by_slug(slug)
         if not data:
             logging.info('404 , visite article ' + slug)
             path = get_path(self.request, '404.html')

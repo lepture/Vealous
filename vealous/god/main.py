@@ -97,11 +97,14 @@ class ViewArticle(WebHandler):
         message = ''
         if source:
             message = self.session.get('message','')
+            logging.info(message)
             self.session.delete('message')
         rdic = {}
         action = self.request.get('action', 'none').lower()
         key = self.request.get('key', 'none')
         status = self.request.get('draft', '2')
+        p = self.request.get('p',1)
+        to = '/god/article?from=%s;p=%s' % (action, p)
         if 'draft' == action or 'post' == action:
             data = db.get(key)
             if data and 'draft' == action:
@@ -110,13 +113,13 @@ class ViewArticle(WebHandler):
                 data.sw_status(False)
             else:
                 self.session['message'] = "Can't find the article"
-            return self.redirect('/god/article?from='+action)
+            return self.redirect(to)
         if 'filter' == action:
             keys = self.get_filter(status)
         elif 'find' == action:
             data = self.get_find(key)
             if data:
-                return self.redirect('/god/article/edit?key=%s' % data.key())
+                return self.redirect('/god/article/edit?key=%s;p=%s' % (data.key(), p))
             message = "Not find the article"
             keys = dbs.Article.all_keys()
         else:
@@ -124,6 +127,7 @@ class ViewArticle(WebHandler):
         rdic['message'] = message
         p = self.request.get('p',1)
         rdic['mvdata'] = dbs.Article.get_page(keys, p)
+        rdic['p'] = p
         path = get_tpl('article.html')
         return self.response.out.write(render(path,rdic))
 
@@ -168,11 +172,13 @@ class EditArticle(WebHandler):
     def post(self):
         rdic = {}
         key = self.request.get('key', None)
+        p = self.request.get('p', 1)
+        to = '/god/article?p=%s' % p
         if not key:
-            return self.redirect('/god/article')
+            return self.redirect(to)
         data = db.get(key)
         if not data:
-            return self.redirect('/god/article')
+            return self.redirect(to)
         title = self.request.get('title', None)
         slug = self.request.get('slug', None)
         text = self.request.get('text', None)
@@ -184,11 +190,12 @@ class EditArticle(WebHandler):
             draft = False
         if title and slug:
             slug = slug.replace(' ','-')
+            keyword = keyword.replace(' ','-')
             data.update(title, slug, text, draft, keyword)
             self.session['message'] = 'Article <a href="/god/article/edit?key=%s">%s</a> has been modified' % (data.key(), data.title)
             if not draft:
                 taskqueue.add(url='/god/task/ping', method="GET")
-            return self.redirect('/god/article?from=edit')
+            return self.redirect(to + ';from=edit')
         rdic['data'] = data
         message = 'Please fill the required fields'
         rdic['message'] = message

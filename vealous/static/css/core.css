@@ -36,5 +36,6 @@ fieldset,img,abbr { border: 0; }
 address,caption,cite,code,dfn,h4,h5,h6,th,var { font-style: normal; font-weight: normal; }
 caption,th { text-align: left; }
 code, pre { font-family: Consolas, Monaco, "Courier New", Courier, monospace; }
+pre { overflow: scroll; }
 textarea { width: 98%; max-width: 98%; margin: 0 auto; }
 a { text-decoration: none; outline: 0 none; }
