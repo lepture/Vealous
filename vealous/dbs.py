@@ -48,7 +48,9 @@ class Article(db.Model):
 
     def update(self, title, slug, text, draft, keyword=''):
         keys = ['a_atom', 'a_rss', 'a_sitemap', 'a_all', 'a_show']
-        keys.append('a_kw_%s' % keyword)
+        if self.keyword != keyword:
+            keys.append('a_kw_%s' % keyword)
+            keys.append('a_kw_%s' % self.keyword)
         keys.append(str(self.key()))
         memcache.delete_multi(keys)
 
@@ -56,6 +58,7 @@ class Article(db.Model):
         self.slug = slug
         self.text = text
         self.draft = draft
+        self.keyword = keyword
         self.html = markdown.markdown(text)
         self.put()
 
