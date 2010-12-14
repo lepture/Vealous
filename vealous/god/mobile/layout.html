@@ -11,10 +11,7 @@
     <body>
         <div id="header">
             <div class="wrapper clearfix">
-                <div class="brand alignleft">
-                    <h2><a href="/">{{vigo.sitename|default:"Vealous"}}</a></h2>
-                    <p class="pretty">{{vigo.sitetag|default:"Love its people, but never trust its government"}}</p>
-                </div>
+                <h2 class="brand"><a href="/">{{vigo.sitename|default:"Vealous"}}</a></h2>
             </div>
         </div>
         <div id="mainbody">
@@ -37,9 +34,6 @@
             <div class="wrapper">
                 {%block account%}<p class="pretty"><a href="/god/logout"><strong>Logout</strong></a> | <a href="/god/chpasswd"><strong>Change Password</strong></a> of <a href="http://i.shiao.org">Vealous God Lands</a></p>{%endblock%}
                 <p class="pretty">Copyleft by <a href="http://i.shiao.org">@lepture</a> &copy; 2010-{%now "Y"%} Version {{conf.version}}</p>
-            </div>
-            <div class="wrapper">
-                <a rel="external" href="http://code.google.com/appengine"><img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Powered by Google App Engine" /></a>
             </div>
         </div>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
