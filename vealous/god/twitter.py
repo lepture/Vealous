@@ -42,8 +42,10 @@ class Twitter(object):
         return res.content
     def set_qs_api(self, qs, input_encoding=None):
         self.token = twitter.oauth.Token.from_string(qs)
-        api = twitter.Api(self.consumer.key, self.consumer.secret,
-                          self.token.key, self.token.secret, input_encoding)
+        api = twitter.Api(
+            self.consumer.key, self.consumer.secret,
+            self.token.key, self.token.secret, input_encoding
+        )
         return api
 
 
@@ -64,7 +66,14 @@ class Dashboard(WebHandler):
         api = Twitter().set_qs_api(qs)
         statuses = memcache.get('twitter$home')
         if statuses is None:
-            statuses = api.GetFriendsTimeline(count=30, retweets=True)
+            try:
+                statuses = api.GetFriendsTimeline(count=30, retweets=True)
+            except twitter.TwitterError, e:
+                logging.warn(str(e))
+                return self.redirect('/god/twitter')
+            except urlfetch.DownloadError, e:
+                logging.warn(str(e))
+                return self.redirect('/god/twitter')
             for status in statuses:
                 status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
             memcache.set('twitter$home', statuses, 240)
@@ -95,6 +104,9 @@ class UserStatus(WebHandler):
             except twitter.TwitterError, e:
                 logging.warn(str(e))
                 return self.redirect('/god/twitter')
+            except urlfetch.DownloadError, e:
+                logging.warn(str(e))
+                return self.redirect('/god/twitter')
             for status in statuses:
                 status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
             memcache.set('twitter$status$' + username, statuses, 240)
@@ -120,6 +132,9 @@ class Mentions(WebHandler):
             try:
                 statuses = api.GetReplies()
             except twitter.TwitterError, e:
+                logging.warn(str(e))
+                return self.redirect('/god/twitter')
+            except urlfetch.DownloadError, e:
                 logging.warn(str(e))
                 return self.redirect('/god/twitter')
             for status in statuses:
@@ -151,6 +166,9 @@ class Directs(WebHandler):
             except twitter.TwitterError, e:
                 logging.warn(str(e))
                 return self.redirect('/god/twitter')
+            except urlfetch.DownloadError, e:
+                logging.warn(str(e))
+                return self.redirect('/god/twitter')
             for status in statuses:
                 status.datetime = datetime.datetime.strptime(status.created_at, '%a %b %d %H:%M:%S +0000 %Y')
             memcache.set('twitter$directs', statuses, 240)
@@ -173,6 +191,9 @@ class Favorites(WebHandler):
             try:
                 statuses = api.GetFavorites()
             except twitter.TwitterError, e:
+                logging.warn(str(e))
+                return self.redirect('/god/twitter')
+            except urlfetch.DownloadError, e:
                 logging.warn(str(e))
                 return self.redirect('/god/twitter')
             for status in statuses:
@@ -201,6 +222,9 @@ class UserFavorites(WebHandler):
             try:
                 statuses = api.GetFavorites(user=username)
             except twitter.TwitterError, e:
+                logging.warn(str(e))
+                return self.redirect('/god/twitter')
+            except urlfetch.DownloadError, e:
                 logging.warn(str(e))
                 return self.redirect('/god/twitter')
             for status in statuses:
@@ -284,6 +308,8 @@ class PostStatus(WebHandler):
             data = {'text':'Post To Twitter Success'}
         except twitter.TwitterError, e:
             data = {'text':str(e)}
+        except urlfetch.DownloadError, e:
+            data = {'text':str(e)}
         self.response.out.write(simplejson.dumps(data))
 
 class AddFav(WebHandler):
@@ -300,6 +326,9 @@ class AddFav(WebHandler):
         except twitter.TwitterError, e:
             data = {'text':str(e)}
             return self.response.out.write(simplejson.dumps(data))
+        except urlfetch.DownloadError, e:
+            data = {'text':str(e)}
+            return self.response.out.write(simplejson.dumps(data))
         return self.response.out.write('{"text":"Twitter Add Favorite Success"}')
 
 class DelFav(WebHandler):
@@ -314,6 +343,9 @@ class DelFav(WebHandler):
         try:
             api.DestroyFavorite(status)
         except twitter.TwitterError, e:
+            data = {'text':str(e)}
+            return self.response.out.write(simplejson.dumps(data))
+        except urlfetch.DownloadError, e:
             data = {'text':str(e)}
             return self.response.out.write(simplejson.dumps(data))
         return self.response.out.write('{"text":"Twitter Delete Favorite Success"}')
