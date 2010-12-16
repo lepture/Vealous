@@ -14,6 +14,14 @@ def is_mobile(request):
         return True
     return False
 
+def is_spider(request):
+    ua = request.headers.get('User-Agent', 'bot')
+    _reg = 'bot|crawl|spider|slurp|search|lycos|robozilla'
+    if re.search(_reg, ua.lower()):
+        return True
+    return False
+
+
 def be_god(func):
     def decorator(handler, *args, **kwargs):
         auth = handler.session.get('auth',0)

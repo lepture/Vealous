@@ -10,7 +10,7 @@ from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 
 from utils.render import render
-from utils import is_mobile, safeunquote
+from utils import is_mobile, is_spider, safeunquote
 import dbs
 
 import config
@@ -64,6 +64,8 @@ class Article(webapp.RequestHandler):
             return self.response.out.write(html)
         mode = self.request.get('mode','mark')
         if 'plaintext' == mode:
+            if is_spider(self.request):
+                return self.error(404)
             self.response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
             html = data.text
             return self.response.out.write(html)
