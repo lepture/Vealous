@@ -10,13 +10,13 @@ from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 
 from utils.render import render
-from utils import is_mobile, is_spider, safeunquote
+from utils.handler import BaseHandler
 import dbs
 
 import config
 
-def get_path(request, name):
-    if is_mobile(request):
+def get_path(condition, name):
+    if condition:
         path = os.path.join(config.ROOT, 'tpl','mobile' , name)
         return path
     path = os.path.join(config.ROOT, 'tpl', config.THEME, name)
@@ -29,10 +29,7 @@ def get_navs():
     dic['more'] = filter(lambda nav: 'more'==nav.ext, navs)
     return dic
 
-class Index(webapp.RequestHandler):
-    def head(self):
-        pass
-
+class Index(BaseHandler):
     def get(self):
         rdic = {}
         keys = dbs.Article.show_keys()[:10]
@@ -44,60 +41,57 @@ class Index(webapp.RequestHandler):
             rdic['articles'] = articles
         rdic['links'] = dbs.Melody.get_all('link')
         rdic['navs'] = get_navs()
-        path = get_path(self.request, 'index.html')
+        path = get_path(self.is_mobile, 'index.html')
         html = render(path, rdic)
         self.response.out.write(html)
 
-class Article(webapp.RequestHandler):
-    def head(self, url):
+class Article(BaseHandler):
+    def head(self, slug):
         pass
 
     def get(self, slug):
-        slug = safeunquote(slug)
+        slug = self.unquote(slug)
         rdic = {}
         data = dbs.Article.get_by_slug(slug)
         if not data:
             logging.info('404 , visite article ' + slug)
-            path = get_path(self.request, '404.html')
+            path = get_path(self.is_mobile, '404.html')
             self.response.set_status(404)
             html = render(path, rdic)
             return self.response.out.write(html)
         mode = self.request.get('mode','mark')
         if 'plaintext' == mode:
-            if is_spider(self.request):
+            if self.is_spider:
                 return self.error(404)
             self.response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
             html = data.text
             return self.response.out.write(html)
         rdic['navs'] = get_navs()
         rdic['data'] = data
-        path = get_path(self.request, 'article.html')
+        path = get_path(self.is_mobile, 'article.html')
         html = render(path, rdic)
         self.response.out.write(html)
 
-class Archive(webapp.RequestHandler):
-    def head(self):
-        pass
-
+class Archive(BaseHandler):
     def get(self):
         rdic = {}
         rdic['navs'] = get_navs()
         p = self.request.get('p',1)
         keys = dbs.Article.show_keys()
         rdic['mvdata'] = dbs.Article.get_page(keys, p)
-        path = get_path(self.request, 'archive.html')
+        path = get_path(self.is_mobile, 'archive.html')
         self.response.out.write(render(path,rdic))
 
-class Keyword(webapp.RequestHandler):
+class Keyword(BaseHandler):
     def head(self, keyword):
         pass
     def get(self, keyword):
-        keyword = safeunquote(keyword)
+        keyword = self.unquote(keyword)
         rdic = {}
         keys = dbs.Article.kw_keys(keyword)
         if not keys:
             logging.info('404 , visite keyword ' + keyword)
-            path = get_path(self.request, '404.html')
+            path = get_path(self.is_mobile, '404.html')
             html = render(path, rdic)
             self.response.set_status(404)
             return self.response.out.write(html)
@@ -106,38 +100,38 @@ class Keyword(webapp.RequestHandler):
         rdic['navs'] = get_navs()
         rdic['links'] = dbs.Melody.get_all('link')
         rdic['keyword'] = keyword
-        path = get_path(self.request, 'keyword.html')
+        path = get_path(self.is_mobile, 'keyword.html')
         html = render(path, rdic)
         self.response.out.write(html)
 
-class Page(webapp.RequestHandler):
+class Page(BaseHandler):
     def get(self, slug):
-        slug = safeunquote(slug)
+        slug = self.quote(slug)
         data = dbs.Page.get_by_slug(slug)
         rdic = {}
         rdic['navs'] = get_navs()
         rdic['links'] = dbs.Melody.get_all('link')
         if not data:
             logging.info('404 , visite page ' + slug)
-            path = get_path(self.request, '404.html')
+            path = get_path(self.is_mobile, '404.html')
             self.response.set_status(404)
             html = render(path, rdic)
             return self.response.out.write(html)
         rdic['data'] = data
-        path = get_path(self.request, 'page.html')
+        path = get_path(self.is_mobile, 'page.html')
         html = render(path, rdic)
         self.response.out.write(html)
 
-class DEMO(webapp.RequestHandler):
+class DEMO(BaseHandler):
     def get(self, slug):
-        slug = safeunquote(slug)
+        slug = self.unquote(slug)
         data = dbs.Melody.get_demo(slug)
         rdic = {}
         rdic['navs'] = get_navs()
         rdic['links'] = dbs.Melody.get_all('link')
         if not data:
             logging.info('404 , visite demo ' + slug)
-            path = get_path(self.request, '404.html')
+            path = get_path(self.is_mobile, '404.html')
             self.response.set_status(404)
             html = render(path, rdic)
             return self.response.out.write(html)
@@ -145,7 +139,7 @@ class DEMO(webapp.RequestHandler):
         self.response.out.write(data.text)
 
 
-class Search(webapp.RequestHandler):
+class Search(BaseHandler):
     def get(self):
         rdic = {}
         cx = config.gcse
@@ -156,10 +150,10 @@ class Search(webapp.RequestHandler):
         except:
             rdic['error'] = 'Oops! An Error occured!'
         rdic['navs'] = get_navs()
-        path = get_path(self.request, 'search.html')
+        path = get_path(self.is_mobile, 'search.html')
         self.response.out.write(render(path,rdic))
 
-class Atom(webapp.RequestHandler):
+class Atom(BaseHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
         html = memcache.get('a_atom')
@@ -173,7 +167,7 @@ class Atom(webapp.RequestHandler):
         memcache.set('a_atom', html)
         self.response.out.write(html)
 
-class Rss(webapp.RequestHandler):
+class Rss(BaseHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
         html = memcache.get('a_rss')
@@ -187,7 +181,7 @@ class Rss(webapp.RequestHandler):
         memcache.set('a_rss', html)
         self.response.out.write(html)
 
-class Sitemap (webapp.RequestHandler):
+class Sitemap (BaseHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/xml; charset=UTF-8'
         html = memcache.get('a_sitemap')
@@ -213,16 +207,16 @@ class Sitemap (webapp.RequestHandler):
         memcache.set('a_sitemap', html)
         self.response.out.write(html)
 
-class Redirect(webapp.RequestHandler):
+class Redirect(BaseHandler):
     def get(self, path):
         logging.info('redirect from path ' + path)
         self.redirect('/' + path)
 
-class Error404(webapp.RequestHandler):
+class Error404(BaseHandler):
     def get(self):
         logging.info('404')
         rdic = {}
-        path = get_path(self.request, '404.html')
+        path = get_path(self.is_mobile, '404.html')
         self.response.set_status(404)
         self.response.out.write(render(path,rdic))
 

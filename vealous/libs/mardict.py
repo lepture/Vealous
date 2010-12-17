@@ -9,7 +9,7 @@ Using api from http://dict.cn and http://www.google.com
 Orignally Publish at http://mardict.appspot.com
 """
 
-__author__ = 'Marvour Young <marvour@gmail.com>'
+__author__ = 'Hsiaoming Young<i@shiao.org>'
 __version__ = '1.0'
 __license__ = 'BSD LICENSE'
 

@@ -1,6 +1,6 @@
 ### Vealous
 
-**Author**: lepture[<i@shiao.org>]
+**Author**: Hsiaoming Young (aka lepture) [<i@shiao.org>]
 
 **Blog**: <http://i.shiao.org>
 
@@ -12,7 +12,7 @@ Help at <http://i.shiao.org/a/help-on-vealous>
 ### Why Vealous
 I just started this project at Wed. Aug. 25, 2010 when I found [Picky](http://picky.olivida.com/picky).
 
-Before that, I was coding with [marvour blog](http://github.com/lepture/marlog), a blog system written in [webpy](http://webpy.org). Too complex the data structure it is, and I am tired of it. Why should it contain tags or category, why should i write a standard blog system?
+Before that, I was coding with [Marlog](http://github.com/lepture/marlog), a blog system written in [webpy](http://webpy.org). Too complex the data structure it is, and I am tired of it. Why should it contain tags or category, why should i write a standard blog system?
 
 Then I stopped the project, and started [Vealous](http://i.shiao.org/a/vealous). I intended to call it **jealous**, but this name is not available with appengine, then here comes **Vealous**.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010 by Marvour
+# Copyright 2010 by Hsiaoming Young
 #
 # Under the BSD License
 
@@ -20,10 +20,11 @@ Here is a simple example:
             self.session['session1'] = 'session'
 """
 
-__AUTHOR__ = 'marvour <marvour@gmail.com>'
+__AUTHOR__ = 'Hsiaoming Young<i@shiao.org>'
 __VERSION__ = '1.0'
 
 import os
+import re
 import logging
 import time
 import datetime
@@ -42,6 +43,43 @@ from google.appengine.api import memcache
 #SESSION_EXPIRE = 7200
 from config import SECRET, SESSION_NAME, SESSION_EXPIRE
 
+_mobile = 'ipod|iphone|android|blackberry|palm|nokia|psp|kindle|phone|mobile|opera mini|ucweb|fennec'
+_spider = 'bot|crawl|spider|slurp|search|lycos|robozilla'
+
+class BaseHandler(webapp.RequestHandler):
+    def head(self):
+        pass
+
+    def unquote(self, slug):
+        from urllib2 import unquote
+        try:
+            slug = unquote(slug)
+            if isinstance(slug, str):
+                return slug.decode('utf-8')
+            assert isinstance(slug, unicode)
+            return slug
+        except:
+            return slug
+
+    @property
+    def is_spider(self):
+        if re.search(_spider, self.request.user_agent.lower()):
+            return True
+        return False
+    @property
+    def is_mobile(self):
+        if re.search(_mobile, self.request.user_agent.lower()):
+            logging.info('mobile device visited this site : ' + self.request.user_agent)
+            return True
+        return False
+    @property
+    def client_ip(self):
+        _env = self.request.environ
+        _ip0 = _env.get('HTTP_X_REAL_IP', '')
+        _ip1 = _env.get('HTTP_CLIENT_IP', '')
+        _ip2 = _env.get('HTTP_X_FORWARDED_FOR', '')
+        _ip3 = _env.get('REMOTE_ADDR', '0.0.0.0')
+        return _ip0 or _ip1 or _ip2 or _ip3
 
 class WebHandler(webapp.RequestHandler):
     def initialize(self, request, response):
