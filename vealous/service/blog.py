@@ -2,7 +2,7 @@
 
 import os.path
 import logging
-from urllib2 import quote, unquote
+from urllib2 import quote
 from django.utils.simplejson import loads as parse_json
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
@@ -106,7 +106,7 @@ class Keyword(BaseHandler):
 
 class Page(BaseHandler):
     def get(self, slug):
-        slug = self.quote(slug)
+        slug = self.unquote(slug)
         data = dbs.Page.get_by_slug(slug)
         rdic = {}
         rdic['navs'] = get_navs()
