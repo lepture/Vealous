@@ -4,7 +4,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
 from google.appengine.api import xmpp, memcache
 
-from libs.mardict import DictCN, GoogleDict
+from libs.mardict import DictCN, GoogleDict, QQDict
 from libs import pydouban
 from libs import twitter
 import dbs
@@ -61,6 +61,8 @@ class CMD(object):
             return self._trans2()
         if self._cmd in ('d', 'dict'):
             return self._dict()
+        if self._cmd in ('q', 'qqdict'):
+            return self._qqdict()
         if self._cmd in ('g', 'google'):
             return self._google()
         if self._cmd in ('dt', 'td'):
@@ -88,6 +90,17 @@ class CMD(object):
         if not data:
             return 'Not Found'
         if 'ec' == data['lang']:
+            dbs.DictBook.add(data['word'], data['pron'], data['define'])
+            memcache.set('dict$last', data)
+        return data['reply']
+    def _qqdict(self):
+        if 'zh' != config.LANGUAGE:
+            return 'disabled for international user'
+        d = QQDict(self._content)
+        data = d.reply()
+        if not data:
+            return 'Not Found'
+        if 'eng' == data['lang']:
             dbs.DictBook.add(data['word'], data['pron'], data['define'])
             memcache.set('dict$last', data)
         return data['reply']

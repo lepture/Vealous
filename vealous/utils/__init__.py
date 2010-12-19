@@ -44,14 +44,11 @@ def safeunquote(slug):
         return slug
 
 class Paginator(object):
-    count = 10
-    def __init__(self, data, page=1, item_num=None):
+    def __init__(self, data, count=10, page=1):
         self.data = data
+        self.count = count
         self.page = self._make_int(page)
-        if item_num:
-            self.item_num = item_num
-        else:
-            self.item_num = self.item_num()
+        self.item_num = self.item_num()
         self.page_num = self.page_num()
 
     def item_num(self):
@@ -70,11 +67,7 @@ class Paginator(object):
     
     @property
     def has_next(self):
-        p1 = self.page
-        p2 = self.page_num
-        if p1 < p2:
-            return True
-        return False
+        return self.page < self.page_num
 
     @property
     def next_num(self):
@@ -82,55 +75,35 @@ class Paginator(object):
     
     @property
     def has_previous(self):
-        p1 = self.page
-        if p1 > 1:
-            return True
-        return False
+        return self.page > 1
     
     @property
     def previous_num(self):
         return int(self.page - 1)
     
-    def page_range(self, num=4):
-        current = self.page
-        xlist = range(current-num, current+num+1)
-        plist = range(1, self.page_num + 1)
-        data = []
-        for p in xlist:
-            if p in plist:
-                data.append(p)
-        return data
+    def page_range(self):
+        p = self.page
+        pn = self.page_num
+        return [i for i in range(p-4, p+5) if i in range(1, pn+1)]
 
     @property
     def show_first(self):
-        if self.page > 5:
-            return True
-        return False
+        return self.page > 5
 
     @property
     def show_first_dash(self):
-        p = self.page
-        if p > 5 and p != 6:
-            return True
-        return False
+        return self.page > 5 and self.page != 6
 
     @property
     def show_last(self):
-        n = self.page_num - self.page
-        if n > 5:
-            return True
-        return False
+        return self.page_num - self.page > 5
 
     @property
     def show_last_dash(self):
         n = self.page_num - self.page
-        if n > 5 and n != 6:
-            return True
-        return False
+        return n > 5 and n != 6
 
     def get_items(self):
-        if self.item_num:
-            return self.data
         limit = self.count
         offset = (self.page - 1)*limit
         try:

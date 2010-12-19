@@ -3,9 +3,8 @@
 
 """
 Mardict - Marvour Dict Bot
-Copyright (c) 2010 Marvour Young
+Copyright (c) 2010 Hsiaoming Young
 
-Using api from http://dict.cn and http://www.google.com
 Orignally Publish at http://mardict.appspot.com
 """
 
@@ -109,3 +108,58 @@ class GoogleDict(object):
                 'define': define, 'reply': reply }
         return data
 
+
+class QQDict(object):
+    def __init__(self, word='hello'):
+        try: word = word.encode('utf-8')
+        except UnicodeDecodeError: pass
+        self._url = 'http://dict.qq.com/dict?q=%s' % urllib2.quote(word)
+
+    def _get_source(self):
+        url = self._url
+        try:
+            page = urllib2.urlopen(url)
+            source = parse_json(page.read())
+            page.close()
+        except:
+            return None
+        return source
+
+    def _fix_phos(self, phos):
+        pron = []
+        for pho in phos:
+            match = re.findall(r'&#(\d{3});', pho, re.U)
+            for num in match:
+                fix = '&#%s;' % num
+                pho = pho.replace(fix, unichr(int(num)))
+            pron.append(pho)
+        return ','.join(pron)
+
+    def _fix_des(self, des):
+        define = []
+        for de in des:
+            define.append('%s %s' % (de['p'], de['d']))
+        return ', '.join(define)
+
+    def reply(self):
+        info = self._get_source()
+        if not info:
+            return None
+        lang = info['lang']
+        key = info['local'][0]['word']
+        pron = []
+        define = []
+        for data in info['local']:
+            pron.append(self._fix_phos(data['pho']))
+            define.append(self._fix_des(data['des']))
+        pron = ','.join(pron)
+        define = ';'.join(define)
+        reply = 'from: dict.qq.com\n%s [%s]\n%s' % (key, pron, define)
+        data = {'from': 'QQdict', 'word': key, 'lang': lang,
+                'pron': pron, 'define':define, 'reply': reply}
+        return data
+
+if "__main__" == __name__:
+    q = raw_input('enter: ')
+    d = QQDict(q)
+    print d.reply()
