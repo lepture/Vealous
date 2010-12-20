@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 import os
 
-VERSION = '1.6.0'
+VERSION = '1.6.1'
 
 DEBUG=False
 
@@ -11,7 +11,9 @@ TIMEZONE = 8
 LANGUAGE = 'zh'
 
 THEME = 'slim'
-EMAIL = ''
+EMAIL = '' #your_email_address@gmail.com
+BLOG_EMAIL = '' #hash@appid.appspotmail.com
+# sender post to article-hash@appid.appspotmail.com
 
 LOGIN_URL = '/god/login'
 STATIC_URL = '/static'

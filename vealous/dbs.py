@@ -69,6 +69,8 @@ class Article(db.Model):
     
     @classmethod
     def add(cls, title, slug, text, draft, keyword=''):
+        slug = slug.replace(' ','-')
+        keyword = keyword.replace(' ', '-')
         key = 'a_slug_' + slug
         data = memcache.get(key)
         if data is not None:
@@ -86,6 +88,8 @@ class Article(db.Model):
         return data
 
     def update(self, title, slug, text, draft, keyword=''):
+        slug = slug.replace(' ','-')
+        keyword = keyword.replace(' ', '-')
         keys = ['a_atom', 'a_rss', 'a_sitemap', 'a_all', 'a_show']
         if self.keyword != keyword:
             keys.append('a_kw_%s' % keyword)
@@ -210,6 +214,7 @@ class Page(db.Model):
     
     @classmethod
     def add(cls, title, slug, text):
+        slug = slug.replace(' ','-')
         key = 'p_slug_%s' % slug
         data = memcache.get(key)
         if data is not None:
@@ -222,6 +227,7 @@ class Page(db.Model):
         return data
 
     def update(self, title, slug, text):
+        slug = slug.replace(' ','-')
         self.title = title
         self.slug = slug
         self.text = text
