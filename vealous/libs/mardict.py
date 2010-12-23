@@ -145,13 +145,23 @@ class QQDict(object):
         info = self._get_source()
         if not info:
             return None
+        if not info.has_key('lang'):
+            return None
         lang = info['lang']
-        key = info['local'][0]['word']
+        if not info.has_key('local'):
+            return None
+        if not info['local']:
+            return None
+        local = info['local']
+        key = local[0]['word']
         pron = []
         define = []
-        for data in info['local']:
+        for data in local:
             pron.append(self._fix_phos(data['pho']))
-            define.append(self._fix_des(data['des']))
+            if 'ch' == lang:
+                define.append(','.join(data['des']))
+            else:
+                define.append(self._fix_des(data['des']))
         pron = ','.join(pron)
         define = ';'.join(define)
         reply = 'from: dict.qq.com\n%s [%s]\n%s' % (key, pron, define)
@@ -162,4 +172,4 @@ class QQDict(object):
 if "__main__" == __name__:
     q = raw_input('enter: ')
     d = QQDict(q)
-    print d.reply()
+    print d.reply()['reply']
