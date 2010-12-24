@@ -187,8 +187,6 @@ class EditArticle(WebHandler):
         else:
             draft = False
         if title and slug:
-            slug = slug.replace(' ','-')
-            keyword = keyword.replace(' ','-')
             data.update(title, slug, text, draft, keyword)
             self.session['message'] = 'Article <a href="/god/article/edit?key=%s">%s</a> has been modified' % (data.key(), data.title)
             if not draft:
@@ -220,7 +218,6 @@ class AddArticle(WebHandler):
         else:
             draft = False
         if title and slug:
-            slug = slug.replace(' ','-')
             data = dbs.Article.add(title,slug,text,draft,keyword)
             self.session['message'] = 'New article <a href="/god/article/edit?key=%s">%s</a> has been created' % (data.key(), data.title)
             if not draft:
@@ -253,8 +250,9 @@ class AddArticle(WebHandler):
         else:
             content = content + '... via ' + url
         token = twitter.oauth.Token.from_string(qs)
-        api = twitter.Api(config.twitter_key, config.twitter_secret,
-                          token.key, token.secret, 'utf-8')
+        api = twitter.Api(
+            config.twitter_key, config.twitter_secret,
+            token.key, token.secret, 'utf-8')
         try:
             api.PostUpdate(content)
         except twitter.TwitterError, e:
@@ -304,7 +302,6 @@ class AddPage(WebHandler):
         slug = self.request.get('slug', None)
         text = self.request.get('text', None)
         if title and slug:
-            slug = slug.replace(' ','-')
             data = dbs.Page.add(title,slug,text)
             self.session['message'] = 'New page <a href="/god/page/edit?key=%s">%s</a> has been created' % (data.key(), data.title)
             return self.redirect('/god/page?from=add')
@@ -345,7 +342,6 @@ class EditPage(WebHandler):
         slug = self.request.get('slug', None)
         text = self.request.get('text', None)
         if title and slug:
-            slug = slug.replace(' ','-')
             data.update(title, slug, text)
             self.session['message'] = 'Page <a href="/god/article/edit?key=%s">%s</a> has been modified' % (data.key(), data.title)
             return self.redirect('/god/page?from=edit')

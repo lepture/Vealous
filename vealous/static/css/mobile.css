@@ -261,6 +261,7 @@ body {
 .god input.text {
     margin-right: 4px;
 }
+.god .action { padding: 3px 0; }
 .god .action a {
     margin: 6px;
 }

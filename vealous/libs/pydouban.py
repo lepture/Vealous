@@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 __version__ = '1.0.0'
-__author__ = 'Marvour <marvour@gmail.com>'
+__author__ = 'Hsiaoming Young<i@shiao.org>'
 __website__ = 'http://i.shiao.org/a/pydouban'
 
 import hmac
