@@ -296,9 +296,9 @@ body {
 /*.translate_loading{background:url("../img/ajax-loader.gif") no-repeat;border:0;display:inline;margin:0;padding:0;vertical-align:middle}*/
 #translate_popup{background-color:#FFF;border:2px solid #CCC;font-size:12px;padding:0.5em;position:absolute;z-index:50; text-align: left;}
 .translate_links{border:0;margin:0;padding:0;}
-.translate_links td{border:0;padding:0 1em 0 0;}
+.translate_links td{border:0;padding:0 1em 0 0;vertical-align:top;}
 .translate_links a{display:block;font-weight:normal !important;line-height:1.5;text-decoration:none !important;white-space:nowrap;}
-.translate_links .translate_flag{background:url("../img/flags.png") no-repeat;border:0;margin:0;padding:0;}
+.translate_links .translate_flag{background:url("../img/flags.png") no-repeat;border:0;margin:0;padding:0; display: inline-block; width:16px; height:11px;}
 .translate_links .ar{background-position:0 0;}
 .translate_links .bg{background-position:0 -12px;}
 .translate_links .ca{background-position:0 -24px;}
