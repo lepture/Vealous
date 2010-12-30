@@ -20,10 +20,10 @@ class Disqus(object):
         self._key = key
 
     def get_forum_posts_rpc(self, forumid):
-        urlbase = 'http://disqus.com/api/%s/?user_api_key=%s&api_version=1.1'
+        urlbase = 'http://disqus.com/api/%s/?user_api_key=%s&api_version=1.1&exlude=killed'
         method = 'get_forum_posts'
         key = self._key
-        url = urlbase % (method, key) + '&limit=10&exclude=killed&forum_id=' + str(forumid)
+        url = urlbase % (method, key) + '&limit=10&forum_id=' + str(forumid)
         rpc = urlfetch.create_rpc()
         urlfetch.make_fetch_call(rpc, url)
         self.rpc = rpc
@@ -120,11 +120,23 @@ class DisqusModerate(WebHandler):
         data = {'succeeded': False}
         return self.response.out.write(dumps(data))
 
+class DisqusAll(WebHandler):
+    @be_god
+    def get(self):
+        disqus_key = config.disqus_userkey
+        disqus_forumid = config.disqus_forumid
+        self.response.headers['Content-Type'] = 'application/json'
+        mydisqus = Disqus(disqus_key)
+        mydisqus.get_forum_posts_rpc(disqus_forumid)
+        result = mydisqus.get_forum_posts_result()
+        data = mydisqus.parse_data(result)
+        return self.response.out.write(dumps(data))
 
 
 apps = webapp.WSGIApplication(
     [
         ('/god/disqus/moderate', DisqusModerate),
+        ('/god/disqus/all', DisqusAll),
     ],
     debug = config.DEBUG,
 )

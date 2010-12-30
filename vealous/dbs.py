@@ -125,7 +125,7 @@ class Article(db.Model):
         return self 
 
     def delete(self):
-        keys = ['a_atom', 'a_rss', 'a_sitemap', 'a_show']
+        keys = ['a_atom', 'a_rss', 'a_sitemap', 'a_all', 'a_show']
         keys.append('a_kw_%s' % self.keyword)
         keys.append('a_slug_%s' % self.slug)
         keys.append(str(self.key()))
