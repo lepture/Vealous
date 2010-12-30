@@ -39,3 +39,23 @@ code, pre { font-family: Consolas, Monaco, "Courier New", Courier, monospace; }
 pre { overflow: scroll; }
 textarea { width: 98%; max-width: 98%; margin: 0 auto; }
 a { text-decoration: none; outline: 0 none; }
+#gotop {
+    display: block;
+    position: fixed;
+    right: 52px;
+    top: 42px;
+    padding: 18px;
+    background-color: rgba(213, 215, 196, 0.9);
+    text-decoration: none;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: #6c6c6a;
+    font: 36px/18px Helvetica, Arial, Verdana, sans-serif;
+    opacity: 0.7;
+    text-shadow: rgba(0,0,0,0.1) 0 0 1px ;
+    outline: 0 none;
+    vertical-align: baseline;
+}
+#gotop:hover {
+    opacity: 0.9;
+}
