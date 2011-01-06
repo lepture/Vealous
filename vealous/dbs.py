@@ -2,7 +2,8 @@
 
 from google.appengine.ext import db
 from google.appengine.api import memcache
-from libs import markdown
+#from libs import markdown
+import markdown
 import logging
 
 week = 604800
