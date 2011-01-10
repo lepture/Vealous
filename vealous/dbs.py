@@ -28,7 +28,7 @@ def make_page(keys, p=1):
     show_last_dash = show_last and (page_num - p) != 6
     page_range = [i for i in range(p-4, p+5) if i in range(1, page_num+1)]
     rdic = {
-        'p':p, 'item_num':item_num,
+        'page':p, 'item_num':item_num,
         'page_num':page_num,
         'has_previous':has_previous,
         'previous_num':previous_num,

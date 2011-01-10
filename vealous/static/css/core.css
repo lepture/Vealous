@@ -45,9 +45,11 @@ a { text-decoration: none; outline: 0 none; }
     right: 52px;
     bottom: 140px;
     padding: 18px;
-    background-color: rgba(213, 215, 196, 0.9);
+    background: #dedede;
+    background-color: rgba(213, 213, 213, 0.9);
     text-decoration: none;
     -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
     border-radius: 5px;
     color: #6c6c6a;
     font: 36px/18px Helvetica, Arial, Verdana, sans-serif;

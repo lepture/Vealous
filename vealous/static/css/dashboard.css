@@ -396,18 +396,23 @@ body {
 .page-nav li { float: left;}
 .page-nav .page-numbers {
     font-size: 11px;
-    background-color: #eee;
-    border: 1px solid #e3e3e3;
-    color: #1c6280;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     text-decoration: none;
     padding: 3px 6px;
     margin: 0 2px;
+    border: 1px solid #cecece;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    color: #ababab;
+    background: -moz-linear-gradient(center top, #ffffff, #efefef 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(100%, #efefef));
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#efefef', GradientType=0);
 }
 .page-nav .current, .page-nav .page-numbers:hover {
-    background-color: #fff;
+    color: white;
+    border: 1px solid #578fb2;
+    background: -moz-linear-gradient(center top, #80b2cd, #578fb2 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #80b2cd), color-stop(100%, #578fb2));
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80b2cd', endColorstr='#578fb2', GradientType=0);
 }
 #noteform .form-row input, #noteform .form-row label {
     vertical-align: middle;

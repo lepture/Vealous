@@ -78,7 +78,13 @@ class Archive(BaseHandler):
         rdic['navs'] = get_navs()
         p = self.request.get('p',1)
         keys = dbs.Article.show_keys()
-        rdic['mvdata'] = dbs.Article.get_page(keys, p)
+        mvdata = dbs.Article.get_page(keys, p)
+        if mvdata['page'] > mvdata['page_num']:
+            path = get_path(self.is_mobile, '404.html')
+            self.response.set_status(404)
+            html = render(path, rdic)
+            return self.response.out.write(html)
+        rdic['mvdata'] = mvdata
         path = get_path(self.is_mobile, 'archive.html')
         self.response.out.write(render(path,rdic))
 
