@@ -18,7 +18,6 @@ ul { list-style-type: none;}
 h3 { font-weight: bold; }
 h3 a { font-size: 16px;}
 hr { border-color: #bbb; }
-code { border-left: 4px solid #dadada; padding: 4px; }
 /* end reset */
 .pretty {
     font-family: "DejaVu Serif", "Times New Roman", serif;

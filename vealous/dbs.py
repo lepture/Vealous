@@ -136,7 +136,7 @@ class Article(db.Model):
 
     @classmethod
     def get_by_slug(cls, slug):
-        key = 'a_' + slug
+        key = 'a_slug_' + slug
         data = memcache.get(key)
         if data is not None:
             return data
