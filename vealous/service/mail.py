@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 
 import logging
-import re
 import urllib2
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app as run
@@ -10,23 +9,8 @@ from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 import dbs
 import config
 
-def is_god(sender):
-    """
-    sender:
-        user@example.com
-        User <user@example.com>
-    """
-    regex1 = r'^%s$' % config.EMAIL
-    regex2 = r'<%s>$' % config.EMAIL
-    if re.search(regex1, sender) or re.search(regex2, sender):
-        return True
-    return False
-
 class Article(InboundMailHandler):
     def receive(self, message):
-        if not is_god(message.sender):
-            logging.info('Not Admin: %s' % message.sender)
-            return
         data = self.format(message)
         if not data:
             return
@@ -52,9 +36,6 @@ class Article(InboundMailHandler):
 
 class Page(InboundMailHandler):
     def receive(self, message):
-        if not is_god(message.sender):
-            logging.info('Not Admin: %s' % message.sender)
-            return
         data = self.format(message)
         if not data:
             return
