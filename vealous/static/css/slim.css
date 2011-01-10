@@ -172,6 +172,7 @@ body {
     color: #ccc;
     font-size: 10px;
     font-weight: bold;
+    -webkit-text-size-adjust: none;
 }
 .soga .title {
     margin: 2px 0 10px;
@@ -180,6 +181,7 @@ body {
     color: gray;
     font-size: 10px;
     font-weight: bold;
+    -webkit-text-size-adjust: none;
 }
 .soga .button {
     margin: 0 10px;
@@ -345,5 +347,7 @@ body {
 .translate_links .google_branding{font-size:11px;}
 .translate_links .google_branding img{border:0;display:block;margin:0;padding:0;}
 /* ajax-translate END */
-.pages a { background: #666; color:#efefef; padding: 0px 4px; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; }
-.pages a:hover { background: #333; color: #fff; border-bottom: 0 none; }
+.pages a {
+    border: 1px solid #dadada;
+    padding: 0 4px;
+}

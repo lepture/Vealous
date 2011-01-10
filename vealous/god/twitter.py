@@ -310,6 +310,7 @@ class PostStatus(WebHandler):
             data = {'text':str(e)}
         except urlfetch.DownloadError, e:
             data = {'text':str(e)}
+        memcache.delete('twitter$home')
         self.response.out.write(simplejson.dumps(data))
 
 class AddFav(WebHandler):

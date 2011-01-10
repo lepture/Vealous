@@ -43,7 +43,7 @@ a { text-decoration: none; outline: 0 none; }
     display: block;
     position: fixed;
     right: 52px;
-    top: 42px;
+    bottom: 140px;
     padding: 18px;
     background-color: rgba(213, 215, 196, 0.9);
     text-decoration: none;
