@@ -5,7 +5,6 @@
 {%endblock%}
 
 {%block soga%}
-
 {%if hi%}
 <div id="post-{{hi.key.id}}" class="post">
     <h2 class="post-title"><a href="{{hi.the_url}}">{{hi.title}}</a></h2>
@@ -68,4 +67,5 @@
 
 {%block footer%}
 {%include "_flags.html"%}
+<script type="text/javascript">$(function(){$("#nav-home").addClass("current");});</script>
 {%endblock%}

@@ -68,6 +68,8 @@ body a.button {
     font-size: 12px;
     line-height: 16px;
     padding: 10px;
+    background: -moz-linear-gradient(center top, #ffffff 30%, #f1f1f1 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(30%, #ffffff), color-stop(100%, #f1f1f1));
 }
 .box .inner {
     padding: 12px;
@@ -277,6 +279,12 @@ body {
 .soga .avatar, #god .avatar {
     width: 48px;
     height: 48px;
+    padding: 2px;
+    border: 1px solid #b4b4b4;
+    border: 1px solid rgba(180, 180, 180, 0.6);
+    border-radius: 2px;
+    -webkit-box-shadow: 1px 1px 1px #ececec;
+    box-shadow: 1px 1px 1px #ececec;
 }
 #god .bitch {
     width: 450px;

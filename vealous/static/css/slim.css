@@ -342,7 +342,7 @@ body {
     font-family: Arial, sans-serif;
     color: #ababab;
 }
-.pages a:hover {
+.pages .current, .pages a:hover {
     border: 1px solid #578fb2;
     background: -moz-linear-gradient(center top, #80b2cd, #578fb2 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #80b2cd), color-stop(100%, #578fb2));

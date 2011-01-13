@@ -26,10 +26,9 @@
 <p class="pages">
 {% if mvdata.has_previous %}<a href="?p={{ mvdata.previous_num }}" class="page-numbers" title="previous">«</a>{%endif%}
 
-{%for p in mvdata.page_range %}
-<a href="?p={{p}}">{{p}}</a>
-{%endfor%}
+{%for p in mvdata.page_range %}<a href="?p={{p}}">{{p}}</a>{%endfor%}
 
 {% if mvdata.has_next %}<a href="?p={{ mvdata.next_num }}" class="page-numbers" title="next">»</a>{% endif %}
 <span class="bold">[{{mvdata.page}} of {{mvdata.page_num}} pages, {{mvdata.item_num}} articles]</span>
 </p>
+<script type="text/javascript">$(function(){$('.pages a[href="?p={{mvdata.page}}"]').addClass('current');});</script>
