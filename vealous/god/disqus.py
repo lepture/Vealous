@@ -23,7 +23,7 @@ class Disqus(object):
         urlbase = 'http://disqus.com/api/%s/?user_api_key=%s&api_version=1.1&exlude=killed'
         method = 'get_forum_posts'
         key = self._key
-        url = urlbase % (method, key) + '&limit=10&forum_id=' + str(forumid)
+        url = urlbase % (method, key) + '&limit=20&forum_id=' + str(forumid)
         rpc = urlfetch.create_rpc()
         urlfetch.make_fetch_call(rpc, url)
         self.rpc = rpc

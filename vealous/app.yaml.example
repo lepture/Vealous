@@ -39,6 +39,9 @@ handlers:
 - url: /utils/.*
   script: service/utils.py
 
+- url: /gtap/.*
+  script: service/gtap.py
+
 - url: /.*
   script: service/blog.py
 
