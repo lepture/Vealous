@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="{{conf.static}}/css/core.css?ver={{conf.version}}" />
         <link rel="stylesheet" href="{{conf.static}}/css/slim.css?ver={{conf.version}}" />
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+        {%include "_ga.html"%}
         {%block extra%}{%endblock%}
     </head>
     <body>
@@ -92,7 +93,6 @@
                 </div>
             </div>
         </div>
-        {%include "_ga.html"%}
         <script type="text/javascript" src="{{conf.static}}/js/slim.js?ver={{conf.version}}"></script>
         <script type="text/javascript" src="{{conf.static}}/js/jquery.translate-1.3.9.min.js"></script>
         {%block footer%}
