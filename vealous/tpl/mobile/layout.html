@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html lang="en">{%autoescape off%}
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
@@ -49,5 +49,5 @@
         <script type="text/javascript" src="{{conf.static}}/js/slim.js?ver={{conf.version}}"></script>
         {%block footer%}
         {%endblock%}
-    </body>
+    </body>{%endautoescape%}
 </html>

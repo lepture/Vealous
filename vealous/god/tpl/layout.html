@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html lang="en">{%autoescape off%}
     <head>
         <meta charset="UTF-8">
         <title>{%block title%}Dashboard{%endblock%}</title>
@@ -57,5 +57,5 @@
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
         <script type="text/javascript" src="{{conf.static}}/js/god.js?ver={{conf.version}}"></script>
         <a id="gotop" href="#header" rel="nofollow" style="display:none;">▲</a>
-    </body>
+    </body>{%endautoescape%}
 </html>

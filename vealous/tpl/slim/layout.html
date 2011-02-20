@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en">
+<html lang="en">{%autoescape off%}
     <head>
         <meta charset="UTF-8">
         <title>{%block title%}Home|{{vigo.sitename|default:"Vealous"}}{%endblock%}</title>
@@ -98,5 +98,5 @@
         {%block footer%}
         {%endblock%}
         <a id="gotop" href="#header" rel="nofollow" style="display:none;">▲</a>
-    </body>
+    </body>{%endautoescape%}
 </html>

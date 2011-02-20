@@ -68,7 +68,9 @@ def embed(value):
     #gist
     value = re.sub(r'(https?://gist.github.com/[\d]+)',r'<small><a rel="nofollow" href="\1">\1</a></small><script src="\1.js"></script>', value) 
     #youtube
-    value = re.sub(r'http://www.youtube.com/watch\?v=([a-zA-Z0-9\-\_]+)', r'<small><a rel="nofollow" href="http://www.youtube.com/watch?v=\1">Youtube Source</a></small><br /><embed src="http://www.youtube.com/v/\1?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385" />', value)
+    value = re.sub(r'http://www.youtube.com/watch\?v=([a-zA-Z0-9\-\_]+)', r'<small><a rel="nofollow" href="http://youtu.be/\1">Youtube Source</a></small><br /><embed src="http://www.youtube.com/v/\1?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385" />', value)
+    #youtube
+    value = re.sub(r'http://youtu.be/([a-zA-Z0-9\-\_]+)', r'<small><a rel="nofollow" href="http://youtu.be/\1">Youtube Source</a></small><br /><embed src="http://www.youtube.com/v/\1?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385" />', value)
     #youku
     value = re.sub(r'http://v.youku.com/v_show/id_([a-zA-Z0-9\=]+).html', r'<small><a rel="nofollow" href="http://v.youku.com/v_show/id_\1.html">Youku Source</a></small><br /><embed src="http://player.youku.com/player.php/sid/\1/v.swf" quality="high" width="480" height="400" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" />', value)
     #tudou
@@ -80,7 +82,9 @@ def embed_feed(value):
     #gist
     value = re.sub(r'(http?://gist.github.com/[\d]+)',r'snippet code at <a rel="nofollow" href="\1">\1</a><script src="\1.js"></script>', value) 
     #youtube
-    value = re.sub(r'http://www.youtube.com/watch\?v=([a-zA-Z0-9\-\_]+)', r'Feed subscribers who cannot see the video click at: <small><a rel="nofollow" href="http://www.youtube.com/watch?v=\1">Youtube Source</a></small><br /><embed src="http://www.youtube.com/v/\1?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385" />', value)
+    value = re.sub(r'http://www.youtube.com/watch\?v=([a-zA-Z0-9\-\_]+)', r'Feed subscribers who cannot see the video click at: <small><a rel="nofollow" href="http://youtu.be/\1">Youtube Source</a></small><br /><embed src="http://www.youtube.com/v/\1?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385" />', value)
+    #youtube
+    value = re.sub(r'http://youtu.be/([a-zA-Z0-9\-\_]+)', r'Feed subscribers who cannot see the video click at: <small><a rel="nofollow" href="http://youtu.be/\1">Youtube Source</a></small><br /><embed src="http://www.youtube.com/v/\1?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385" />', value)
     #youku
     value = re.sub(r'http://v.youku.com/v_show/id_([a-zA-Z0-9\=]+).html', r'Feed subscribers who cannot see the video click at: <small><a rel="nofollow" href="http://v.youku.com/v_show/id_\1.html">Youku Source</a></small><br /><embed src="http://player.youku.com/player.php/sid/\1/v.swf" quality="high" width="480" height="400" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" />', value)
     #tudou
