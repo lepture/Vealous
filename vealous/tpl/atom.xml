@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
+<feed xmlns="http://www.w3.org/2005/Atom">{% autoescape off %}
     <title>{{vigo.sitename}}</title>
     <subtitle>{{vigo.sitetag}}</subtitle>
     <updated>{%now "Y-m-d\TH:i:s\Z"%}</updated>
@@ -31,5 +31,5 @@
         <category scheme="{{conf.site}}" term="{{tag}}" />
         {%endfor%}
     </entry>
-    {% endfor %}
+    {% endfor %}{% endautoescape %}
 </feed>
